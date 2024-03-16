@@ -8,16 +8,17 @@ module.exports = {
   ],
   theme: {
     colors: {
-      body: "rgba(var(--body) / <alpha-value>)",
-      card: "rgba(var(--card) / <alpha-value>)",
-      "card-strong": "rgba(var(--card-strong) / <alpha-value>)",
-      "content-1": "rgba(var(--content-1) / <alpha-value>)",
-      "content-2": "rgba(var(--content-2) / <alpha-value>)",
-      "content-3": "rgba(var(--content-3) / <alpha-value>)",
-      primary: "rgba(var(--primary) / <alpha-value>)",
-      accent: "rgba(var(--accent) / <alpha-value>)",
-      green: "rgba(var(--green) / <alpha-value>)",
-      red: "rgba(var(--red) / <alpha-value>)",
+      white: "rgba(var(--rgb-white) / <alpha-value>)",
+      body: "rgba(var(--rgb-body) / <alpha-value>)",
+      card: "rgba(var(--rgb-card) / <alpha-value>)",
+      strong: "rgba(var(--rgb-strong) / <alpha-value>)",
+      "content-1": "rgba(var(--rgb-content-1) / <alpha-value>)",
+      "content-2": "rgba(var(--rgb-content-2) / <alpha-value>)",
+      "content-3": "rgba(var(--rgb-content-3) / <alpha-value>)",
+      primary: "rgba(var(--rgb-primary) / <alpha-value>)",
+      accent: "rgba(var(--rgb-accent) / <alpha-value>)",
+      green: "rgba(var(--rgb-green) / <alpha-value>)",
+      red: "rgba(var(--rgb-red) / <alpha-value>)",
       transparent: "transparent",
     },
     fontSize: {
@@ -34,5 +35,8 @@ module.exports = {
       loose: "1.45",
     },
   },
-  plugins: [require("@pyncz/tailwind-mask-image")],
+  plugins: [
+    require("@pyncz/tailwind-mask-image"),
+    require("tailwind-scrollbar")({ nocompatible: true }),
+  ],
 };
