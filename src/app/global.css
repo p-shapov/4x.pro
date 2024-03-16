@@ -1,0 +1,52 @@
+@tailwind base;
+@layer base {
+  :root {
+    --body: 20 21 23;
+    --card: 29 31 35;
+    --card-strong: 49 51 58;
+    --content-1: 243 245 250;
+    --content-2: 134 140 155;
+    --content-3: 90 95 109;
+    --primary: 81 249 189;
+    --accent: 81 141 249;
+    --green: 81 249 189;
+    --red: 249 81 145;
+  }
+
+  #__next {
+    isolation: isolate;
+  }
+
+  html {
+    @apply text-[62.5%];
+  }
+
+  body {
+    @apply bg-body font-sans;
+  }
+}
+
+@tailwind components;
+
+@tailwind utilities;
+@layer utilities {
+  .text-body-12 {
+    @apply text-sm leading-tight;
+  }
+
+  .text-body-14 {
+    @apply text-md leading-normal;
+  } 
+
+  .text-h3 {
+    @apply text-lg leading-loose;
+  }
+
+  .text-h5 {
+    @apply text-md font-bold leading-loose;
+  }
+
+  .text-h6 {
+    @apply text-sm font-bold leading-tight;
+  }
+}
