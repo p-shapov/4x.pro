@@ -15,8 +15,8 @@ type Props = {
   }[];
   label?: string;
   value?: string;
-  defaultValue?: string;
   readonly?: boolean;
+  defaultValue?: string;
   onChange?: (value: string) => void;
 };
 
@@ -26,6 +26,7 @@ const Select: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
   outlined,
   size,
   popoverPosition,
+  readonly,
   ...rest
 }) => {
   const fieldStyles = mkFieldStyles({ outlined, size, popoverPosition });
@@ -34,7 +35,7 @@ const Select: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
       {label && (
         <Listbox.Label className={fieldStyles.label}>{label}</Listbox.Label>
       )}
-      <Listbox {...rest}>
+      <Listbox {...rest} disabled={readonly}>
         <Listbox.Button className={fieldStyles.inputWrap}>
           {({ value, open }) => {
             const current = options.find((opt) => opt.value === value);
