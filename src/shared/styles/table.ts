@@ -31,6 +31,14 @@ const mkTableStyles = () => {
       "items-center",
       "col-[1/calc(var(--tw-table-cols)+1)]",
     ),
+    rowDelimiter: cn(
+      "py-[1.2rem]",
+      "border-b-[1px]",
+      "border-dashed",
+      "border-content-3",
+      "last:border-0",
+      "last:pb-0",
+    ),
     headingCell: cn("text-content-1", "text-h6"),
     cell: cn("text-content-1", "text-body-12"),
   };

@@ -53,7 +53,10 @@ const PositionsTable: FC<Props> = ({ items, onManage, onClose }) => {
       </thead>
       <tbody className={tableStyles.body}>
         {items.map((item) => (
-          <tr key={item.txHash} className={tableStyles.row}>
+          <tr
+            key={item.txHash}
+            className={cn(tableStyles.row, tableStyles.rowDelimiter)}
+          >
             <td className={tableStyles.cell}>
               <Token
                 symbol={item.token.symbol}
