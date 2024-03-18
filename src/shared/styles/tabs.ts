@@ -6,7 +6,7 @@ type Props = {
 
 const mkTabsStyles = ({ stretchTabs }: Props) => {
   return {
-    root: cn("grid", "gap-[4px]", "h-full", "grid-rows-[max-content_1fr]"),
+    root: cn("grid", "h-full", "grid-rows-[max-content_1fr]"),
     items: cn("flex", "gap-[0.4rem]", "border-b-[1px]", "border-content-3", {
       flex: !stretchTabs,
       grid: stretchTabs,
@@ -21,6 +21,7 @@ const mkTabsStyles = ({ stretchTabs }: Props) => {
       "uppercase",
       "outline-none",
     ),
+    panel: cn("pt-[4px]"),
     activeTab: cn("text-accent", "mb-[-1px]", "border-accent"),
     inactiveTab: cn(
       "text-content-1",

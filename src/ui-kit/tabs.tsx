@@ -13,6 +13,12 @@ type Props<T extends string> = {
   panels: Record<T, ReactNode>;
   value?: T;
   defaultValue?: T;
+  classNames?: {
+    items?: string;
+    tab?: string;
+    panels?: string;
+    panel?: string;
+  };
   onChange?: (value: T) => void;
 };
 
@@ -22,12 +28,12 @@ const Tabs = <T extends string>({
   value,
   stretchTabs,
   defaultValue,
+  classNames,
   onChange,
 }: PropsWithStyles<Props<T>, typeof mkTabsStyles>): ReactNode => {
   const tabsStyles = mkTabsStyles({ stretchTabs });
   const defaultIndex = items.findIndex((item) => item.id === defaultValue);
   const selectedIndex = items.findIndex((item) => item.id === value);
-
   const handleChange = (index: number) => {
     onChange?.(items[index].id);
   };
@@ -39,13 +45,13 @@ const Tabs = <T extends string>({
         defaultIndex={defaultIndex === -1 ? undefined : defaultIndex}
         onChange={handleChange}
       >
-        <Tab.List className={tabsStyles.items}>
+        <Tab.List className={cn(tabsStyles.items, classNames?.items)}>
           {({ selectedIndex }) => (
             <>
               {items.map((item, idx) => (
                 <Tab
                   key={item.id}
-                  className={cn(tabsStyles.tab, {
+                  className={cn(tabsStyles.tab, classNames?.tab, {
                     [tabsStyles.activeTab]: selectedIndex === idx,
                     [tabsStyles.inactiveTab]: selectedIndex !== idx,
                   })}
@@ -56,9 +62,12 @@ const Tabs = <T extends string>({
             </>
           )}
         </Tab.List>
-        <Tab.Panels className="min-h-[0]">
+        <Tab.Panels className={classNames?.panels}>
           {Object.values(panels).map((panel, idx) => (
-            <Tab.Panel key={idx} className="h-full">
+            <Tab.Panel
+              key={idx}
+              className={cn(tabsStyles.panel, classNames?.panel)}
+            >
               {panel as ReactNode}
             </Tab.Panel>
           ))}

@@ -28,6 +28,7 @@ const TradeModule = () => {
   const leverage = useWatch({ control: tradeForm.control, name: "leverage" });
   return (
     <div className={tradeModuleStyles.root}>
+      <div className={tradeModuleStyles.header}></div>
       <div
         className={tradeModuleStyles.content}
         style={{
@@ -42,53 +43,34 @@ const TradeModule = () => {
         ></div>
         <div className={tradeModuleStyles.tableTabs}>
           <Tabs
+            classNames={{
+              tab: tradeModuleStyles.tableTab,
+              panels: tradeModuleStyles.tableTabContent,
+              panel: tradeModuleStyles.tableTabPanel,
+            }}
             items={[
               {
                 id: "positions",
-                content: (
-                  <div className={tradeModuleStyles.tableTab}>Positions</div>
-                ),
+                content: "Positions",
               },
               {
                 id: "orders",
-                content: (
-                  <div className={tradeModuleStyles.tableTab}>Orders</div>
-                ),
+                content: "Orders",
               },
               {
                 id: "history",
-                content: (
-                  <div className={tradeModuleStyles.tableTab}>History</div>
-                ),
+                content: "History",
               },
               {
                 id: "balances",
-                content: (
-                  <div className={tradeModuleStyles.tableTab}>Balances</div>
-                ),
+                content: "Balances",
               },
             ]}
             panels={{
-              positions: (
-                <div className={tradeModuleStyles.tableTabPanel}>
-                  <UserPositions />
-                </div>
-              ),
-              orders: (
-                <div className={tradeModuleStyles.tableTabPanel}>
-                  <UserOrders />
-                </div>
-              ),
-              history: (
-                <div className={tradeModuleStyles.tableTabPanel}>
-                  <UserHistory />
-                </div>
-              ),
-              balances: (
-                <div className={tradeModuleStyles.tableTabPanel}>
-                  <UserBalances />
-                </div>
-              ),
+              positions: <UserPositions />,
+              orders: <UserOrders />,
+              history: <UserHistory />,
+              balances: <UserBalances />,
             }}
           />
         </div>
@@ -97,38 +79,34 @@ const TradeModule = () => {
         <div className={tradeModuleStyles.sidebarTabs}>
           <Tabs
             stretchTabs
+            classNames={{
+              tab: tradeModuleStyles.sidebarTab,
+              panels: tradeModuleStyles.sidebarTabContent,
+            }}
             items={[
               {
                 id: "long",
-                content: (
-                  <div className={tradeModuleStyles.sidebarTab}>Long</div>
-                ),
+                content: "Long",
               },
               {
                 id: "short",
-                content: (
-                  <div className={tradeModuleStyles.sidebarTab}>Short</div>
-                ),
+                content: "Short",
               },
             ]}
             panels={{
               long: (
-                <div className={tradeModuleStyles.sidebarTabPanel}>
-                  <TradeLongForm
-                    form={tradeForm}
-                    baseTokenList={BASE_TOKENS}
-                    quoteToken={QUOTE_TOKEN}
-                  />
-                </div>
+                <TradeLongForm
+                  form={tradeForm}
+                  baseTokenList={BASE_TOKENS}
+                  quoteToken={QUOTE_TOKEN}
+                />
               ),
               short: (
-                <div className={tradeModuleStyles.sidebarTabPanel}>
-                  <TradeShortForm
-                    form={tradeForm}
-                    baseTokenList={BASE_TOKENS}
-                    quoteToken={QUOTE_TOKEN}
-                  />
-                </div>
+                <TradeShortForm
+                  form={tradeForm}
+                  baseTokenList={BASE_TOKENS}
+                  quoteToken={QUOTE_TOKEN}
+                />
               ),
             }}
           />

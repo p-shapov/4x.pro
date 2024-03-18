@@ -5,18 +5,13 @@ const mkLayoutStyles = () => {
     cardSurface: cn(
       "bg-card",
       "bg-opacity-80",
-      "rounded-[1.6rem]",
+      "rounded-[16px]",
       "border-[1px]",
       "border-white",
       "border-opacity-[0.03]",
     ),
-    cardPaddings: cn("p-[1.2rem]"),
-    strongSurface: cn(
-      "bg-strong",
-      "rounded-[1.6rem]",
-      "px-[1.5rem]",
-      "py-[0.8rem]",
-    ),
+    cardPaddings: cn("p-[12px]"),
+    strongSurface: cn("bg-strong", "rounded-[16px]"),
   };
 };
 
