@@ -1,6 +1,6 @@
 import type { FC } from "react";
 
-import { TradeModule } from "@promo-shock/modules/trade";
+import { TradeModule } from "@4x.pro/modules/trade";
 
 const TradePage: FC = () => {
   return <TradeModule />;

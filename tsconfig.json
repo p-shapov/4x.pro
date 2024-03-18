@@ -19,7 +19,7 @@
       }
     ],
     "paths": {
-      "@promo-shock/*": ["./src/*"],
+      "@4x.pro/*": ["./src/*"],
       "@public/*": ["./public/*"],
       "@generated/*": ["./generated/*"],
       "tailwindcss-classnames": ["./generated/tailwindcss-classnames.ts"]

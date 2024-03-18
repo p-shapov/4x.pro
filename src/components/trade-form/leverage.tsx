@@ -1,12 +1,13 @@
 "use client";
-import type { FC } from "react";
-import type { UseFormReturn } from "react-hook-form";
-import { Controller } from "react-hook-form";
 
-import { formatRate } from "@promo-shock/shared/utils/number";
-import { NumberField } from "@promo-shock/ui-kit/number-field";
-import { Presets } from "@promo-shock/ui-kit/presets";
-import { RangeSlider } from "@promo-shock/ui-kit/range-slider";
+import type { FC } from "react";
+import { Controller } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
+
+import { formatRate } from "@4x.pro/shared/utils/number";
+import { NumberField } from "@4x.pro/ui-kit/number-field";
+import { Presets } from "@4x.pro/ui-kit/presets";
+import { RangeSlider } from "@4x.pro/ui-kit/range-slider";
 
 import type { SubmitData } from "./schema";
 import { mkLeverageStyles } from "./styles";

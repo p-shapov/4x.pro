@@ -1,9 +1,9 @@
 import cn from "classnames";
 import type { FC } from "react";
 
-import { mkTokenStyles } from "@promo-shock/shared/styles/token";
-import type { PropsWithStyles } from "@promo-shock/shared/types";
-import { formatPercentage } from "@promo-shock/shared/utils/number";
+import { mkTokenStyles } from "@4x.pro/shared/styles/token";
+import type { PropsWithStyles } from "@4x.pro/shared/types";
+import { formatPercentage } from "@4x.pro/shared/utils/number";
 
 import { Icon } from "./icon";
 

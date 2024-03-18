@@ -4,7 +4,7 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useWatch } from "react-hook-form";
 
-import { TokenField } from "@promo-shock/ui-kit/token-field";
+import { TokenField } from "@4x.pro/ui-kit/token-field";
 
 import type { SubmitData } from "./schema";
 import { mkPositionStyles } from "./styles";

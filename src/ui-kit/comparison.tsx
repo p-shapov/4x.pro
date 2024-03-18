@@ -1,8 +1,8 @@
 import cn from "classnames";
 import type { FC } from "react";
 
-import type { Formatter } from "@promo-shock/shared/utils/number";
-import { formatIdentity } from "@promo-shock/shared/utils/number";
+import type { Formatter } from "@4x.pro/shared/utils/number";
+import { formatIdentity } from "@4x.pro/shared/utils/number";
 
 import { Icon } from "./icon";
 

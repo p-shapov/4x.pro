@@ -2,7 +2,7 @@ import type { FC } from "react";
 import { Controller } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 
-import { NumberField } from "@promo-shock/ui-kit/number-field";
+import { NumberField } from "@4x.pro/ui-kit/number-field";
 
 import type { SubmitData } from "./schema";
 import { mkClosingOptionsStyles } from "./styles";

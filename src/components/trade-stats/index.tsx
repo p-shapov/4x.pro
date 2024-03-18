@@ -1,7 +1,7 @@
 import type { FC } from "react";
 
-import { formatRate } from "@promo-shock/shared/utils/number";
-import { Definition } from "@promo-shock/ui-kit/definition";
+import { formatRate } from "@4x.pro/shared/utils/number";
+import { Definition } from "@4x.pro/ui-kit/definition";
 
 import { mkTradeStatsStyles } from "./styles";
 

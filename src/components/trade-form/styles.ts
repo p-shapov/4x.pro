@@ -1,7 +1,7 @@
 import cn from "classnames";
 
-import { mkFieldStyles } from "@promo-shock/shared/styles/field";
-import { mkLayoutStyles } from "@promo-shock/shared/styles/layout";
+import { mkFieldStyles } from "@4x.pro/shared/styles/field";
+import { mkLayoutStyles } from "@4x.pro/shared/styles/layout";
 
 const mkTradeFormStyles = () => {
   return {

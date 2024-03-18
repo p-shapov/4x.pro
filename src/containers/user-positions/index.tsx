@@ -1,4 +1,4 @@
-import { PositionsTable } from "@promo-shock/components/positions-table";
+import { PositionsTable } from "@4x.pro/components/positions-table";
 
 import { POSITIONS } from "./mocks";
 

@@ -1,15 +1,16 @@
 "use client";
+
 import { useWatch } from "react-hook-form";
 
-import { useTradeForm } from "@promo-shock/components/trade-form";
-import { TradeStats } from "@promo-shock/components/trade-stats";
-import { TradeLongForm } from "@promo-shock/containers/trade-long-form";
-import { TradeShortForm } from "@promo-shock/containers/trade-short-form";
-import { UserBalances } from "@promo-shock/containers/user-balances";
-import { UserHistory } from "@promo-shock/containers/user-history";
-import { UserOrders } from "@promo-shock/containers/user-orders";
-import { UserPositions } from "@promo-shock/containers/user-positions";
-import { Tabs } from "@promo-shock/ui-kit/tabs";
+import { useTradeForm } from "@4x.pro/components/trade-form";
+import { TradeStats } from "@4x.pro/components/trade-stats";
+import { TradeLongForm } from "@4x.pro/containers/trade-long-form";
+import { TradeShortForm } from "@4x.pro/containers/trade-short-form";
+import { UserBalances } from "@4x.pro/containers/user-balances";
+import { UserHistory } from "@4x.pro/containers/user-history";
+import { UserOrders } from "@4x.pro/containers/user-orders";
+import { UserPositions } from "@4x.pro/containers/user-positions";
+import { Tabs } from "@4x.pro/ui-kit/tabs";
 
 import { BASE_TOKENS, QUOTE_TOKEN } from "./mocks";
 import { mkTradeModuleStyles } from "./styles";

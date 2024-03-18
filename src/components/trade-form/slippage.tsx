@@ -2,9 +2,9 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller } from "react-hook-form";
 
-import { formatPercentage } from "@promo-shock/shared/utils/number";
-import { NumberField } from "@promo-shock/ui-kit/number-field";
-import { Presets } from "@promo-shock/ui-kit/presets";
+import { formatPercentage } from "@4x.pro/shared/utils/number";
+import { NumberField } from "@4x.pro/ui-kit/number-field";
+import { Presets } from "@4x.pro/ui-kit/presets";
 
 import type { SubmitData } from "./schema";
 import { mkSlippageStyles } from "./styles";

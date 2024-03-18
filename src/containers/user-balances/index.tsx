@@ -1,6 +1,6 @@
 import type { FC } from "react";
 
-import { BalancesTable } from "@promo-shock/components/balances-table";
+import { BalancesTable } from "@4x.pro/components/balances-table";
 
 import { BALANCES } from "./mocks";
 

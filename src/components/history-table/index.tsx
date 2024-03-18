@@ -1,9 +1,9 @@
 import cn from "classnames";
 import type { FC } from "react";
 
-import { mkTableStyles } from "@promo-shock/shared/styles/table";
-import { formatRate } from "@promo-shock/shared/utils/number";
-import { Token } from "@promo-shock/ui-kit/token";
+import { mkTableStyles } from "@4x.pro/shared/styles/table";
+import { formatRate } from "@4x.pro/shared/utils/number";
+import { Token } from "@4x.pro/ui-kit/token";
 
 type Props = {
   items: {

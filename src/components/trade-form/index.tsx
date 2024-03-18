@@ -4,7 +4,7 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@promo-shock/ui-kit/button";
+import { Button } from "@4x.pro/ui-kit/button";
 
 import { ClosingOptions } from "./closing-options";
 import { Leverage } from "./leverage";

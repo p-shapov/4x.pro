@@ -3,8 +3,8 @@ import cn from "classnames";
 import { useId } from "react";
 import type { ChangeEvent, FC, ReactNode } from "react";
 
-import { mkFieldStyles } from "@promo-shock/shared/styles/field";
-import type { PropsWithStyles } from "@promo-shock/shared/types";
+import { mkFieldStyles } from "@4x.pro/shared/styles/field";
+import type { PropsWithStyles } from "@4x.pro/shared/types";
 
 type Props = {
   label?: string;

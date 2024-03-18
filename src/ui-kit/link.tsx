@@ -1,8 +1,8 @@
 import NextLink from "next/link";
 import type { FC } from "react";
 
-import { mkLinkStyles } from "@promo-shock/shared/styles/link";
-import type { PropsWithStyles } from "@promo-shock/shared/types";
+import { mkLinkStyles } from "@4x.pro/shared/styles/link";
+import type { PropsWithStyles } from "@4x.pro/shared/types";
 
 import { Icon } from "./icon";
 

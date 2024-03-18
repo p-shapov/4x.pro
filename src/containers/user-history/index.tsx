@@ -1,6 +1,6 @@
 import type { FC } from "react";
 
-import { HistoryTable } from "@promo-shock/components/history-table";
+import { HistoryTable } from "@4x.pro/components/history-table";
 
 import { HISTORY } from "./mocks";
 

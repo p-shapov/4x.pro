@@ -1,6 +1,6 @@
 import cn from "classnames";
 
-import { mkLayoutStyles } from "@promo-shock/shared/styles/layout";
+import { mkLayoutStyles } from "@4x.pro/shared/styles/layout";
 
 const mkTradeModuleStyles = () => {
   const layoutStyles = mkLayoutStyles();

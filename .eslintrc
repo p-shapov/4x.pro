@@ -182,7 +182,7 @@
           },
           {
             "group": "parent",
-            "pattern": "@promo-shock/**",
+            "pattern": "@4x.pro/**",
             "position": "before"
           }
         ]

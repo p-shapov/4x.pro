@@ -1,7 +1,7 @@
 "use client";
 import type { FC, PropsWithChildren } from "react";
 
-import type { PropsWithStyles } from "@promo-shock/shared/types";
+import type { PropsWithStyles } from "@4x.pro/shared/types";
 
 import { mkButtonStyles } from "../shared/styles/button";
 

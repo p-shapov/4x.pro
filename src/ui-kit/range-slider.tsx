@@ -3,9 +3,9 @@ import cn from "classnames";
 import { useEffect, useId, useState } from "react";
 import type { ChangeEvent, FC } from "react";
 
-import { mkRangeStyles } from "@promo-shock/shared/styles/range";
-import type { Formatter } from "@promo-shock/shared/utils/number";
-import { formatIdentity } from "@promo-shock/shared/utils/number";
+import { mkRangeStyles } from "@4x.pro/shared/styles/range";
+import type { Formatter } from "@4x.pro/shared/utils/number";
+import { formatIdentity } from "@4x.pro/shared/utils/number";
 
 type Props = {
   value?: number;

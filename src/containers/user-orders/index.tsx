@@ -1,6 +1,6 @@
 import type { FC } from "react";
 
-import { OrdersTable } from "@promo-shock/components/orders-table";
+import { OrdersTable } from "@4x.pro/components/orders-table";
 
 import { ORDERS } from "./mocks";
 

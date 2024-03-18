@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from "react";
 
-import { mkDefinitionStyles } from "@promo-shock/shared/styles/definition";
+import { mkDefinitionStyles } from "@4x.pro/shared/styles/definition";
 
 type Props = {
   term: string;

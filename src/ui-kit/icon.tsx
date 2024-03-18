@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import type { FC } from "react";
 
-import type { PropsWithClassName } from "@promo-shock/shared/types";
+import type { PropsWithClassName } from "@4x.pro/shared/types";
 
 type Props = {
   src: `/icons/${string}.svg`;

@@ -2,8 +2,8 @@ import { Tab } from "@headlessui/react";
 import cn from "classnames";
 import type { ReactNode } from "react";
 
-import { mkTabsStyles } from "@promo-shock/shared/styles/tabs";
-import type { PropsWithStyles } from "@promo-shock/shared/types";
+import { mkTabsStyles } from "@4x.pro/shared/styles/tabs";
+import type { PropsWithStyles } from "@4x.pro/shared/types";
 
 type Props<T extends string> = {
   items: {

@@ -1,9 +1,10 @@
 "use client";
+
 import type { FC, PropsWithChildren } from "react";
 
-import { BaseQueryClientProvider } from "@promo-shock/configs/base-query-client";
-import { WalletAdapterProvider } from "@promo-shock/configs/wallet-adapter-config";
-import { useInitIsMounted } from "@promo-shock/shared/hooks";
+import { BaseQueryClientProvider } from "@4x.pro/configs/base-query-client";
+import { WalletAdapterProvider } from "@4x.pro/configs/wallet-adapter-config";
+import { useInitIsMounted } from "@4x.pro/shared/hooks";
 
 const RootProvider: FC<PropsWithChildren> = ({ children }) => {
   useInitIsMounted();

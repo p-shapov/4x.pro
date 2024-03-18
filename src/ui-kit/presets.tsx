@@ -1,9 +1,9 @@
 import { RadioGroup } from "@headlessui/react";
 import type { FC } from "react";
 
-import { mkPresetsStyles } from "@promo-shock/shared/styles/presets";
-import type { Formatter } from "@promo-shock/shared/utils/number";
-import { formatIdentity } from "@promo-shock/shared/utils/number";
+import { mkPresetsStyles } from "@4x.pro/shared/styles/presets";
+import type { Formatter } from "@4x.pro/shared/utils/number";
+import { formatIdentity } from "@4x.pro/shared/utils/number";
 
 type Props = {
   options: number[];
