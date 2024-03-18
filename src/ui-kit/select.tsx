@@ -35,7 +35,7 @@ const Select: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
       {label && (
         <Listbox.Label className={fieldStyles.label}>{label}</Listbox.Label>
       )}
-      <Listbox {...rest} disabled={readonly}>
+      <Listbox {...rest} disabled={readonly || options.length === 1}>
         <Listbox.Button className={fieldStyles.inputWrap}>
           {({ value, open }) => {
             const current = options.find((opt) => opt.value === value);
@@ -46,14 +46,18 @@ const Select: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
                 <span className={fieldStyles.optionText}>
                   {current?.content}
                 </span>
-                <span className={fieldStyles.postfix}>
-                  <Icon
-                    className={fieldStyles.icon}
-                    src={
-                      open ? "/icons/arrow-up-1.svg" : "/icons/arrow-down-1.svg"
-                    }
-                  />
-                </span>
+                {options.length > 1 && (
+                  <span className={fieldStyles.postfix}>
+                    <Icon
+                      className={fieldStyles.icon}
+                      src={
+                        open
+                          ? "/icons/arrow-up-1.svg"
+                          : "/icons/arrow-down-1.svg"
+                      }
+                    />
+                  </span>
+                )}
               </div>
             );
           }}

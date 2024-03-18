@@ -14,7 +14,7 @@ const mkDefinitionStyles = () => {
       "before:border-dashed",
       "before:border-strong",
       "before:self-end",
-      "before:mb-[0.6rem]",
+      "before:mb-[0.5rem]",
     ),
     term: cn("inline-flex", "order-1", "text-body-12", "text-content-2"),
     info: cn("inline-flex", "order-3", "text-body-12", "text-content-1"),

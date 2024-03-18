@@ -102,7 +102,7 @@ const mkFieldStyles = ({
   popoverPosition = "left",
 }: Props) => {
   return {
-    root: cn("grid", "relative"),
+    root: cn("grid", "relative", "gap-[1rem]"),
     input: mkInputStyles(outlined, size),
     inputWrap: mkInputWrapStyles(outlined, size),
     label: cn("text-h6", "text-content-1"),

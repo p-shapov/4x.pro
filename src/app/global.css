@@ -20,6 +20,7 @@
 
   html {
     @apply text-[62.5%];
+    color-scheme: dark;
   }
 
   body {

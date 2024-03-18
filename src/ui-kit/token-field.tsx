@@ -6,14 +6,20 @@ import { NumberField } from "./number-field";
 import { Select } from "./select";
 import { Token } from "./token";
 
+type Token = {
+  account: string;
+  symbol: string;
+  uri: string;
+};
+
 type Props = {
-  tokenList: { account: string; symbol: string; uri: string }[];
+  tokenList: Token[];
   label?: string;
-  value?: number;
+  value?: number | "";
   defaultValue?: number;
   placeholder?: string;
   readonly?: boolean;
-  onChange?: (value: number, tokenAccount: string) => void;
+  onChange?: (data: { value: number; tokenAccount: string }) => void;
 };
 
 const TokenField: FC<Props> = ({ tokenList, onChange, ...rest }) => {
@@ -24,11 +30,11 @@ const TokenField: FC<Props> = ({ tokenList, onChange, ...rest }) => {
   const [tokenAccount, setTokenAccount] = useState<string>(defaultTokenAccount);
   const handleChange = (value: number) => {
     setValue(value);
-    onChange?.(value, tokenAccount);
+    onChange?.({ value, tokenAccount });
   };
-  const handleSelect = (id: string) => {
-    setTokenAccount(id);
-    onChange?.(value, id);
+  const handleSelect = (tokenAccount: string) => {
+    setTokenAccount(tokenAccount);
+    onChange?.({ value, tokenAccount });
   };
   return (
     <NumberField

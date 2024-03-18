@@ -3,6 +3,7 @@ import cn from "classnames";
 import type { ReactNode } from "react";
 
 import { mkTabsStyles } from "@promo-shock/shared/styles/tabs";
+import type { PropsWithStyles } from "@promo-shock/shared/types";
 
 type Props<T extends string> = {
   items: {
@@ -19,10 +20,11 @@ const Tabs = <T extends string>({
   items,
   panels,
   value,
+  stretchTabs,
   defaultValue,
   onChange,
-}: Props<T>): ReactNode => {
-  const tabsStyles = mkTabsStyles();
+}: PropsWithStyles<Props<T>, typeof mkTabsStyles>): ReactNode => {
+  const tabsStyles = mkTabsStyles({ stretchTabs });
   const defaultIndex = items.findIndex((item) => item.id === defaultValue);
   const selectedIndex = items.findIndex((item) => item.id === value);
 

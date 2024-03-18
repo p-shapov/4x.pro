@@ -12,7 +12,7 @@ const mkLayoutStyles = () => {
     ),
     cardPaddings: cn("p-[1.2rem]"),
     strongSurface: cn(
-      "bg-surface-strong",
+      "bg-strong",
       "rounded-[1.6rem]",
       "px-[1.5rem]",
       "py-[0.8rem]",

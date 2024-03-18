@@ -3,7 +3,9 @@ import cn from "classnames";
 const mkBadgeStyles = () => {
   return {
     root: cn(
+      "inline-flex",
       "w-max",
+      "h-max",
       "pt-[0.4rem]",
       "pb-[0.5rem]",
       "px-[0.8rem]",

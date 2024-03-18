@@ -3,17 +3,20 @@ import cn from "classnames";
 const mkTableStyles = () => {
   return {
     root: cn(
-      "appearance-none",
       "grid",
       "grid-cols-[repeat(var(--tw-table-cols),max-content)]",
+      "grid-rows-[max-content_1fr]",
       "gap-x-[2.4rem]",
-      "max-w-full",
-      "max-h-full",
+      "h-full",
     ),
     body: cn(
       "grid",
       "grid-cols-subgrid",
       "col-[1/calc(var(--tw-table-cols)+1)]",
+      "h-full",
+      "overflow-y-auto",
+      "scrollbar-none",
+      "overscroll-contain",
     ),
     head: cn(
       "grid",

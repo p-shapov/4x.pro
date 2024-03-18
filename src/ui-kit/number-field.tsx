@@ -8,10 +8,14 @@ import type { PropsWithStyles } from "@promo-shock/shared/types";
 
 type Props = {
   label?: string;
-  value?: number;
+  value?: number | "";
   defaultValue?: number;
   placeholder?: string;
   postfix?: ReactNode;
+  min?: number;
+  max?: number;
+  step?: number;
+  readonly?: boolean;
   onChange?: (value: number) => void;
 };
 
