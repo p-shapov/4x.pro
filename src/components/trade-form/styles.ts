@@ -18,6 +18,7 @@ const mkLeverageStyles = () => {
       "grid-cols-[max-content_max-content]",
       "items-center",
     ),
+    field: cn("w-[6.7rem]"),
     label: cn(fieldStyles.label, "col-span-2"),
     range: cn("col-span-2"),
   };
@@ -32,7 +33,7 @@ const mkSlippageStyles = () => {
       "grid-cols-[max-content_max-content]",
       "items-center",
     ),
-    field: cn("min-w-[96px]"),
+    field: cn("w-[9.6rem]"),
     label: cn(fieldStyles.label, "col-span-2"),
   };
 };

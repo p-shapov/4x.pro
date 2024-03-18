@@ -56,9 +56,11 @@ const Tabs = <T extends string>({
             </>
           )}
         </Tab.List>
-        <Tab.Panels>
+        <Tab.Panels className="min-h-[0]">
           {Object.values(panels).map((panel, idx) => (
-            <Tab.Panel key={idx}>{panel as ReactNode}</Tab.Panel>
+            <Tab.Panel key={idx} className="h-full">
+              {panel as ReactNode}
+            </Tab.Panel>
           ))}
         </Tab.Panels>
       </Tab.Group>

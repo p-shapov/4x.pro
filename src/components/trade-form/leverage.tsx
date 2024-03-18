@@ -21,19 +21,21 @@ const Leverage: FC<Props> = ({ form }) => {
   return (
     <fieldset className={leverageStyles.root}>
       <span className={leverageStyles.label}>Leverage</span>
-      <Controller<SubmitData, "leverage">
-        name="leverage"
-        control={form.control}
-        render={({ field: { value, onChange } }) => (
-          <NumberField
-            value={value}
-            min={1.1}
-            max={100}
-            step={0.1}
-            onChange={onChange}
-          />
-        )}
-      />
+      <div className={leverageStyles.field}>
+        <Controller<SubmitData, "leverage">
+          name="leverage"
+          control={form.control}
+          render={({ field: { value, onChange } }) => (
+            <NumberField
+              value={value}
+              min={1.1}
+              max={100}
+              step={0.1}
+              onChange={onChange}
+            />
+          )}
+        />
+      </div>
       <Controller<SubmitData, "leverage">
         name="leverage"
         control={form.control}

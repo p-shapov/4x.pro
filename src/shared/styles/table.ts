@@ -13,6 +13,7 @@ const mkTableStyles = () => {
       "grid",
       "grid-cols-subgrid",
       "col-[1/calc(var(--tw-table-cols)+1)]",
+      "auto-rows-max",
       "h-full",
       "overflow-y-auto",
       "scrollbar-none",
@@ -33,6 +34,7 @@ const mkTableStyles = () => {
       "justify-items-start",
       "items-center",
       "col-[1/calc(var(--tw-table-cols)+1)]",
+      "h-max",
     ),
     rowDelimiter: cn(
       "py-[1.2rem]",

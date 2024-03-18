@@ -21,6 +21,7 @@
   html {
     @apply text-[62.5%];
     color-scheme: dark;
+    scrollbar-gutter: stable;
   }
 
   body {
