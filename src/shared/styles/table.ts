@@ -4,7 +4,7 @@ const mkTableStyles = () => {
   return {
     root: cn(
       "grid",
-      "grid-cols-[repeat(var(--tw-table-cols),max-content)]",
+      "grid-cols-[repeat(var(--tw-table-cols),1fr)]",
       "grid-rows-[max-content_1fr]",
       "gap-x-[2.4rem]",
       "h-full",
@@ -43,7 +43,7 @@ const mkTableStyles = () => {
       "last:pb-0",
     ),
     headingCell: cn("text-content-1", "text-h6"),
-    cell: cn("text-content-1", "text-body-12"),
+    cell: cn("inline-grid", "text-content-1", "text-body-12"),
   };
 };
 

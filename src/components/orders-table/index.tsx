@@ -15,25 +15,23 @@ type Props = {
       network: "solana";
       uri: string;
     };
-    side: "short" | "long";
     leverage: number;
+    side: "short" | "long";
     size: number;
-    collateral: number;
-    pnl: number;
-    entryPrice: number;
+    type: "tp" | "sl";
     markPrice: number;
-    liquidationPrice: number;
+    triggerPrice: number;
   }[];
 };
 
-const PositionsTable: FC<Props> = ({ items }) => {
+const OrdersTable: FC<Props> = ({ items }) => {
   const tableStyles = mkTableStyles();
   return (
     <table
       className={tableStyles.root}
       style={{
         // @ts-expect-error - CSS variable
-        "--tw-table-cols": 9,
+        "--tw-table-cols": 7,
       }}
     >
       <thead className={cn(tableStyles.head, "pl-[2.4rem]")}>
@@ -41,12 +39,10 @@ const PositionsTable: FC<Props> = ({ items }) => {
           <th className={tableStyles.headingCell}>Market</th>
           <th className={tableStyles.headingCell}>Side</th>
           <th className={tableStyles.headingCell}>Size</th>
-          <th className={tableStyles.headingCell}>Collateral</th>
-          <th className={tableStyles.headingCell}>PnL</th>
-          <th className={tableStyles.headingCell}>Entry Price</th>
+          <th className={tableStyles.headingCell}>Type</th>
           <th className={tableStyles.headingCell}>Mark Price</th>
-          <th className={tableStyles.headingCell}>Liq Price</th>
-          <th className={tableStyles.headingCell}>Actions</th>
+          <th className={tableStyles.headingCell}>Trigger Price</th>
+          <th className={tableStyles.headingCell}>Action</th>
         </tr>
       </thead>
       <tbody className={tableStyles.body}>
@@ -70,23 +66,14 @@ const PositionsTable: FC<Props> = ({ items }) => {
               </span>
             </td>
             <td className={tableStyles.cell}>{item.size}</td>
-            <td className={tableStyles.cell}>{item.collateral}</td>
-            <td className={tableStyles.cell}>
-              <span className="text-green">{item.pnl}</span>
-            </td>
-            <td className={tableStyles.cell}>{item.entryPrice}</td>
+            <td className={tableStyles.cell}>{item.type}</td>
             <td className={tableStyles.cell}>{item.markPrice}</td>
-            <td className={tableStyles.cell}>{item.liquidationPrice}</td>
+            <td className={tableStyles.cell}>{item.triggerPrice}</td>
             <td className={tableStyles.cell}>
               <div className={cn("flex", "gap-[2rem]")}>
                 <Link
-                  variant="accent"
-                  text="Manage"
-                  iconSrc="/icons/setting-2.svg"
-                ></Link>
-                <Link
                   variant="red"
-                  text="Close"
+                  text="Cancel"
                   iconSrc="/icons/close-circle.svg"
                 ></Link>
               </div>
@@ -98,4 +85,4 @@ const PositionsTable: FC<Props> = ({ items }) => {
   );
 };
 
-export { PositionsTable };
+export { OrdersTable };

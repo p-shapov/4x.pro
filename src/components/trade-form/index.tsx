@@ -40,8 +40,11 @@ const useTradeForm = () => {
 
 const TradeForm: FC<Props> = ({ title, form, baseTokenList, quoteToken }) => {
   const tradeFormStyles = mkTradeFormStyles();
+  const handleSubmit = form.handleSubmit((data) => {
+    console.log(data);
+  });
   return (
-    <form className={tradeFormStyles.root}>
+    <form className={tradeFormStyles.root} onSubmit={handleSubmit}>
       <Position
         form={form}
         baseTokenList={baseTokenList}
