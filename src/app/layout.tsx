@@ -8,7 +8,7 @@ import type { FC, PropsWithChildren } from "react";
 import { RootProvider } from "./provider";
 
 const metadata: Metadata = {
-  title: "PromoShock",
+  title: "4x.pro",
 };
 
 const inter = Inter({
