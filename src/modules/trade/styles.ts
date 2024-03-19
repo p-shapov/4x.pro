@@ -26,15 +26,11 @@ const mkTradeModuleStyles = () => {
     tradingView: cn(
       layoutStyles.cardSurface,
       layoutStyles.cardPaddings,
-      "h-[var(--tw-trading-view-height,500px)]",
+      "transition-[height]",
     ),
-    tableTabs: cn(
-      layoutStyles.cardSurface,
-      "min-h-[200px]",
-      "h-[calc(100%-var(--tw-trading-view-height,500px))]",
-    ),
+    tableTabs: cn(layoutStyles.cardSurface),
     tableTab: cn(layoutStyles.cardPaddings, "*:px-[4px]"),
-    tableTabContent: cn(layoutStyles.cardPaddings, "h-full", "min-h-[0]"),
+    tableTabContent: cn(layoutStyles.cardPaddings, "h-full", "min-h-[200px]"),
     tableTabPanel: cn("h-full", "pb-[0px]"),
     sidebar: cn(
       "w-[275px]",

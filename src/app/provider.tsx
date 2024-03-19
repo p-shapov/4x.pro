@@ -4,7 +4,7 @@ import type { FC, PropsWithChildren } from "react";
 
 import { BaseQueryClientProvider } from "@4x.pro/configs/base-query-client";
 import { WalletAdapterProvider } from "@4x.pro/configs/wallet-adapter-config";
-import { useInitIsMounted } from "@4x.pro/shared/hooks";
+import { useInitIsMounted } from "@4x.pro/shared/hooks/use-is-mounted";
 
 const RootProvider: FC<PropsWithChildren> = ({ children }) => {
   useInitIsMounted();

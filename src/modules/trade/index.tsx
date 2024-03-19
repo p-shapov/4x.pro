@@ -1,7 +1,7 @@
 "use client";
 
+import { useRef } from "react";
 import { useWatch } from "react-hook-form";
-import { useResizable } from "react-resizable-layout";
 
 import { useTradeForm } from "@4x.pro/components/trade-form";
 import { TradeStats } from "@4x.pro/components/trade-stats";
@@ -11,17 +11,20 @@ import { UserBalances } from "@4x.pro/containers/user-balances";
 import { UserHistory } from "@4x.pro/containers/user-history";
 import { UserOrders } from "@4x.pro/containers/user-orders";
 import { UserPositions } from "@4x.pro/containers/user-positions";
+import { useResizableLayout } from "@4x.pro/shared/hooks/use-resizable-layout";
 import { Tabs } from "@4x.pro/ui-kit/tabs";
 
 import { BASE_TOKENS, QUOTE_TOKEN } from "./mocks";
 import { mkTradeModuleStyles } from "./styles";
 
 const TradeModule = () => {
-  const { position, separatorProps } = useResizable({
+  const contentRef = useRef<HTMLDivElement>(null);
+  const { position, separatorProps } = useResizableLayout("trade-module", {
     initial: 500,
     max: 600,
     min: 200,
     axis: "y",
+    containerRef: contentRef,
   });
   const tradeModuleStyles = mkTradeModuleStyles();
   const tradeForm = useTradeForm();
@@ -29,14 +32,15 @@ const TradeModule = () => {
   return (
     <div className={tradeModuleStyles.root}>
       <div className={tradeModuleStyles.header}></div>
-      <div
-        className={tradeModuleStyles.content}
-        style={{
-          // @ts-expect-error - CSS variable
-          "--tw-trading-view-height": `${position}px`,
-        }}
-      >
-        <div className={tradeModuleStyles.tradingView}>TRADING VIEW</div>
+      <div className={tradeModuleStyles.content} ref={contentRef}>
+        <div
+          className={tradeModuleStyles.tradingView}
+          style={{
+            height: position,
+          }}
+        >
+          TRADING VIEW
+        </div>
         <div
           className={tradeModuleStyles.contentSeparator}
           {...separatorProps}
