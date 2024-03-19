@@ -2,7 +2,11 @@ import cn from "classnames";
 
 import { mkLayoutStyles } from "@4x.pro/shared/styles/layout";
 
-const mkTradeModuleStyles = () => {
+type Props = {
+  animateHeight?: boolean;
+};
+
+const mkTradeModuleStyles = ({ animateHeight }: Props) => {
   const layoutStyles = mkLayoutStyles();
   return {
     root: cn(
@@ -23,11 +27,9 @@ const mkTradeModuleStyles = () => {
       "scrollbar-none",
     ),
     contentSeparator: cn("w-full", "h-[12px]", "cursor-row-resize"),
-    tradingView: cn(
-      layoutStyles.cardSurface,
-      layoutStyles.cardPaddings,
-      "transition-[height]",
-    ),
+    tradingView: cn(layoutStyles.cardSurface, layoutStyles.cardPaddings, {
+      [cn("transition-[height]", "will-change-[height]")]: animateHeight,
+    }),
     tableTabs: cn(layoutStyles.cardSurface),
     tableTab: cn(layoutStyles.cardPaddings, "*:px-[4px]"),
     tableTabContent: cn(layoutStyles.cardPaddings, "h-full", "min-h-[200px]"),

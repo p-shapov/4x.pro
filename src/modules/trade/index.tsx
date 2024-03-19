@@ -1,6 +1,5 @@
 "use client";
-
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useWatch } from "react-hook-form";
 
 import { useTradeForm } from "@4x.pro/components/trade-form";
@@ -19,6 +18,7 @@ import { mkTradeModuleStyles } from "./styles";
 
 const TradeModule = () => {
   const contentRef = useRef<HTMLDivElement>(null);
+  const [animateHeight, setAnimateHeight] = useState(true);
   const { position, separatorProps } = useResizableLayout("trade-module", {
     initial: 500,
     max: 600,
@@ -26,7 +26,7 @@ const TradeModule = () => {
     axis: "y",
     containerRef: contentRef,
   });
-  const tradeModuleStyles = mkTradeModuleStyles();
+  const tradeModuleStyles = mkTradeModuleStyles({ animateHeight });
   const tradeForm = useTradeForm();
   const leverage = useWatch({ control: tradeForm.control, name: "leverage" });
   return (
@@ -37,6 +37,9 @@ const TradeModule = () => {
           className={tradeModuleStyles.tradingView}
           style={{
             height: position,
+          }}
+          onTransitionEnd={() => {
+            if (animateHeight) setAnimateHeight(false);
           }}
         >
           TRADING VIEW
