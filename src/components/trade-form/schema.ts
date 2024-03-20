@@ -1,14 +1,18 @@
 import * as yup from "yup";
 
-type Token = {
-  account: string;
-  value: number;
-};
+import { tokenList } from "@4x.pro/configs/token-config";
+import type { Token } from "@4x.pro/configs/token-config";
 
 type SubmitData = {
   position: {
-    base: Token;
-    quote: Token;
+    base: {
+      token: Token;
+      amount: number;
+    };
+    quote: {
+      token: Token;
+      amount: number;
+    };
   };
   leverage: number;
   slippage: number;
@@ -19,12 +23,12 @@ type SubmitData = {
 const submitDataSchema = yup.object<SubmitData>().shape({
   position: yup.object().shape({
     base: yup.object().shape({
-      account: yup.string().required(),
-      value: yup.number().min(1).required(),
+      token: yup.string().required().oneOf(tokenList),
+      amount: yup.number().required().min(1),
     }),
     quote: yup.object().shape({
-      account: yup.string().required(),
-      value: yup.number().min(1).required(),
+      token: yup.string().required().oneOf(tokenList),
+      amount: yup.number().required().min(1),
     }),
   }),
   leverage: yup.number().min(1.1).max(100).required(),

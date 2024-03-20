@@ -1,14 +1,17 @@
-type Formatter = (value: number, fractionalDigits?: number) => string;
+type Formatter = (value?: number, fractionalDigits?: number) => string;
 
 const formatIdentity: Formatter = (value, fractionalDigits) => {
-  return value.toFixed(fractionalDigits);
+  return value?.toFixed(fractionalDigits) || "-";
 };
 const formatPercentage: Formatter = (value, fractionalDigits) => {
-  return value.toFixed(fractionalDigits) + "%";
+  return value ? value.toFixed(fractionalDigits) + "%" : "-";
 };
 const formatRate: Formatter = (value, fractionalDigits) => {
-  return value.toFixed(fractionalDigits) + "x";
+  return value ? value.toFixed(fractionalDigits) + "x" : "-";
+};
+const formatCurrency_USD: Formatter = (value, fractionalDigits) => {
+  return value ? "$" + value.toFixed(fractionalDigits) : "-";
 };
 
-export { formatIdentity, formatPercentage, formatRate };
+export { formatIdentity, formatPercentage, formatRate, formatCurrency_USD };
 export type { Formatter };

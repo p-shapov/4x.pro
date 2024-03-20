@@ -2,12 +2,7 @@ const HISTORY = [
   {
     id: "1",
     txHash: "1",
-    token: {
-      account: "1",
-      symbol: "Token 1",
-      network: "Solana",
-      uri: "https://placeholder.com/16x16",
-    },
+    asset: "SOL",
     type: "open",
     side: "short",
     leverage: 5,
@@ -19,12 +14,7 @@ const HISTORY = [
   {
     id: "2",
     txHash: "2",
-    token: {
-      account: "2",
-      symbol: "Token 2",
-      network: "Solana",
-      uri: "https://placeholder.com/16x16",
-    },
+    asset: "USDC",
     type: "close",
     side: "long",
     leverage: 5,
@@ -36,12 +26,7 @@ const HISTORY = [
   {
     id: "3",
     txHash: "3",
-    token: {
-      account: "3",
-      symbol: "Token 3",
-      network: "Solana",
-      uri: "https://placeholder.com/16x16",
-    },
+    asset: "BTC",
     type: "open",
     side: "short",
     leverage: 5,
@@ -53,12 +38,7 @@ const HISTORY = [
   {
     id: "4",
     txHash: "4",
-    token: {
-      account: "4",
-      symbol: "Token 4",
-      network: "Solana",
-      uri: "https://placeholder.com/16x16",
-    },
+    asset: "ETH",
     type: "close",
     side: "long",
     leverage: 5,

@@ -3,10 +3,10 @@ import cn from "classnames";
 import { mkLayoutStyles } from "@4x.pro/shared/styles/layout";
 
 type Props = {
-  animateHeight?: boolean;
+  layoutIsDragging?: boolean;
 };
 
-const mkTradeModuleStyles = ({ animateHeight }: Props) => {
+const mkTradeModuleStyles = ({ layoutIsDragging }: Props) => {
   const layoutStyles = mkLayoutStyles();
   return {
     root: cn(
@@ -28,7 +28,9 @@ const mkTradeModuleStyles = ({ animateHeight }: Props) => {
     ),
     contentSeparator: cn("w-full", "h-[12px]", "cursor-row-resize"),
     tradingView: cn(layoutStyles.cardSurface, layoutStyles.cardPaddings, {
-      [cn("transition-[height]", "will-change-[height]")]: animateHeight,
+      [cn("transition-[height]", "duration-500", "will-change-[height]")]:
+        !layoutIsDragging,
+      ["pointer-events-none"]: layoutIsDragging,
     }),
     tableTabs: cn(layoutStyles.cardSurface),
     tableTab: cn(layoutStyles.cardPaddings, "*:px-[4px]"),

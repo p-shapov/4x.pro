@@ -191,7 +191,13 @@
     "@next/next/no-img-element": "off",
     "react/display-name": "off"
   },
-  "ignorePatterns": ["node_modules", ".next", "generated", "*.config.*"],
+  "ignorePatterns": [
+    "node_modules",
+    ".next",
+    "generated",
+    "*.config.*",
+    "public"
+  ],
   "overrides": [
     {
       "files": ["src/app/**/*"],

@@ -1,20 +1,16 @@
 import cn from "classnames";
 import type { FC } from "react";
 
+import type { Token } from "@4x.pro/configs/token-config";
 import { mkTableStyles } from "@4x.pro/shared/styles/table";
 import { formatRate } from "@4x.pro/shared/utils/number";
-import { Token } from "@4x.pro/ui-kit/token";
+import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
 
 type Props = {
   items: {
     id: string;
     txHash: string;
-    token: {
-      account: string;
-      symbol: string;
-      network: "solana";
-      uri: string;
-    };
+    asset: Token;
     type: "open" | "close";
     side: "short" | "long";
     leverage: number;
@@ -54,12 +50,7 @@ const HistoryTable: FC<Props> = ({ items }) => {
             className={cn(tableStyles.row, tableStyles.rowDelimiter)}
           >
             <td className={tableStyles.cell}>
-              <Token
-                symbol={item.token.symbol}
-                uri={item.token.uri}
-                network={item.token.network}
-                gap={8}
-              />
+              <TokenBadge token={item.asset} showNetwork gap={8} />
             </td>
             <td className={tableStyles.cell}>{item.type}</td>
             <td className={tableStyles.cell}>

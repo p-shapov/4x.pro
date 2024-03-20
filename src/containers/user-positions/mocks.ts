@@ -1,12 +1,7 @@
 const POSITIONS = [
   {
     id: "1",
-    token: {
-      account: "1",
-      symbol: "Token 1",
-      network: "Solana",
-      uri: "https://placeholder.com/16x16",
-    },
+    asset: "SOL",
     side: "short",
     leverage: 5,
     size: 100,
@@ -18,12 +13,7 @@ const POSITIONS = [
   },
   {
     id: "2",
-    token: {
-      account: "2",
-      symbol: "Token 2",
-      network: "Solana",
-      uri: "https://placeholder.com/16x16",
-    },
+    asset: "BTC",
     side: "long",
     leverage: 5,
     size: 100,
@@ -35,12 +25,7 @@ const POSITIONS = [
   },
   {
     id: "3",
-    token: {
-      account: "3",
-      symbol: "Token 3",
-      network: "Solana",
-      uri: "https://placeholder.com/16x16",
-    },
+    asset: "USDC",
     side: "short",
     leverage: 5,
     size: 100,
@@ -52,12 +37,7 @@ const POSITIONS = [
   },
   {
     id: "4",
-    token: {
-      account: "4",
-      symbol: "Token 4",
-      network: "Solana",
-      uri: "https://placeholder.com/16x16",
-    },
+    asset: "ETH",
     side: "long",
     leverage: 5,
     size: 100,

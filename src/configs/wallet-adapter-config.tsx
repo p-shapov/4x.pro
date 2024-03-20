@@ -1,5 +1,5 @@
 import type { Adapter } from "@solana/wallet-adapter-base";
-import { WalletAdapterNetwork as WalletAdapterNetworks } from "@solana/wallet-adapter-base";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import {
   ConnectionProvider,
   WalletProvider,
@@ -8,11 +8,11 @@ import { SolflareWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
 import type { FC, PropsWithChildren } from "react";
 
-const WalletAdapterNetwork =
+const Network =
   process.env.NEXT_PUBLIC_IS_DEVNET === "true"
-    ? WalletAdapterNetworks.Devnet
-    : WalletAdapterNetworks.Mainnet;
-const endpoint = clusterApiUrl(WalletAdapterNetwork);
+    ? WalletAdapterNetwork.Devnet
+    : WalletAdapterNetwork.Mainnet;
+const endpoint = clusterApiUrl(Network);
 const wallets: Adapter[] = [new SolflareWalletAdapter()];
 
 const WalletAdapterProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -23,4 +23,4 @@ const WalletAdapterProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-export { WalletAdapterProvider, WalletAdapterNetwork };
+export { WalletAdapterProvider, Network };

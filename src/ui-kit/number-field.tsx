@@ -9,7 +9,7 @@ import type { PropsWithStyles } from "@4x.pro/shared/types";
 type Props = {
   label?: string;
   value?: number | "";
-  defaultValue?: number;
+  defaultValue?: number | "";
   placeholder?: string;
   postfix?: ReactNode;
   min?: number;

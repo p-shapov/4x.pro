@@ -4,59 +4,63 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useWatch } from "react-hook-form";
 
+import { tokenList } from "@4x.pro/configs/token-config";
+import type { Token } from "@4x.pro/configs/token-config";
+import { useWatchTokenInfo } from "@4x.pro/shared/hooks/use-token-info";
+import { formatCurrency_USD } from "@4x.pro/shared/utils/number";
 import { TokenField } from "@4x.pro/ui-kit/token-field";
 
 import type { SubmitData } from "./schema";
 import { mkPositionStyles } from "./styles";
 
-type Token = {
-  account: string;
-  symbol: string;
-  uri: string;
-};
-
 type Props = {
-  baseTokenList: Token[];
   quoteToken: Token;
   form: UseFormReturn<SubmitData>;
 };
 
-const Position: FC<Props> = ({ form, baseTokenList, quoteToken }) => {
+const Position: FC<Props> = ({ form, quoteToken }) => {
   const [changingField, setChangingField] = useState<"base" | "quote">("base");
   const positionStyles = mkPositionStyles();
   // TODO :: replace by real rate
   const rate = 129.45;
-  const baseToken = useWatch({ control: form.control, name: "position.base" });
+  const base = useWatch({ control: form.control, name: "position.base" });
   const leverage = useWatch({ control: form.control, name: "leverage" }) || 1;
+  const quoteTokenInfo = useWatchTokenInfo(quoteToken);
   const mkHandleChangeBase =
-    (onChange: (data: { value: number; tokenAccount: string }) => void) =>
-    (data: { value: number; tokenAccount: string }) => {
+    (onChange: (data: { amount: number; token: Token }) => void) =>
+    (data: { amount: number; token: Token }) => {
       setChangingField("base");
       onChange(data);
       form.setValue("position.quote", {
-        ...quoteToken,
-        value: data.value / rate,
+        token: quoteToken,
+        amount: data.amount / rate,
       });
     };
   const mkHandleChangeQuote =
-    (onChange: (data: { value: number; tokenAccount: string }) => void) =>
-    (data: { value: number; tokenAccount: string }) => {
+    (onChange: (data: { amount: number; token: Token }) => void) =>
+    (data: { amount: number; token: Token }) => {
       setChangingField("quote");
       onChange(data);
       form.setValue("position.base", {
-        ...baseToken,
-        value: data.value * rate,
+        token: base.token,
+        amount: data.amount * rate,
       });
     };
   return (
     <fieldset className={positionStyles.root}>
       <div className={positionStyles.stats}>
         <span className={positionStyles.statsItem}>
-          Market: <span className={positionStyles.statsValue}>129.45 $</span>
+          Market:{" "}
+          <span className={positionStyles.statsValue}>
+            {formatCurrency_USD(quoteTokenInfo.priceData?.price, 2)}
+          </span>
         </span>
         <span className={positionStyles.statsDelimiter} />
         <span className={positionStyles.statsItem}>
-          Limit: <span className={positionStyles.statsValue}>129.45 $</span>
+          Limit:{" "}
+          <span className={positionStyles.statsValue}>
+            {formatCurrency_USD(quoteTokenInfo.priceData?.price, 2)}
+          </span>
         </span>
       </div>
       <Controller<SubmitData, "position.base">
@@ -65,12 +69,14 @@ const Position: FC<Props> = ({ form, baseTokenList, quoteToken }) => {
         render={({ field: { onChange, value: data } }) => (
           <TokenField
             placeholder="0.00"
-            tokenList={baseTokenList}
-            value={
-              (data &&
-                data.value / (changingField === "quote" ? leverage : 1)) ||
-              ""
-            }
+            tokenList={tokenList}
+            value={{
+              amount:
+                (data.amount &&
+                  data.amount / (changingField === "quote" ? leverage : 1)) ||
+                "",
+              token: data.token,
+            }}
             onChange={mkHandleChangeBase(onChange)}
           />
         )}
@@ -82,11 +88,13 @@ const Position: FC<Props> = ({ form, baseTokenList, quoteToken }) => {
           <TokenField
             placeholder="0.00"
             tokenList={[quoteToken]}
-            value={
-              (data &&
-                data.value * (changingField === "base" ? leverage : 1)) ||
-              ""
-            }
+            value={{
+              amount:
+                (data.amount &&
+                  data.amount * (changingField === "base" ? leverage : 1)) ||
+                "",
+              token: data.token,
+            }}
             onChange={mkHandleChangeQuote(onChange)}
           />
         )}

@@ -13,34 +13,45 @@ import { UserPositions } from "@4x.pro/containers/user-positions";
 import { useResizableLayout } from "@4x.pro/shared/hooks/use-resizable-layout";
 import { Tabs } from "@4x.pro/ui-kit/tabs";
 
-import { BASE_TOKENS, QUOTE_TOKEN } from "./mocks";
 import { mkTradeModuleStyles } from "./styles";
+
+const TRADING_VIEW_ID = "trading-view";
 
 const TradeModule = () => {
   const contentRef = useRef<HTMLDivElement>(null);
-  const [animateHeight, setAnimateHeight] = useState(true);
-  const { position, separatorProps } = useResizableLayout("trade-module", {
-    initial: 500,
-    max: 600,
-    min: 200,
-    axis: "y",
-    containerRef: contentRef,
+  const [side, setSide] = useState<"long" | "short">("long");
+  const { position, separatorProps, isDragging } = useResizableLayout(
+    "trade-module",
+    {
+      initial: 500,
+      max: 600,
+      min: 200,
+      axis: "y",
+      containerRef: contentRef,
+    },
+  );
+  const tradeModuleStyles = mkTradeModuleStyles({
+    layoutIsDragging: isDragging,
   });
-  const tradeModuleStyles = mkTradeModuleStyles({ animateHeight });
-  const tradeForm = useTradeForm();
+  const tradeForm = useTradeForm({
+    defaultPositionTokens: {
+      base: "BTC",
+      quote: "SOL",
+    },
+  });
+  const baseToken = useWatch({
+    control: tradeForm.control,
+    name: "position.base.token",
+  });
   const leverage = useWatch({ control: tradeForm.control, name: "leverage" });
   return (
     <div className={tradeModuleStyles.root}>
       <div className={tradeModuleStyles.header}></div>
       <div className={tradeModuleStyles.content} ref={contentRef}>
         <div
+          id={TRADING_VIEW_ID}
           className={tradeModuleStyles.tradingView}
-          style={{
-            height: position,
-          }}
-          onTransitionEnd={() => {
-            if (animateHeight) setAnimateHeight(false);
-          }}
+          style={{ height: position }}
         >
           TRADING VIEW
         </div>
@@ -86,6 +97,8 @@ const TradeModule = () => {
         <div className={tradeModuleStyles.sidebarTabs}>
           <Tabs
             stretchTabs
+            value={side}
+            onChange={setSide}
             classNames={{
               tab: tradeModuleStyles.sidebarTab,
               panels: tradeModuleStyles.sidebarTabContent,
@@ -101,25 +114,18 @@ const TradeModule = () => {
               },
             ]}
             panels={{
-              long: (
-                <TradeLongForm
-                  form={tradeForm}
-                  baseTokenList={BASE_TOKENS}
-                  quoteToken={QUOTE_TOKEN}
-                />
-              ),
-              short: (
-                <TradeShortForm
-                  form={tradeForm}
-                  baseTokenList={BASE_TOKENS}
-                  quoteToken={QUOTE_TOKEN}
-                />
-              ),
+              long: <TradeLongForm form={tradeForm} quoteToken="SOL" />,
+              short: <TradeShortForm form={tradeForm} quoteToken="SOL" />,
             }}
           />
         </div>
         <div className={tradeModuleStyles.sidebarStats}>
-          <TradeStats collateralToken={QUOTE_TOKEN} leverage={leverage} />
+          <TradeStats
+            baseToken={baseToken}
+            quoteToken="SOL"
+            side={side}
+            leverage={leverage}
+          />
         </div>
       </div>
     </div>
