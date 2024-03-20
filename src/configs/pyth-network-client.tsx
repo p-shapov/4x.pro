@@ -4,11 +4,11 @@ import {
   getPythProgramKeyForCluster,
   PythHttpClient,
 } from "@pythnetwork/client";
-import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
+import { Connection, PublicKey } from "@solana/web3.js";
 
 import { Network } from "./wallet-adapter-config";
 
-const endpoint = clusterApiUrl(Network);
+const endpoint = process.env.NEXT_PUBLIC_RPC_URL;
 const pythProgramKey = getPythProgramKeyForCluster(Network);
 const httpConnection = new Connection(endpoint);
 const pythHttpClient = new PythHttpClient(

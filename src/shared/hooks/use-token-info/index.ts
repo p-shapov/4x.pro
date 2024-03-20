@@ -14,7 +14,7 @@ const pythConnectionsMap = new Map<Token, PythConnection>();
 type TokenProductInfo = Parameters<PythPriceCallback>[0];
 type TokenPriceInfo = Parameters<PythPriceCallback>[1];
 
-const useWatchTokenInfoStore = create<{
+const useTokenInfoStore = create<{
   tokenInfoRecord: Partial<
     Record<
       Token,
@@ -71,45 +71,47 @@ const useWatchTokenInfoStore = create<{
   },
 }));
 
-const useWatchTokenInfo = (token: Token, watch: boolean = true) => {
-  const connectionsRecord = useWatchTokenInfoStore(
+const useTokenInfo = (token: Token, watch: boolean = true) => {
+  const connectionsRecord = useTokenInfoStore(
     (state) => state.connectionsRecord,
   );
-  const setTokenInfo = useWatchTokenInfoStore((state) => state.setTokenInfo);
-  const incrementConnectionsCount = useWatchTokenInfoStore(
+  const setTokenInfo = useTokenInfoStore((state) => state.setTokenInfo);
+  const incrementConnectionsCount = useTokenInfoStore(
     (state) => state.incrementConnectionsCount,
   );
-  const decrementConnectionsCount = useWatchTokenInfoStore(
+  const decrementConnectionsCount = useTokenInfoStore(
     (state) => state.decrementConnectionsCount,
   );
   useEffect(() => {
-    if (watch) {
-      if (connectionsRecord[token] === 0) {
-        if (!pythConnectionsMap.has(token)) {
-          const pythConnection = createPythConnectionForFeedId(
-            tokenConfig.PythFeedIds_to_USD[token],
-          );
-          pythConnectionsMap.set(token, pythConnection);
-          pythConnection.onPriceChange((...tokenInfo) => {
-            setTokenInfo(token, tokenInfo);
-          });
-          pythConnection.start();
-        }
-      }
-      incrementConnectionsCount(token);
+    if (!watch) return;
+    const hasConnection = pythConnectionsMap.has(token);
+    if (!hasConnection) {
+      const pythConnection = createPythConnectionForFeedId(
+        tokenConfig.PythFeedIds_to_USD[token],
+      );
+      pythConnectionsMap.set(token, pythConnection);
+      pythConnection.onPriceChange((...tokenInfo) => {
+        setTokenInfo(token, tokenInfo);
+      });
+      pythConnection.start();
+    }
+    incrementConnectionsCount(token);
 
-      return () => {
+    return () => {
+      const pythConnection = pythConnectionsMap.get(token);
+      if (pythConnection) {
         decrementConnectionsCount(token);
         if (connectionsRecord[token] === 0) {
-          pythConnectionsMap.get(token)?.stop();
+          pythConnection.stop();
           pythConnectionsMap.delete(token);
         }
-      };
-    }
+      }
+    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, watch]);
 
-  return useWatchTokenInfoStore(
+  return useTokenInfoStore(
     (state) =>
       state.tokenInfoRecord[token] ||
       ({} as {
@@ -119,4 +121,4 @@ const useWatchTokenInfo = (token: Token, watch: boolean = true) => {
   );
 };
 
-export { useWatchTokenInfo };
+export { useTokenInfo };

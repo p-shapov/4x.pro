@@ -6,7 +6,7 @@ import { Controller, useWatch } from "react-hook-form";
 
 import { tokenList } from "@4x.pro/configs/token-config";
 import type { Token } from "@4x.pro/configs/token-config";
-import { useWatchTokenInfo } from "@4x.pro/shared/hooks/use-token-info";
+import { useTokenInfo } from "@4x.pro/shared/hooks/use-token-info";
 import { formatCurrency_USD } from "@4x.pro/shared/utils/number";
 import { TokenField } from "@4x.pro/ui-kit/token-field";
 
@@ -25,7 +25,7 @@ const Position: FC<Props> = ({ form, quoteToken }) => {
   const rate = 129.45;
   const base = useWatch({ control: form.control, name: "position.base" });
   const leverage = useWatch({ control: form.control, name: "leverage" }) || 1;
-  const quoteTokenInfo = useWatchTokenInfo(quoteToken);
+  const quoteTokenInfo = useTokenInfo(quoteToken);
   const mkHandleChangeBase =
     (onChange: (data: { amount: number; token: Token }) => void) =>
     (data: { amount: number; token: Token }) => {

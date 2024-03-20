@@ -4,7 +4,7 @@ import type { FC } from "react";
 import type { Token } from "@4x.pro/configs/token-config";
 import { tokenConfig } from "@4x.pro/configs/token-config";
 import { Network } from "@4x.pro/configs/wallet-adapter-config";
-import { useWatchTokenInfo } from "@4x.pro/shared/hooks/use-token-info";
+import { useTokenInfo } from "@4x.pro/shared/hooks/use-token-info";
 import { mkTokenStyles } from "@4x.pro/shared/styles/token-badge";
 import type { PropsWithStyles } from "@4x.pro/shared/types";
 import { formatPercentage } from "@4x.pro/shared/utils/number";
@@ -20,7 +20,7 @@ type Props = {
 const TokenBadge: FC<
   Omit<PropsWithStyles<Props, typeof mkTokenStyles>, "dir">
 > = ({ token, showNetwork, showDir, bold = true, gap = 4 }) => {
-  const tokenInfo = useWatchTokenInfo(token, showNetwork);
+  const tokenInfo = useTokenInfo(token, showDir);
   const { price = 0, previousPrice = 0 } = tokenInfo?.priceData || {};
   const changePercentage = (price - previousPrice) / previousPrice;
   const dir = changePercentage > 0 ? "up" : "down";

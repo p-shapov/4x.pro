@@ -1,7 +1,7 @@
 import type { FC } from "react";
 
 import type { Token } from "@4x.pro/configs/token-config";
-import { useWatchTokenInfo } from "@4x.pro/shared/hooks/use-token-info";
+import { useTokenInfo } from "@4x.pro/shared/hooks/use-token-info";
 import { formatCurrency_USD, formatRate } from "@4x.pro/shared/utils/number";
 import { Definition } from "@4x.pro/ui-kit/definition";
 
@@ -16,7 +16,7 @@ type Props = {
 
 const TradeStats: FC<Props> = ({ baseToken, quoteToken, leverage }) => {
   const tradeStatsStyles = mkTradeStatsStyles();
-  const baseTokenInfo = useWatchTokenInfo(baseToken);
+  const baseTokenInfo = useTokenInfo(baseToken);
   const { price } = baseTokenInfo.priceData || {};
   return (
     <dl className={tradeStatsStyles.root}>
