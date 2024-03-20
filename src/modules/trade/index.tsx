@@ -11,6 +11,7 @@ import { UserHistory } from "@4x.pro/containers/user-history";
 import { UserOrders } from "@4x.pro/containers/user-orders";
 import { UserPositions } from "@4x.pro/containers/user-positions";
 import { useResizableLayout } from "@4x.pro/shared/hooks/use-resizable-layout";
+import { useTradingViewWidget } from "@4x.pro/shared/hooks/use-trading-view-widget";
 import { Tabs } from "@4x.pro/ui-kit/tabs";
 
 import { mkTradeModuleStyles } from "./styles";
@@ -40,6 +41,13 @@ const TradeModule = () => {
     },
   });
   const leverage = useWatch({ control: tradeForm.control, name: "leverage" });
+  useTradingViewWidget({
+    variables: {
+      container_id: TRADING_VIEW_ID,
+      token: "Sol_SOL",
+      interval: "1",
+    },
+  });
   return (
     <div className={tradeModuleStyles.root}>
       <div className={tradeModuleStyles.header}></div>
