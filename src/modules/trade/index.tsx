@@ -119,8 +119,8 @@ const TradeModule = () => {
                 },
               ]}
               panels={{
-                long: <TradeLongForm form={tradeForm} quoteToken="Sol_SOL" />,
-                short: <TradeShortForm form={tradeForm} quoteToken="Sol_SOL" />,
+                long: <TradeLongForm form={tradeForm} />,
+                short: <TradeShortForm form={tradeForm} />,
               }}
             />
           </TradeFormProvider>

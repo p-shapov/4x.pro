@@ -2,7 +2,7 @@ import cn from "classnames";
 import type { FC } from "react";
 
 import type { Formatter } from "@4x.pro/shared/utils/number";
-import { formatIdentity } from "@4x.pro/shared/utils/number";
+import { formatDefault } from "@4x.pro/shared/utils/number";
 
 import { Icon } from "./icon";
 
@@ -15,7 +15,7 @@ type Props = {
 const Comparison: FC<Props> = ({
   initial,
   final,
-  formatValue = formatIdentity,
+  formatValue = formatDefault,
 }) => {
   return (
     <span className={cn("flex", "gap-[0.4rem]", "text-inherit")}>

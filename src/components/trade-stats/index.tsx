@@ -29,12 +29,12 @@ const TradeStats: FC<Props> = ({ side, collateralToken, leverage }) => {
       <Definition term="Leverage" content={formatRate(leverage, 1)} />
       <Definition
         term="Entry Price"
-        content={<TokenPrice token={collateralToken} />}
+        content={<TokenPrice token={collateralToken} fractionalDigits={2} />}
       />
       <Definition
         term="Liq. Price"
         content={
-          <TokenPrice token={collateralToken}>
+          <TokenPrice token={collateralToken} fractionalDigits={2}>
             {useCallback(
               (price?: number) =>
                 price &&

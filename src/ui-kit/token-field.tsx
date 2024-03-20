@@ -15,6 +15,7 @@ type Props = {
   defaultValue?: { amount: number | ""; token: Token };
   placeholder?: string;
   readonly?: boolean;
+  onFocus?: () => void;
   onChange?: (data: { amount: number; token: Token }) => void;
 };
 

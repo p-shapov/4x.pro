@@ -16,7 +16,7 @@ const TokenPrice: FC<Props> = ({
   children = 1,
   token,
   currency = "$",
-  fractionalDigits = 2,
+  fractionalDigits,
 }) => {
   const { priceData } = useWatchPythPriceFeed(token);
 

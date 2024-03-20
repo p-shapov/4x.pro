@@ -16,6 +16,7 @@ type Props = {
   max?: number;
   step?: number;
   readonly?: boolean;
+  onFocus?: () => void;
   onChange?: (value: number) => void;
 };
 

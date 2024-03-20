@@ -19,7 +19,6 @@ import { mkTradeFormStyles } from "./styles";
 type Props = {
   form: UseFormReturn<SubmitData>;
   title: string;
-  quoteToken: Token;
 };
 
 const useTradeForm = ({
@@ -50,14 +49,14 @@ const useTradeForm = ({
   return form;
 };
 
-const TradeForm: FC<Props> = ({ title, form, quoteToken }) => {
+const TradeForm: FC<Props> = ({ title, form }) => {
   const tradeFormStyles = mkTradeFormStyles();
   const handleSubmit = form.handleSubmit((data) => {
     alert(JSON.stringify(data));
   });
   return (
     <form className={tradeFormStyles.root} onSubmit={handleSubmit}>
-      <Position form={form} quoteToken={quoteToken} />
+      <Position form={form} />
       <Leverage form={form} />
       <Slippage form={form} />
       <ClosingOptions form={form} />

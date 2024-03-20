@@ -3,7 +3,7 @@ import type { FC } from "react";
 
 import { mkPresetsStyles } from "@4x.pro/shared/styles/presets";
 import type { Formatter } from "@4x.pro/shared/utils/number";
-import { formatIdentity } from "@4x.pro/shared/utils/number";
+import { formatDefault } from "@4x.pro/shared/utils/number";
 
 type Props = {
   options: number[];
@@ -17,7 +17,7 @@ const Presets: FC<Props> = ({
   value,
   defaultValue,
   options,
-  formatValue = formatIdentity,
+  formatValue = formatDefault,
   onChange,
 }) => {
   const presetsStyles = mkPresetsStyles();

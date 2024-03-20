@@ -12,6 +12,7 @@ type Props = {
   placeholder?: string;
   postfix?: ReactNode;
   readonly?: boolean;
+  onFocus?: () => void;
   onChange?: (value: string) => void;
 };
 

@@ -5,7 +5,7 @@ import type { ChangeEvent, FC } from "react";
 
 import { mkRangeStyles } from "@4x.pro/shared/styles/range";
 import type { Formatter } from "@4x.pro/shared/utils/number";
-import { formatIdentity } from "@4x.pro/shared/utils/number";
+import { formatDefault } from "@4x.pro/shared/utils/number";
 
 type Props = {
   value?: number;
@@ -25,7 +25,7 @@ const RangeSlider: FC<Props> = ({
   tickStep = step,
   defaultValue = 0,
   onChange,
-  formatValue = formatIdentity,
+  formatValue = formatDefault,
   ...rest
 }) => {
   const rangeStyles = mkRangeStyles();
