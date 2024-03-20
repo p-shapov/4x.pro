@@ -28,7 +28,7 @@ const TokenBadge: FC<
   return (
     <span className={tokenStyles.root}>
       <img
-        src={tokenConfig.TokenLogos[token] || "/tokens/default.svg"}
+        src={tokenConfig.TokenLogos[token] || "/tokens/fallback.svg"}
         alt={token}
         width={16}
         height={16}
