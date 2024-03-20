@@ -10,6 +10,7 @@ import { Button } from "@4x.pro/ui-kit/button";
 import { ClosingOptions } from "./closing-options";
 import { Leverage } from "./leverage";
 import { Position } from "./position";
+import { TradeFormProvider } from "./provider";
 import type { SubmitData } from "./schema";
 import { submitDataSchema } from "./schema";
 import { Slippage } from "./slippage";
@@ -36,11 +37,11 @@ const useTradeForm = ({
       position: {
         base: {
           token: defaultPositionTokens.base,
-          amount: 0,
+          size: 0,
         },
         quote: {
           token: defaultPositionTokens.quote,
-          amount: 0,
+          size: 0,
         },
       },
     },
@@ -52,7 +53,7 @@ const useTradeForm = ({
 const TradeForm: FC<Props> = ({ title, form, quoteToken }) => {
   const tradeFormStyles = mkTradeFormStyles();
   const handleSubmit = form.handleSubmit((data) => {
-    console.log(data);
+    alert(JSON.stringify(data));
   });
   return (
     <form className={tradeFormStyles.root} onSubmit={handleSubmit}>
@@ -67,4 +68,4 @@ const TradeForm: FC<Props> = ({ title, form, quoteToken }) => {
   );
 };
 
-export { TradeForm, useTradeForm };
+export { TradeForm, useTradeForm, TradeFormProvider };

@@ -2,10 +2,9 @@ import cn from "classnames";
 import type { FC } from "react";
 
 import type { Token } from "@4x.pro/configs/token-config";
-import { useTokenInfo } from "@4x.pro/shared/hooks/use-token-info";
 import { mkTableStyles } from "@4x.pro/shared/styles/table";
-import { formatCurrency_USD } from "@4x.pro/shared/utils/number";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
+import { TokenPrice } from "@4x.pro/ui-kit/token-price";
 
 type Props = {
   items: {
@@ -19,7 +18,6 @@ const TableRow: FC<{ asset: Token; balance: number }> = ({
   balance,
 }) => {
   const tableStyles = mkTableStyles();
-  const { priceData } = useTokenInfo(asset);
   return (
     <tr className={cn(tableStyles.row, tableStyles.rowDelimiter)} key={asset}>
       <td className={tableStyles.cell}>
@@ -28,7 +26,7 @@ const TableRow: FC<{ asset: Token; balance: number }> = ({
       <td className={tableStyles.cell}>{balance}</td>
       <td className={tableStyles.cell}>-</td>
       <td className={tableStyles.cell}>
-        {formatCurrency_USD(priceData?.price && priceData.price * balance, 2)}
+        <TokenPrice token={asset}>{balance}</TokenPrice>
       </td>
     </tr>
   );

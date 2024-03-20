@@ -7,11 +7,11 @@ type SubmitData = {
   position: {
     base: {
       token: Token;
-      amount: number;
+      size: number;
     };
     quote: {
       token: Token;
-      amount: number;
+      size: number;
     };
   };
   leverage: number;
@@ -24,11 +24,11 @@ const submitDataSchema = yup.object<SubmitData>().shape({
   position: yup.object().shape({
     base: yup.object().shape({
       token: yup.string().required().oneOf(tokenList),
-      amount: yup.number().required().min(1),
+      size: yup.number().required().min(1),
     }),
     quote: yup.object().shape({
       token: yup.string().required().oneOf(tokenList),
-      amount: yup.number().required().min(1),
+      size: yup.number().required().min(1),
     }),
   }),
   leverage: yup.number().min(1.1).max(100).required(),

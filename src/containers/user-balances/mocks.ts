@@ -1,18 +1,18 @@
 const BALANCES = [
   {
-    asset: "SOL",
+    asset: "Sol_SOL",
     balance: 100,
   },
   {
-    asset: "USDC",
+    asset: "Sol_USDC",
     balance: 100,
   },
   {
-    asset: "BTC",
+    asset: "Sol_BTC",
     balance: 100,
   },
   {
-    asset: "ETH",
+    asset: "Sol_ETH",
     balance: 100,
   },
 ];

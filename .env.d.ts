@@ -4,7 +4,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       NEXT_PUBLIC_IS_DEVNET: 'true' | 'false';
-      NEXT_PUBLIC_RPC_URL: string;
+      NEXT_PUBLIC_SOLANA_RPC_URL: string;
     }
   }
 }

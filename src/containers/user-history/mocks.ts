@@ -2,7 +2,7 @@ const HISTORY = [
   {
     id: "1",
     txHash: "1",
-    asset: "SOL",
+    asset: "Sol_SOL",
     type: "open",
     side: "short",
     leverage: 5,
@@ -14,7 +14,7 @@ const HISTORY = [
   {
     id: "2",
     txHash: "2",
-    asset: "USDC",
+    asset: "Sol_USDC",
     type: "close",
     side: "long",
     leverage: 5,
@@ -26,7 +26,7 @@ const HISTORY = [
   {
     id: "3",
     txHash: "3",
-    asset: "BTC",
+    asset: "Sol_BTC",
     type: "open",
     side: "short",
     leverage: 5,
@@ -38,7 +38,7 @@ const HISTORY = [
   {
     id: "4",
     txHash: "4",
-    asset: "ETH",
+    asset: "Sol_ETH",
     type: "close",
     side: "long",
     leverage: 5,

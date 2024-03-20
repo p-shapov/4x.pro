@@ -1,7 +1,7 @@
 const ORDERS = [
   {
     id: "1",
-    asset: "SOL",
+    asset: "Sol_SOL",
     leverage: 5,
     side: "short",
     size: 100,
@@ -11,7 +11,7 @@ const ORDERS = [
   },
   {
     id: "2",
-    asset: "BTC",
+    asset: "Sol_BTC",
     leverage: 5,
     side: "long",
     size: 100,
@@ -21,7 +21,7 @@ const ORDERS = [
   },
   {
     id: "3",
-    asset: "USDC",
+    asset: "Sol_USDC",
     leverage: 5,
     side: "short",
     size: 100,
@@ -31,7 +31,7 @@ const ORDERS = [
   },
   {
     id: "4",
-    asset: "ETH",
+    asset: "Sol_ETH",
     leverage: 5,
     side: "long",
     size: 100,

@@ -1,4 +1,4 @@
-const tokenList = ["BTC", "ETH", "USDC", "SOL"] as const;
+const tokenList = ["Sol_BTC", "Sol_ETH", "Sol_USDC", "Sol_SOL"] as const;
 type Token = (typeof tokenList)[number];
 
 export { tokenList };

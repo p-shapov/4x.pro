@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import { useWatch } from "react-hook-form";
 
-import { useTradeForm } from "@4x.pro/components/trade-form";
+import { TradeFormProvider, useTradeForm } from "@4x.pro/components/trade-form";
 import { TradeStats } from "@4x.pro/components/trade-stats";
 import { TradeLongForm } from "@4x.pro/containers/trade-long-form";
 import { TradeShortForm } from "@4x.pro/containers/trade-short-form";
@@ -35,13 +35,9 @@ const TradeModule = () => {
   });
   const tradeForm = useTradeForm({
     defaultPositionTokens: {
-      base: "BTC",
-      quote: "SOL",
+      base: "Sol_BTC",
+      quote: "Sol_SOL",
     },
-  });
-  const baseToken = useWatch({
-    control: tradeForm.control,
-    name: "position.base.token",
   });
   const leverage = useWatch({ control: tradeForm.control, name: "leverage" });
   return (
@@ -95,34 +91,35 @@ const TradeModule = () => {
       </div>
       <div className={tradeModuleStyles.sidebar}>
         <div className={tradeModuleStyles.sidebarTabs}>
-          <Tabs
-            stretchTabs
-            value={side}
-            onChange={setSide}
-            classNames={{
-              tab: tradeModuleStyles.sidebarTab,
-              panels: tradeModuleStyles.sidebarTabContent,
-            }}
-            items={[
-              {
-                id: "long",
-                content: "Long",
-              },
-              {
-                id: "short",
-                content: "Short",
-              },
-            ]}
-            panels={{
-              long: <TradeLongForm form={tradeForm} quoteToken="SOL" />,
-              short: <TradeShortForm form={tradeForm} quoteToken="SOL" />,
-            }}
-          />
+          <TradeFormProvider>
+            <Tabs
+              stretchTabs
+              value={side}
+              onChange={setSide}
+              classNames={{
+                tab: tradeModuleStyles.sidebarTab,
+                panels: tradeModuleStyles.sidebarTabContent,
+              }}
+              items={[
+                {
+                  id: "long",
+                  content: "Long",
+                },
+                {
+                  id: "short",
+                  content: "Short",
+                },
+              ]}
+              panels={{
+                long: <TradeLongForm form={tradeForm} quoteToken="Sol_SOL" />,
+                short: <TradeShortForm form={tradeForm} quoteToken="Sol_SOL" />,
+              }}
+            />
+          </TradeFormProvider>
         </div>
         <div className={tradeModuleStyles.sidebarStats}>
           <TradeStats
-            baseToken={baseToken}
-            quoteToken="SOL"
+            collateralToken="Sol_SOL"
             side={side}
             leverage={leverage}
           />
