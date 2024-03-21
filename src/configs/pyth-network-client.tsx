@@ -26,12 +26,5 @@ const pythConnection = new PythConnection(
     (feedId) => new PublicKey(feedId),
   ),
 );
-const createPythConnectionForFeedId = (feedId: string) =>
-  new PythConnection(
-    httpConnection,
-    pythProgramKey,
-    httpConnection.commitment,
-    [new PublicKey(feedId)],
-  );
 
-export { pythHttpClient, pythConnection, createPythConnectionForFeedId };
+export { pythHttpClient, pythConnection };

@@ -14,9 +14,7 @@ const mkTradeModuleStyles = ({ layoutIsDragging }: Props) => {
       "grid-cols-[1fr_275px]",
       "grid-rows-[1fr]",
       "gap-[12px]",
-      "px-[32px]",
-      "pt-[32px]",
-      "h-[100vh]",
+      "h-full",
     ),
     header: cn("col-[1/3]", "h-[3.2rem]", "bg-card", "rounded-[3.2rem]"),
     content: cn(

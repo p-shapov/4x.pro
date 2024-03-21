@@ -20,7 +20,7 @@ const Comparison: FC<Props> = ({
   return (
     <span className={cn("flex", "gap-[0.4rem]", "text-inherit")}>
       <span className="text-content-2">{formatValue(initial, 2)}</span>
-      <Icon src="/icons/arrow-right.svg" color="green" />
+      <Icon src="/icons/arrow-right.svg" />
       {formatValue(final, 2)}
     </span>
   );

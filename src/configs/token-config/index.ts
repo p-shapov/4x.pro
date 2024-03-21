@@ -7,7 +7,7 @@ import type { Network } from "../network-config";
 type TokenConfig = {
   TradingViewSymbols: Record<Token, string>;
   PythFeedIds_to_USD: Record<Token, string>;
-  TokenLogos: Partial<Record<Token, string>>;
+  TokenLogos: Partial<Record<Token, `/coins/${string}.svg`>>;
   TokenNetworks: Record<Token, Network>;
   TokenSymbols: Record<Token, string>;
 };
@@ -19,9 +19,9 @@ const TradingViewSymbols: Record<Token, string> = {
   Sol_ETH: "PYTH:ETHUSD",
 };
 
-const TokenLogos: Partial<Record<Token, string>> = {
-  Sol_BTC: "/tokens/BTC.svg",
-  Sol_ETH: "/tokens/ETH.svg",
+const TokenLogos: Partial<Record<Token, `/coins/${string}.svg`>> = {
+  Sol_BTC: "/coins/BTC.svg",
+  Sol_ETH: "/coins/ETH.svg",
 };
 
 const TokenNetworks: Record<Token, Network> = {

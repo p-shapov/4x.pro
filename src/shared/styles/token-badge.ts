@@ -23,11 +23,11 @@ const mkTokenStyles = ({ dir = "up", bold = true, gap = 4 }: Props) => {
       "text-green": dir === "up",
       "text-red": dir === "down",
     }),
-    tradeDir: cn("inline-flex", "items-center"),
-    icon: cn("size-[1.6rem]", {
-      "bg-green": dir === "up",
-      "bg-red": dir === "down",
+    tradeDir: cn("inline-flex", "items-center", {
+      "text-green": dir === "up",
+      "text-red": dir === "down",
     }),
+    icon: cn("size-[1.6rem]"),
   };
 };
 

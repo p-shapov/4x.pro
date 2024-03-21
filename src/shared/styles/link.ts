@@ -36,8 +36,6 @@ const mkLinkStyles = ({
       "group-active:bg-opacity-70",
       "transition-color",
       {
-        "bg-accent": variant === "accent",
-        "bg-red": variant === "red",
         "size-[1.6rem]": size === "md",
         "size-[2.4rem]": size === "lg",
       },

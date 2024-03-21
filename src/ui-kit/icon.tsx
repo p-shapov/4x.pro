@@ -13,10 +13,11 @@ const Icon: FC<PropsWithClassName<Props>> = ({ className, src }) => {
   return (
     <span
       className={classNames(
-        className,
         "inline-flex",
         "mask-[var(--tw-icon-src)]",
         "mask-size-cover",
+        "bg-[currentColor]",
+        className,
       )}
       style={{
         // @ts-expect-error - CSS variable
