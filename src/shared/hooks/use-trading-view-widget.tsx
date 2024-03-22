@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved */
-import { createQuery } from "react-query-kit";
+import { useEffect, useState } from "react";
 
 import { tokenConfig } from "@4x.pro/configs/token-config";
 import type { Token } from "@4x.pro/configs/token-config";
@@ -14,16 +14,14 @@ declare global {
 }
 
 type Config = {
-  token: Token;
   container_id: string;
   interval: string;
 };
 
-const initTradingViewWidget = async ({
-  token,
-  container_id,
-  interval,
-}: Config) => {
+const initTradingViewWidget = async (
+  token: Token,
+  { container_id, interval }: Config,
+) => {
   // @ts-expect-error - external script
   await import(/* webpackIgnore: true */ "https://s3.tradingview.com/tv.js");
   return (
@@ -48,9 +46,33 @@ const initTradingViewWidget = async ({
   );
 };
 
-const useTradingViewWidget = createQuery({
-  queryKey: ["trading-view"],
-  fetcher: initTradingViewWidget,
-});
+const useTradingViewWidget = (
+  token: Token | undefined,
+  { container_id, interval }: Config,
+) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [widgetInstance, setWidgetInstance] = useState<any>(null);
+
+  useEffect(() => {
+    let cancel = false;
+    const initWidget = async () => {
+      if (token) {
+        const widget = await initTradingViewWidget(token, {
+          container_id,
+          interval,
+        });
+        if (!cancel) setWidgetInstance(widget);
+      }
+    };
+    initWidget();
+
+    return () => {
+      cancel = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, interval, container_id]);
+
+  return widgetInstance;
+};
 
 export { useTradingViewWidget };

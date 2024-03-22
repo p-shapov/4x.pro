@@ -22,7 +22,7 @@ const mkRangeStyles = () => {
       "[&::-webkit-slider-thumb]:transition-transform",
       "[&::-webkit-slider-thumb]:border-none",
       "[&::-webkit-slider-thumb]:rounded-[2rem]",
-      "[&::-webkit-slider-thumb]:bg-[url('/icons/range-thumb.svg')]",
+      "[&::-webkit-slider-thumb]:bg-[url('/images/range-thumb.svg')]",
       "[&::-moz-range-thumb]:w-[2.8rem]",
       "[&::-moz-range-thumb]:h-[2rem]",
       "[&::-moz-range-thumb]:bg-content-1",

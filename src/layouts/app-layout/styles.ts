@@ -11,6 +11,7 @@ const mkAppLayoutStyles = () => {
       "max-w-[1440px]",
       "m-auto",
       "h-[100vh]",
+      "grid-rows-[max-content_1fr]",
     ),
     header: cn(
       "grid",

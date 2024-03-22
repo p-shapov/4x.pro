@@ -4,7 +4,6 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useForm } from "react-hook-form";
 
-import type { Token } from "@4x.pro/configs/token-config";
 import { Button } from "@4x.pro/ui-kit/button";
 
 import { ClosingOptions } from "./closing-options";
@@ -21,25 +20,18 @@ type Props = {
   title: string;
 };
 
-const useTradeForm = ({
-  defaultPositionTokens,
-}: {
-  defaultPositionTokens: {
-    base: Token;
-    quote: Token;
-  };
-}) => {
+const useTradeForm = () => {
   const form = useForm<SubmitData>({
     defaultValues: {
       leverage: 1.1,
       slippage: 0.5,
       position: {
         base: {
-          token: defaultPositionTokens.base,
+          token: "Sol_USDC",
           size: 0,
         },
         quote: {
-          token: defaultPositionTokens.quote,
+          token: "Sol_SOL",
           size: 0,
         },
       },

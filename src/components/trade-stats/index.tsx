@@ -14,27 +14,27 @@ import { mkTradeStatsStyles } from "./styles";
 
 type Props = {
   side: "long" | "short";
-  collateralToken: Token;
+  collateral: Token;
   leverage: number;
 };
 
-const TradeStats: FC<Props> = ({ side, collateralToken, leverage }) => {
+const TradeStats: FC<Props> = ({ side, collateral, leverage }) => {
   const tradeStatsStyles = mkTradeStatsStyles();
   return (
     <dl className={tradeStatsStyles.root}>
       <Definition
         term="Collateral in"
-        content={<TokenBadge token={collateralToken} />}
+        content={<TokenBadge token={collateral} />}
       />
       <Definition term="Leverage" content={formatRate(leverage, 1)} />
       <Definition
         term="Entry Price"
-        content={<TokenPrice token={collateralToken} fractionalDigits={2} />}
+        content={<TokenPrice token={collateral} fractionalDigits={2} />}
       />
       <Definition
         term="Liq. Price"
         content={
-          <TokenPrice token={collateralToken} fractionalDigits={2}>
+          <TokenPrice token={collateral} fractionalDigits={2}>
             {useCallback(
               (price?: number) =>
                 price &&

@@ -26,8 +26,10 @@ const Position: FC<Props> = ({ form }) => {
   const base = useWatch({ control: form.control, name: "position.base" });
   const quote = useWatch({ control: form.control, name: "position.quote" });
   const leverage = useWatch({ control: form.control, name: "leverage" }) || 1;
-  const { priceData: baseTokenPriceData } = useWatchPythPriceFeed(base.token);
-  const { priceData: quoteTokenPriceData } = useWatchPythPriceFeed(quote.token);
+  const { priceData: baseTokenPriceData } =
+    useWatchPythPriceFeed(base?.token) || {};
+  const { priceData: quoteTokenPriceData } =
+    useWatchPythPriceFeed(quote?.token) || {};
   const rate =
     baseTokenPriceData?.price && quoteTokenPriceData?.price
       ? quoteTokenPriceData.price / baseTokenPriceData.price

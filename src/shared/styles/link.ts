@@ -20,7 +20,7 @@ const mkLinkStyles = ({
       "gap-[0.4rem]",
       "items-center",
       "group",
-      "transition-color",
+      "transition-colors",
       "hover:text-opacity-50",
       "active:text-opacity-70",
       {
@@ -31,15 +31,10 @@ const mkLinkStyles = ({
         uppercase: uppercase,
       },
     ),
-    icon: cn(
-      "group-hover:bg-opacity-50",
-      "group-active:bg-opacity-70",
-      "transition-color",
-      {
-        "size-[1.6rem]": size === "md",
-        "size-[2.4rem]": size === "lg",
-      },
-    ),
+    icon: cn({
+      "size-[1.6rem]": size === "md",
+      "size-[2.4rem]": size === "lg",
+    }),
   };
 };
 
