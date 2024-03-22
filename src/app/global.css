@@ -1,6 +1,6 @@
 @tailwind base;
 @layer base {
-  :root {
+  :root.dark {
     --rgb-white: 255 255 255;
     --rgb-body: 20 21 23;
     --rgb-card: 29 31 35;
@@ -12,6 +12,7 @@
     --rgb-accent: 81 141 249;
     --rgb-green: 81 249 189;
     --rgb-red: 249 81 145;
+    color-scheme: dark;
   }
 
   #__next {
@@ -20,8 +21,8 @@
 
   html {
     @apply text-[62.5%];
-    color-scheme: dark;
     scrollbar-gutter: stable;
+    scrollbar-width: thin;
   }
 
   body {

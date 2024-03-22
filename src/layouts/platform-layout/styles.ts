@@ -1,7 +1,13 @@
 import cn from "classnames";
 
-const mkAppLayoutStyles = () => {
+const mkPlatformLayoutStyles = () => {
   return {
+    overlay: cn(
+      "w-full",
+      "h-100vh",
+      "bg-[url('/images/app-bg.png')]",
+      "bg-cover",
+    ),
     root: cn(
       "relative",
       "grid",
@@ -27,4 +33,4 @@ const mkAppLayoutStyles = () => {
   };
 };
 
-export { mkAppLayoutStyles };
+export { mkPlatformLayoutStyles };
