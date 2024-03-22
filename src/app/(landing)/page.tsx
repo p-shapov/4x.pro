@@ -10,24 +10,47 @@ const RootPage: FC = () => {
     <div
       className={cn(
         "grid",
-        "grid-rows-[max-content_1fr]",
-        "max-w-[1200px]",
+        "mobile:grid-rows-[max-content_max-content]",
+        "not_mobile:grid-rows-[max-content_1fr]",
+        "mobile:content-center",
+        "max-w-[1280px]",
+        "items-between",
         "w-full",
         "mx-auto",
+        "px-[40px]",
         "pt-[60px]",
         "h-[100vh]",
         "overflow-hidden",
       )}
     >
-      <div className={cn("flex", "justify-between", "mb-[70px]")}>
-        <Image src="/images/logo.svg" alt="4X logo" width={798} height={66} />
+      <div
+        className={cn(
+          "flex",
+          "flex-nowrap",
+          "desktop:justify-between",
+          "not_desktop:flex-col",
+          "gap-[32px]",
+          "mb-[70px]",
+        )}
+      >
+        <div
+          className={cn(
+            "relative",
+            "w-full",
+            "max-w-[798px]",
+            "aspect-[798/66]",
+            "mobile:mx-auto",
+          )}
+        >
+          <Image src="/images/logo.svg" alt="4X logo" fill />
+        </div>
         <span
           className={cn(
-            "text-[2.4rem]",
-            "leading-[1.5]",
             "font-[family-name:var(--unbounded-text-font)]",
-            "text-[2.4rem]",
             "font-[200]",
+            "not_phone:text-[2.4rem]",
+            "phone:text-[1.6rem]",
+            "mobile:text-center",
             "leading-[1.6]",
             "text-white",
             "whitespace-pre-wrap",
@@ -36,20 +59,30 @@ const RootPage: FC = () => {
           {`Disrupting Forex Industry\nwith Web3 Tech`}
         </span>
       </div>
-      <div className={cn("flex", "h-full", "justify-between")}>
-        <div className={cn("relative", "w-[489px]", "h-full")}>
+      <div className={cn("flex", "h-full", "justify-between", "gap-[32px]")}>
+        <div className={cn("phone:hidden", "tablet:hidden")}>
           <Image
-            className={cn("object-cover", "object-bottom")}
+            className={cn(
+              "absolute",
+              "object-cover",
+              "object-top",
+              "w-full",
+              "max-w-[489px]",
+              "aspect-[489/598]",
+            )}
             src="/images/phone-mockup.png"
             alt="Phone mockup"
-            fill
+            width={489}
+            height={598}
           />
         </div>
         <div
           className={cn(
             "grid",
-            "max-w-[386px]",
-            "flex-1",
+            "mobile:w-full",
+            "mobile:max-w-[386px]",
+            "mobile:mx-auto",
+            "not_mobile:w-[386px]",
             "gap-[32px]",
             "pb-[106px]",
             "self-end",

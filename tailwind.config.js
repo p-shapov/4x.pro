@@ -34,6 +34,34 @@ module.exports = {
       normal: "1.4",
       loose: "1.45",
     },
+    screens: {
+      phone: {
+        max: "639px",
+      },
+      not_phone: {
+        min: "640px",
+      },
+      tablet: {
+        min: "640px",
+        max: "1023px",
+      },
+      mobile: {
+        max: "1023px",
+      },
+      not_mobile: {
+        min: "1024px",
+      },
+      laptop: {
+        min: "1024px",
+        max: "1279px",
+      },
+      not_desktop: {
+        max: "1279px",
+      },
+      desktop: {
+        min: "1280px",
+      },
+    },
   },
   plugins: [
     require("@pyncz/tailwind-mask-image"),
