@@ -13,6 +13,7 @@ import { useTradeModule } from "../store";
 const Sidebar = () => {
   const sidebarStyles = mkSidebarStyles();
   const selectedAsset = useTradeModule((state) => state.selectedAsset);
+  const tradeModuleHydrated = useTradeModule((state) => state.hydrated);
   const tradeForm = useTradeForm();
   const leverage = useWatch({ control: tradeForm.control, name: "leverage" });
   const [side, setSide] = useState<"long" | "short">("long");
@@ -21,14 +22,14 @@ const Sidebar = () => {
     name: "position.quote",
   });
   useEffect(() => {
-    if (selectedAsset) {
+    if (tradeModuleHydrated) {
       tradeForm.setValue("position.quote", {
         size: quote.size,
         token: selectedAsset,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAsset]);
+  }, [selectedAsset, tradeModuleHydrated]);
   return (
     <div className={sidebarStyles.root}>
       <div className={sidebarStyles.tabs}>

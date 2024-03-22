@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FC } from "react";
 
 import type { Token } from "@4x.pro/configs/token-config";
@@ -29,16 +29,22 @@ const TokenField: FC<Props> = ({
   const [amount, setAmount] = useState<number>(
     value?.amount || defaultValue?.amount || 0,
   );
-  const [token, setTokenAccount] = useState(
+  const [token, setToken] = useState(
     value?.token || defaultValue?.token || tokenList[0],
   );
+  const tokenListKey = tokenList.join("");
+  useEffect(() => {
+    setToken(value?.token || defaultValue?.token || tokenList[0]);
+    setAmount(value?.amount || defaultValue?.amount || 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokenListKey]);
   const handleChange = (amount: number) => {
     setAmount(amount);
     onChange?.({ amount, token });
   };
   const handleSelect = (token: string) => {
     // TODO :: make Select component generic
-    setTokenAccount(token as Token);
+    setToken(token as Token);
     onChange?.({ amount, token: token as Token });
   };
   return (

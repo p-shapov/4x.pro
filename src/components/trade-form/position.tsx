@@ -56,26 +56,33 @@ const Position: FC<Props> = ({ form }) => {
     (onChange: (data: { size: number; token: Token }) => void) =>
     (data: { amount: number; token: Token }) => {
       if (!rate) return;
+      if (base.size !== data.amount) {
+        setLastTouchedPosition("base");
+        form.setValue("position.quote", {
+          size: roundToFirstNonZeroDecimal((data.amount / rate) * leverage),
+          token: quote.token,
+        });
+      }
       onChange({
         size: data.amount,
         token: data.token,
-      });
-      form.setValue("position.quote", {
-        size: roundToFirstNonZeroDecimal((data.amount / rate) * leverage),
-        token: quote.token,
       });
     };
   const mkHandleChangeQuote =
     (onChange: (data: { size: number; token: Token }) => void) =>
     (data: { amount: number; token: Token }) => {
       if (!rate) return;
+      if (quote.size !== data.amount) {
+        setLastTouchedPosition("quote");
+        form.setValue("position.base", {
+          size: roundToFirstNonZeroDecimal((data.amount * rate) / leverage),
+          token: base.token,
+        });
+      }
+      console.log(data);
       onChange({
         size: data.amount,
         token: data.token,
-      });
-      form.setValue("position.base", {
-        size: roundToFirstNonZeroDecimal((data.amount * rate) / leverage),
-        token: base.token,
       });
     };
   return (
@@ -107,7 +114,6 @@ const Position: FC<Props> = ({ form }) => {
               token: data.token,
             }}
             onChange={mkHandleChangeBase(onChange)}
-            onFocus={() => setLastTouchedPosition("base")}
           />
         )}
       />
@@ -123,7 +129,6 @@ const Position: FC<Props> = ({ form }) => {
               token: data.token,
             }}
             onChange={mkHandleChangeQuote(onChange)}
-            onFocus={() => setLastTouchedPosition("quote")}
           />
         )}
       />
