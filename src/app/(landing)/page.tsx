@@ -64,9 +64,11 @@ const RootPage: FC = () => {
           <Image
             className={cn(
               "absolute",
+              "bottom-0",
               "object-cover",
               "object-top",
               "w-full",
+              "w-[34%]",
               "max-w-[489px]",
               "aspect-[489/598]",
             )}
