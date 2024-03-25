@@ -1,3 +1,4 @@
+import { useVisibilityChange } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
 
 import type {
@@ -21,6 +22,16 @@ const useTvChartingLibraryWidget = (
   const pythConnection = useDexPlatformConfig((state) => state.pythConnection);
   const [tvChartingLibraryWidget, setTvChartingLibraryWidget] =
     useState<IChartingLibraryWidget | null>(null);
+
+  const visible = useVisibilityChange();
+
+  useEffect(() => {
+    if (tvChartingLibraryWidget && visible) {
+      tvChartingLibraryWidget.onChartReady(() => {
+        tvChartingLibraryWidget.chart().resetData();
+      });
+    }
+  }, [tvChartingLibraryWidget, visible]);
 
   useEffect(() => {
     const loadTvChartingLibraryWidget = async () => {

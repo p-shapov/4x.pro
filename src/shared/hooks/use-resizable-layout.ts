@@ -1,24 +1,21 @@
+import { useLocalStorage } from "@uidotdev/usehooks";
+import { useEffect } from "react";
 import type { UseResizableProps } from "react-resizable-layout";
 import { useResizable } from "react-resizable-layout";
-import { useEffectOnce, useLocalStorage } from "react-use";
 
 const useResizableLayout = (id: string, props: UseResizableProps) => {
   const [persisted, setPersisted] = useLocalStorage(
     `resizable-layout/${id}`,
     props.initial,
-    {
-      raw: false,
-      serializer: (value: number) => value.toString(),
-      deserializer: Number,
-    },
   );
   const resizable = useResizable({
     ...props,
     onResizeEnd: ({ position }) => setPersisted(position),
   });
-  useEffectOnce(() => {
+  useEffect(() => {
     if (persisted) resizable.setPosition(persisted);
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return resizable;
 };
 

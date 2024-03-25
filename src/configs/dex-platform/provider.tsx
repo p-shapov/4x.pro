@@ -33,7 +33,15 @@ const wallets: Adapter[] = [
   }),
 ];
 
-const dexPlatformQueryClient = new QueryClient();
+const dexPlatformQueryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: true,
+      staleTime: 0,
+      gcTime: 1000 * 60 * 60,
+    },
+  },
+});
 
 const DexPlatformProvider: FC<PropsWithChildren> = ({ children }) => {
   const rpcEndpoint = useDexPlatformConfig((state) => state.rpcEndpoint);

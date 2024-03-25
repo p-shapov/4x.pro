@@ -5,6 +5,7 @@ import Image from "next/image";
 import type { FC, PropsWithChildren } from "react";
 
 import { Wallet } from "@4x.pro/components/wallet";
+import { useIsMounted } from "@4x.pro/shared/hooks/use-is-mounted";
 import type { PropsWithClassName } from "@4x.pro/shared/types";
 import { IconButton } from "@4x.pro/ui-kit/icon-button";
 import { Link } from "@4x.pro/ui-kit/link";
@@ -15,8 +16,10 @@ const PlatformLayout: FC<PropsWithClassName<PropsWithChildren>> = ({
   className,
   children,
 }) => {
+  const isMounted = useIsMounted();
   const platformLayoutStyles = mkPlatformLayoutStyles();
   const { connected } = useWallet();
+  if (!isMounted) return null;
   return (
     <div className={cn(platformLayoutStyles.overlay, className)}>
       <Wallet.Dialog />

@@ -1,5 +1,6 @@
 import type { PythConnection } from "@pythnetwork/client";
 import type { PythVerbosePriceCallback } from "@pythnetwork/client/lib/PythConnection";
+import dayjs from "dayjs";
 
 import type {
   Bar,
@@ -31,7 +32,7 @@ const subscribeOnStream =
       if (product.symbol === symbolInfo.ticker && priceData.price) {
         const lastBar = lastBarCache.get(symbolInfo.ticker);
         if (!lastBar) return;
-        const tradeTime = Number(priceData.timestamp) * 1000;
+        const tradeTime = dayjs.utc().unix() * 1000;
         const nextBarTime =
           getNextBarTimeByResolution(resolution, lastBar.time) * 1000;
         const tradePrice = priceData.price;
