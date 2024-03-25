@@ -1,9 +1,8 @@
 import cn from "classnames";
 import type { FC } from "react";
 
-import { networkConfig } from "@4x.pro/configs/network-config";
-import type { Token } from "@4x.pro/configs/token-config";
-import { tokenConfig } from "@4x.pro/configs/token-config";
+import { getTokenLogo, getTokenSymbol } from "@4x.pro/configs/dex-platform";
+import type { Token } from "@4x.pro/configs/dex-platform";
 import { mkTokenStyles } from "@4x.pro/shared/styles/token-badge";
 import type { PropsWithStyles } from "@4x.pro/shared/types";
 import { formatPercentage } from "@4x.pro/shared/utils/number";
@@ -34,21 +33,10 @@ const TokenBadge: FC<
   const tokenStyles = mkTokenStyles({ dir, bold, gap });
   return (
     <span className={tokenStyles.root}>
-      <img
-        src={tokenConfig.TokenLogos[token] || "/coins/fallback.svg"}
-        alt={token}
-        width={16}
-        height={16}
-      />
+      <img src={getTokenLogo(token)} alt={token} width={16} height={16} />
       <span className={tokenStyles.info}>
-        <span className={tokenStyles.symbol}>
-          {tokenConfig.TokenSymbols[token]}
-        </span>
-        {showNetwork && (
-          <span className={tokenStyles.network}>
-            {networkConfig.NetworkLabels[tokenConfig.TokenNetworks[token]]}
-          </span>
-        )}
+        <span className={tokenStyles.symbol}>{getTokenSymbol(token)}</span>
+        {showNetwork && <span className={tokenStyles.network}>Solana</span>}
       </span>
       {changePercentage && (
         <span className={tokenStyles.tradeDir}>

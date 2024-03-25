@@ -1,4 +1,5 @@
-import "./global.css";
+import "@public/css/tailwind.css";
+import "@public/css/color-scheme.css";
 
 import type { Metadata } from "next";
 import type { FC, PropsWithChildren } from "react";

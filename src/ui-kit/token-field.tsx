@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/configs/token-config";
+import type { Token } from "@4x.pro/configs/dex-platform";
 
 import { NumberField } from "./number-field";
 import { Select } from "./select";

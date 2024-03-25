@@ -27,11 +27,11 @@ const useTradeForm = () => {
       slippage: 0.5,
       position: {
         base: {
-          token: "Sol_USDC",
+          token: "USDC",
           size: 0,
         },
         quote: {
-          token: "Sol_SOL",
+          token: "SOL",
           size: 0,
         },
       },

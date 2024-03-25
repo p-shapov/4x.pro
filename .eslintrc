@@ -160,10 +160,7 @@
     ],
     "import/no-self-import": "error",
     "import/no-unused-modules": ["error", { "missingExports": true }],
-    "import/no-unassigned-import": [
-      "error",
-      { "allow": ["src/app/global.css"] }
-    ],
+    "import/no-unassigned-import": ["error", { "allow": ["**/*.css"] }],
     "import/no-useless-path-segments": "error",
     "import/order": [
       "error",

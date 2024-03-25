@@ -1,7 +1,7 @@
 const POSITIONS = [
   {
     id: "1",
-    asset: "Sol_SOL",
+    asset: "SOL",
     side: "short",
     leverage: 5,
     size: 100,
@@ -13,7 +13,7 @@ const POSITIONS = [
   },
   {
     id: "2",
-    asset: "Sol_BTC",
+    asset: "BTC",
     side: "long",
     leverage: 5,
     size: 100,
@@ -25,7 +25,7 @@ const POSITIONS = [
   },
   {
     id: "3",
-    asset: "Sol_USDC",
+    asset: "USDC",
     side: "short",
     leverage: 5,
     size: 100,
@@ -37,7 +37,7 @@ const POSITIONS = [
   },
   {
     id: "4",
-    asset: "Sol_ETH",
+    asset: "ETH",
     side: "long",
     leverage: 5,
     size: 100,

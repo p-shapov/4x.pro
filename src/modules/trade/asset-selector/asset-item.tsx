@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/configs/token-config";
-import { tokenConfig } from "@4x.pro/configs/token-config";
+import { getTokenSymbol } from "@4x.pro/configs/dex-platform";
+import type { Token } from "@4x.pro/configs/dex-platform";
 import { Icon } from "@4x.pro/ui-kit/icon";
 
 import { mkAssetItemStyles } from "./styles";
@@ -42,7 +42,7 @@ const AssetItem: FC<Props> = ({ token, onChange }) => {
         />
       </button>
       <button type="button" onClick={handleSelect}>
-        {tokenConfig.TokenSymbols[token]}
+        {getTokenSymbol(token)}
       </button>
     </li>
   );

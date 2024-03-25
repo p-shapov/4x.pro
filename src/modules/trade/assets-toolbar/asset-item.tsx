@@ -1,7 +1,7 @@
 import cn from "classnames";
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/configs/token-config";
+import type { Token } from "@4x.pro/configs/dex-platform";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-price-feed";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
 

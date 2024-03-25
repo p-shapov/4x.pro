@@ -1,8 +1,8 @@
 import { Popover } from "@headlessui/react";
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/configs/token-config";
-import { tokenConfig, tokenList } from "@4x.pro/configs/token-config";
+import type { Token } from "@4x.pro/configs/dex-platform";
+import { getTokenLogo, getTokenSymbol } from "@4x.pro/configs/dex-platform";
 import { formatRate } from "@4x.pro/shared/utils/number";
 import { Icon } from "@4x.pro/ui-kit/icon";
 
@@ -13,6 +13,8 @@ import { useTradeModule } from "../store";
 type Props = {
   onChange?: (asset: Token) => void;
 };
+
+const assetList: Token[] = ["SOL", "BTC", "ETH"];
 
 const AssetSelector: FC<Props> = ({ onChange }) => {
   const assetSelectorStyles = mkAssetSelectorStyles();
@@ -29,14 +31,12 @@ const AssetSelector: FC<Props> = ({ onChange }) => {
         {({ open }) => (
           <>
             <img
-              src={
-                tokenConfig.TokenLogos[selectedAsset] || "/coins/fallback.svg"
-              }
+              src={getTokenLogo(selectedAsset)}
               alt={selectedAsset}
               width={20}
               height={20}
             />
-            <span>{tokenConfig.TokenSymbols[selectedAsset]}/USDC</span>
+            <span>{getTokenSymbol(selectedAsset)}/USDC</span>
             <span className={assetSelectorStyles.leverage}>
               {formatRate(100)}
             </span>
@@ -50,7 +50,7 @@ const AssetSelector: FC<Props> = ({ onChange }) => {
       <Popover.Panel className={assetSelectorStyles.panel}>
         {({ close }) => (
           <ul className={assetSelectorStyles.options}>
-            {tokenList.map((token) => (
+            {assetList.map((token) => (
               <AssetItem
                 key={token}
                 token={token}

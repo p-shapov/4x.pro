@@ -1,3 +1,4 @@
+"use client";
 import { Dialog as Dialog_ } from "@headlessui/react";
 import type { FC, PropsWithChildren } from "react";
 

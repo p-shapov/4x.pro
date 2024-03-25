@@ -1,4 +1,4 @@
-import type { Token } from "@4x.pro/configs/token-config";
+import type { Token } from "@4x.pro/configs/dex-platform";
 
 type Formatter = (value?: number, fractionalDigits?: number) => string;
 
@@ -47,10 +47,10 @@ const formatCurrency_USDC: Formatter = (value, fractionalDigits) => {
 };
 const currencyFormatters: Record<Token | "$", Formatter> = {
   $: formatCurrency_USD,
-  Sol_BTC: formatCurrency_BTC,
-  Sol_ETH: formatCurrency_ETH,
-  Sol_SOL: formatCurrency_SOL,
-  Sol_USDC: formatCurrency_USDC,
+  BTC: formatCurrency_BTC,
+  ETH: formatCurrency_ETH,
+  SOL: formatCurrency_SOL,
+  USDC: formatCurrency_USDC,
 };
 const calculateLiquidationPrice = (
   entryPrice: number,

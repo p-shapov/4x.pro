@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
-import { tokenList } from "@4x.pro/configs/token-config";
-import type { Token } from "@4x.pro/configs/token-config";
+import { tokenList } from "@4x.pro/configs/dex-platform";
+import type { Token } from "@4x.pro/configs/dex-platform";
 
 type SubmitData = {
   position: {

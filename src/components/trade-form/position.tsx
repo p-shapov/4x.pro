@@ -1,11 +1,11 @@
 "use client";
-import { useEffect } from "react";
+import { useDeferredValue, useEffect } from "react";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useWatch } from "react-hook-form";
 
-import { tokenList } from "@4x.pro/configs/token-config";
-import type { Token } from "@4x.pro/configs/token-config";
+import { tokenList } from "@4x.pro/configs/dex-platform";
+import type { Token } from "@4x.pro/configs/dex-platform";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-price-feed";
 import { roundToFirstNonZeroDecimal } from "@4x.pro/shared/utils/number";
 import { TokenField } from "@4x.pro/ui-kit/token-field";
@@ -23,9 +23,15 @@ const Position: FC<Props> = ({ form }) => {
   const { lastTouchedPosition, setLastTouchedPosition } =
     useLastTouchedPosition();
   const positionStyles = mkPositionStyles();
-  const base = useWatch({ control: form.control, name: "position.base" });
-  const quote = useWatch({ control: form.control, name: "position.quote" });
-  const leverage = useWatch({ control: form.control, name: "leverage" }) || 1;
+  const base = useDeferredValue(
+    useWatch({ control: form.control, name: "position.base" }),
+  );
+  const quote = useDeferredValue(
+    useWatch({ control: form.control, name: "position.quote" }),
+  );
+  const leverage =
+    useDeferredValue(useWatch({ control: form.control, name: "leverage" })) ||
+    1;
   const { priceData: baseTokenPriceData } =
     useWatchPythPriceFeed(base?.token) || {};
   const { priceData: quoteTokenPriceData } =

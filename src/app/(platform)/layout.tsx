@@ -3,6 +3,8 @@ import type { FC, PropsWithChildren } from "react";
 
 import { PlatformLayout } from "@4x.pro/layouts/platform-layout";
 
+import { PlatformProvider } from "./provider";
+
 const wix = Wix_Madefor_Text({
   weight: ["400", "600"],
   style: ["normal"],
@@ -10,8 +12,12 @@ const wix = Wix_Madefor_Text({
   variable: "--wix-madefor-text-font",
 });
 
-const AppLayout: FC<PropsWithChildren> = ({ children }) => {
-  return <PlatformLayout className={wix.className}>{children}</PlatformLayout>;
+const Layout: FC<PropsWithChildren> = ({ children }) => {
+  return (
+    <PlatformProvider>
+      <PlatformLayout className={wix.className}>{children}</PlatformLayout>
+    </PlatformProvider>
+  );
 };
 
-export default AppLayout;
+export default Layout;

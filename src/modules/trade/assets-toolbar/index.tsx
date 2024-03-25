@@ -1,6 +1,6 @@
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/configs/token-config";
+import type { Token } from "@4x.pro/configs/dex-platform";
 import { Icon } from "@4x.pro/ui-kit/icon";
 
 import { AssetItem } from "./asset-item";

@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from "react";
 
-import type { Token } from "@4x.pro/configs/token-config";
+import type { Token } from "@4x.pro/configs/dex-platform";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-price-feed";
 import { currencyFormatters } from "@4x.pro/shared/utils/number";
 

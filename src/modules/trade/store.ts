@@ -3,8 +3,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { tokenList } from "@4x.pro/configs/token-config";
-import type { Token } from "@4x.pro/configs/token-config";
+import { tokenList } from "@4x.pro/configs/dex-platform";
+import type { Token } from "@4x.pro/configs/dex-platform";
 
 type Store = {
   hydrated: boolean;
@@ -20,7 +20,7 @@ type Actions = {
 };
 
 const storeSchema = yup.object<Store>({
-  hydrated: yup.boolean().required(),
+  hydrated: yup.boolean(),
   selectedAsset: yup.string().oneOf(tokenList).required(),
   favorites: yup.array().of(yup.string().oneOf(tokenList)).required(),
 });
@@ -29,8 +29,8 @@ const useTradeModule = create<Store & Actions>()(
   persist(
     immer((set) => ({
       hydrated: false,
-      selectedAsset: "Sol_SOL",
-      favorites: ["Sol_SOL"],
+      selectedAsset: "SOL",
+      favorites: ["SOL", "BTC", "ETH"] as const,
       selectAsset: (token: Token) => set({ selectedAsset: token }),
       addFavorite: (token: Token) =>
         set((state) => {
