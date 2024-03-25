@@ -11,15 +11,11 @@ const unbounded = Unbounded({
 
 const Layout: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <main
-      className={cn(
-        unbounded.className,
-        "bg-[url('/images/graph.png')]",
-        "bg-cover",
-      )}
-    >
-      {children}
-    </main>
+    <body className={unbounded.className}>
+      <main className={cn("bg-[url('/images/graph.png')]", "bg-cover")}>
+        {children}
+      </main>
+    </body>
   );
 };
 

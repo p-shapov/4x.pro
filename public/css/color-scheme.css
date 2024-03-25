@@ -12,6 +12,7 @@
   --rgb-accent: 81 141 249;
   --rgb-green: 81 249 189;
   --rgb-red: 249 81 145;
+  --rgb-backdrop: 0 0 0;
   color-scheme: dark;
 }
 
@@ -28,6 +29,7 @@
   --color-accent: rgb(var(--rgb-accent));
   --color-green: rgb(var(--rgb-green));
   --color-red: rgb(var(--rgb-red));
+  --color-backdrop: rgb(var(--rgb-backdrop));
 
   --tv-color-platform-background: var(--color-card-solid);
   --tv-color-pane-background: var(--color-card-solid);

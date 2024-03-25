@@ -13,6 +13,7 @@ type Config = {
   pythFeedIds_to_USD: Record<Token, string>;
   tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>>;
   tokenSymbols: Record<Token, string>;
+  splTokenAddresses: Record<Token, string>;
 };
 
 const tvSymbols: Record<Token, string> = {

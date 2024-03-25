@@ -1,49 +1,52 @@
 import type { Token } from "@4x.pro/configs/dex-platform";
 
-type Formatter = (value?: number, fractionalDigits?: number) => string;
+type Formatter = (value?: number | null, fractionalDigits?: number) => string;
 
 const roundToFirstNonZeroDecimal = (value: number) => {
   return Number(value.toFixed(20).match(/^-?\d*\.?0*\d{0,2}/)?.[0] || 0);
 };
 const formatDefault: Formatter = (value, fractionalDigits) => {
-  if (!value) return "-";
+  if (typeof value !== "number") return "-";
   if (fractionalDigits) return value.toFixed(fractionalDigits);
   return value ? roundToFirstNonZeroDecimal(value).toString() : "-";
 };
 const formatPercentage: Formatter = (value, fractionalDigits) => {
-  if (!value) return "-";
+  if (typeof value !== "number") return "-";
   if (fractionalDigits) return value.toFixed(fractionalDigits) + "%";
   return value ? roundToFirstNonZeroDecimal(value) + "%" : "-";
 };
 const formatRate: Formatter = (value, fractionalDigits) => {
-  if (!value) return "-";
+  if (typeof value !== "number") return "-";
   if (fractionalDigits) return value.toFixed(fractionalDigits) + "x";
   return value ? roundToFirstNonZeroDecimal(value) + "x" : "-";
 };
 const formatCurrency_USD: Formatter = (value, fractionalDigits) => {
-  if (!value) return "-";
+  if (typeof value !== "number") return "-";
   if (fractionalDigits) return "$ " + value.toFixed(fractionalDigits);
   return value ? "$ " + roundToFirstNonZeroDecimal(value) : "-";
 };
 const formatCurrency_BTC: Formatter = (value, fractionalDigits) => {
-  if (!value) return "-";
+  if (typeof value !== "number") return "-";
   if (fractionalDigits) return value.toFixed(fractionalDigits) + " BTC";
   return value ? roundToFirstNonZeroDecimal(value) + " BTC" : "-";
 };
 const formatCurrency_ETH: Formatter = (value, fractionalDigits) => {
-  if (!value) return "-";
+  if (typeof value !== "number") return "-";
   if (fractionalDigits) return value.toFixed(fractionalDigits) + " ETH";
   return value ? roundToFirstNonZeroDecimal(value) + " ETH" : "-";
 };
 const formatCurrency_SOL: Formatter = (value, fractionalDigits) => {
-  if (!value) return "-";
+  if (typeof value !== "number") return "-";
   if (fractionalDigits) return value.toFixed(fractionalDigits) + " SOL";
   return value ? roundToFirstNonZeroDecimal(value) + " SOL" : "-";
 };
 const formatCurrency_USDC: Formatter = (value, fractionalDigits) => {
-  if (!value) return "-";
+  if (typeof value !== "number") return "-";
   if (fractionalDigits) return value.toFixed(fractionalDigits) + " USDC";
   return value ? roundToFirstNonZeroDecimal(value) + " USDC" : "-";
+};
+const formatCurrency = (token: Token | "$") => {
+  return currencyFormatters[token];
 };
 const currencyFormatters: Record<Token | "$", Formatter> = {
   $: formatCurrency_USD,
@@ -75,5 +78,6 @@ export {
   currencyFormatters,
   calculateLiquidationPrice,
   roundToFirstNonZeroDecimal,
+  formatCurrency,
 };
 export type { Formatter };

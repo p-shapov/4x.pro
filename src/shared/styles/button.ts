@@ -21,6 +21,7 @@ const mkRootOutlined = (variant: Variant) =>
 type Props = {
   variant: Variant;
   outlined?: boolean;
+  size?: "md" | "lg";
 };
 
 const mkBaseStyles = (variant: Variant, outlined: boolean) => {
@@ -33,7 +34,6 @@ const mkBaseStyles = (variant: Variant, outlined: boolean) => {
     "rounded-[1.2rem]",
     "transition-colors",
     "border-[1px]",
-
     {
       [mkRootFilled(variant)]: !outlined,
       [mkRootOutlined(variant)]: outlined,
@@ -41,20 +41,39 @@ const mkBaseStyles = (variant: Variant, outlined: boolean) => {
   );
 };
 
-const mkButtonStyles = ({ variant = "primary", outlined = false }: Props) => {
+const mkButtonStyles = ({
+  variant = "primary",
+  outlined = false,
+  fill = true,
+  size = "md",
+}: Props & { fill?: boolean }) => {
   const baseStyles = mkBaseStyles(variant, outlined);
   return {
-    root: cn("text-h5", "px-[1.6rem]", "py-[0.8rem]", baseStyles),
+    root: cn(baseStyles, {
+      "w-full": fill,
+      [cn("px-[1.6rem]", "py-[0.8rem]", "text-h5")]: size === "md",
+      [cn(
+        "px-[2.4rem]",
+        "py-[1.2rem]",
+        "text-[1.6rem]",
+        "font-bold",
+        "leading-loose",
+      )]: size === "lg",
+    }),
   };
 };
 
 const mkIconButtonStyles = ({
   variant = "primary",
   outlined = false,
+  size = "md",
 }: Props) => {
   const baseStyles = mkBaseStyles(variant, outlined);
   return {
-    root: cn("size-[3.83rem]", "p-[0.8rem]", baseStyles),
+    root: cn(baseStyles, {
+      [cn("size-[3.83rem]", "p-[0.8rem]")]: size === "md",
+      [cn("size-[4.8rem]", "p-[1.2rem]")]: size === "lg",
+    }),
     icon: cn("w-full", "h-full"),
   };
 };

@@ -1,38 +1,51 @@
+import { useConnection } from "@solana/wallet-adapter-react";
+import type { PublicKey } from "@solana/web3.js";
 import cn from "classnames";
 import type { FC } from "react";
 
 import type { Token } from "@4x.pro/configs/dex-platform";
+import { useTokenBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import { mkTableStyles } from "@4x.pro/shared/styles/table";
+import { formatCurrency } from "@4x.pro/shared/utils/number";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
 import { TokenPrice } from "@4x.pro/ui-kit/token-price";
 
 type Props = {
-  items: {
-    asset: Token;
-    balance: number;
-  }[];
+  publicKey: PublicKey | null;
+  tokenList: readonly Token[];
 };
 
-const TableRow: FC<{ asset: Token; balance: number }> = ({
+const TableRow: FC<{ publicKey: PublicKey | null; asset: Token }> = ({
+  publicKey,
   asset,
-  balance,
 }) => {
+  const { connection } = useConnection();
   const tableStyles = mkTableStyles();
+  const tokenBalance = useTokenBalance(connection)({
+    variables: {
+      token: asset,
+      publicKeyBase58: publicKey?.toBase58(),
+    },
+  });
   return (
     <tr className={cn(tableStyles.row, tableStyles.rowDelimiter)} key={asset}>
       <td className={tableStyles.cell}>
         <TokenBadge token={asset} gap={8} />
       </td>
-      <td className={tableStyles.cell}>{balance}</td>
-      <td className={tableStyles.cell}>-</td>
       <td className={tableStyles.cell}>
-        <TokenPrice token={asset}>{balance}</TokenPrice>
+        {formatCurrency(asset)(tokenBalance.data)}
+      </td>
+      <td className={tableStyles.cell}>
+        <TokenPrice token={asset}>{tokenBalance.data}</TokenPrice>
+      </td>
+      <td className={tableStyles.cell}>
+        <TokenPrice token={asset} />
       </td>
     </tr>
   );
 };
 
-const BalancesTable: FC<Props> = ({ items }) => {
+const BalancesTable: FC<Props> = ({ publicKey, tokenList }) => {
   const tableStyles = mkTableStyles();
   return (
     <table
@@ -51,8 +64,8 @@ const BalancesTable: FC<Props> = ({ items }) => {
         </tr>
       </thead>
       <tbody className={tableStyles.body}>
-        {items.map((item) => (
-          <TableRow key={item.asset} {...item} />
+        {tokenList.map((asset) => (
+          <TableRow key={asset} publicKey={publicKey} asset={asset} />
         ))}
       </tbody>
     </table>

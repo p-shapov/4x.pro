@@ -1,6 +1,11 @@
 "use client";
 import { Dialog as Dialog_ } from "@headlessui/react";
+import cn from "classnames";
 import type { FC, PropsWithChildren } from "react";
+
+import { mkDialogStyles } from "@4x.pro/shared/styles/dialog";
+
+import { Icon } from "./icon";
 
 type Props = {
   title: string;
@@ -14,15 +19,26 @@ const Dialog: FC<PropsWithChildren<Props>> = ({
   onClose,
   children,
 }) => {
+  const dialogStyles = mkDialogStyles();
   return (
-    <Dialog_ as="div" className="relative z-10" open={open} onClose={onClose}>
-      <div className="fixed inset-0 overflow-y-auto">
-        <div className="flex min-h-full items-center justify-center p-4 text-center">
-          <Dialog_.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-card p-6 text-left align-middle shadow-xl transition-all">
-            <Dialog_.Title>{title}</Dialog_.Title>
-            {children}
-          </Dialog_.Panel>
-        </div>
+    <Dialog_
+      as="div"
+      className={dialogStyles.root}
+      open={open}
+      onClose={onClose}
+    >
+      <div className={dialogStyles.layout}>
+        <Dialog_.Panel className={dialogStyles.panel}>
+          <div className={cn(dialogStyles.header, "justify-between")}>
+            <Dialog_.Title className={dialogStyles.title}>
+              {title}
+            </Dialog_.Title>
+            <button type="button" onClick={onClose}>
+              <Icon className={dialogStyles.closeBtn} src="/icons/close.svg" />
+            </button>
+          </div>
+          {children}
+        </Dialog_.Panel>
       </div>
     </Dialog_>
   );

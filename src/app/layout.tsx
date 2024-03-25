@@ -13,9 +13,7 @@ const metadata: Metadata = {
 const RootLayout: FC<PropsWithChildren> = ({ children }: PropsWithChildren) => {
   return (
     <html lang="en" className="dark">
-      <body>
-        <RootProvider>{children}</RootProvider>
-      </body>
+      <RootProvider>{children}</RootProvider>
     </html>
   );
 };

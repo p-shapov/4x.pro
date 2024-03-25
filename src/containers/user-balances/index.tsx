@@ -1,12 +1,12 @@
+import { useWallet } from "@solana/wallet-adapter-react";
 import type { FC } from "react";
 
 import { BalancesTable } from "@4x.pro/components/balances-table";
-
-import { BALANCES } from "./mocks";
+import { tokenList } from "@4x.pro/configs/dex-platform";
 
 const UserBalances: FC = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return <BalancesTable items={BALANCES as any} />;
+  const { publicKey } = useWallet();
+  return <BalancesTable publicKey={publicKey} tokenList={tokenList} />;
 };
 
 export { UserBalances };

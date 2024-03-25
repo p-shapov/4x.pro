@@ -2,13 +2,13 @@ import type { FC, ReactNode } from "react";
 
 import type { Token } from "@4x.pro/configs/dex-platform";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-price-feed";
-import { currencyFormatters } from "@4x.pro/shared/utils/number";
+import { formatCurrency } from "@4x.pro/shared/utils/number";
 
 type Props = {
   token: Token;
   currency?: Token | "$";
   watch?: boolean;
-  children?: number | ((price?: number) => ReactNode);
+  children?: null | number | ((price?: number) => ReactNode);
   fractionalDigits?: number;
 };
 
@@ -19,29 +19,33 @@ const TokenPrice: FC<Props> = ({
   fractionalDigits,
 }) => {
   const { priceData } = useWatchPythPriceFeed(token);
-
   const getPrice = (price?: number) => {
-    if (!price) return currencyFormatters[currency](undefined);
+    if (!price) return formatCurrency(currency)(undefined);
     if (typeof children === "function") {
       const result = children(price);
-      if (typeof result === "number")
-        return currencyFormatters[currency](result, fractionalDigits);
+      if (
+        typeof result === "number" ||
+        typeof result === "undefined" ||
+        result === null
+      ) {
+        return formatCurrency(currency)(result, fractionalDigits);
+      }
       return result;
     }
-    if (typeof children === "number")
-      return currencyFormatters[currency](price * children, fractionalDigits);
-    return children;
+    if (typeof children === "number") {
+      return formatCurrency(currency)(price * children, fractionalDigits);
+    }
+    return formatCurrency(currency)(undefined);
   };
   const tokenPrice = getPrice(priceData?.price);
-
   return currency === "$" ? (
     tokenPrice
   ) : (
     <TokenPrice token={currency} currency="$">
       {(currencyPrice) => {
-        if (!currencyPrice) return currencyFormatters[currency](undefined);
+        if (!currencyPrice) return formatCurrency(token)(undefined);
         if (typeof tokenPrice === "number")
-          return currencyFormatters[currency](
+          return formatCurrency(token)(
             tokenPrice / currencyPrice,
             fractionalDigits,
           );

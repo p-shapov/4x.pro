@@ -1,15 +1,13 @@
 "use client";
-import { BackpackWalletAdapter } from "@solana/wallet-adapter-backpack";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import type { Adapter } from "@solana/wallet-adapter-base";
-import { GlowWalletAdapter } from "@solana/wallet-adapter-glow";
 import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
 import {
-  PhantomWalletAdapter,
   SolflareWalletAdapter,
+  WalletConnectWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { FC, PropsWithChildren } from "react";
@@ -22,10 +20,17 @@ const network =
     : WalletAdapterNetwork.Mainnet;
 
 const wallets: Adapter[] = [
-  new BackpackWalletAdapter({ network }),
-  new PhantomWalletAdapter({ network }),
   new SolflareWalletAdapter({ network }),
-  new GlowWalletAdapter({ network }),
+  new WalletConnectWalletAdapter({
+    network,
+    options: {
+      projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID,
+      metadata: {
+        name: "4x Protocol",
+        description: "DEX Platform",
+      },
+    },
+  }),
 ];
 
 const dexPlatformQueryClient = new QueryClient();

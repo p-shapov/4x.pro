@@ -19,6 +19,9 @@ const getRpcEndpoint = (rpcProvider: RpcProvider) => {
 const getPythFeedIds_to_USD = () => {
   return Object.values(DexPlatformConfig.pythFeedIds_to_USD);
 };
+const getSplTokenAddress = (token: Token) => {
+  return DexPlatformConfig.splTokenAddresses[token];
+};
 
 export {
   getTvSymbol,
@@ -27,4 +30,5 @@ export {
   getTokenPythFeedId_to_USD,
   getPythFeedIds_to_USD,
   getRpcEndpoint,
+  getSplTokenAddress,
 };

@@ -19,12 +19,14 @@ module.exports = {
       accent: "rgba(var(--rgb-accent) / <alpha-value>)",
       green: "rgba(var(--rgb-green) / <alpha-value>)",
       red: "rgba(var(--rgb-red) / <alpha-value>)",
+      backdrop: "rgba(var(--rgb-backdrop) / <alpha-value>)",
       transparent: "transparent",
     },
     fontSize: {
       sm: "1.2rem",
       md: "1.4rem",
       lg: "1.8rem",
+      xl: "2.2rem",
     },
     fontFamily: {
       sans: ["var(--wix-madefor-text-font)", "system-ui", "sans-serif"],

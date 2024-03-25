@@ -14,9 +14,11 @@ const wix = Wix_Madefor_Text({
 
 const Layout: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <PlatformProvider>
-      <PlatformLayout className={wix.className}>{children}</PlatformLayout>
-    </PlatformProvider>
+    <body className={wix.className}>
+      <PlatformProvider>
+        <PlatformLayout>{children}</PlatformLayout>
+      </PlatformProvider>
+    </body>
   );
 };
 
