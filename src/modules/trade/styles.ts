@@ -10,6 +10,7 @@ const mkTradeModuleStyles = () => {
       "h-full",
     ),
     content: cn(
+      "relative",
       "col-[1]",
       "gap-[6px]",
       "pb-[32px]",

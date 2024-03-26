@@ -22,6 +22,9 @@ const getPythFeedIds_to_USD = () => {
 const getSplTokenAddress = (token: Token) => {
   return DexPlatformConfig.splTokenAddresses[token];
 };
+const getTokenNetwork = (token: Token) => {
+  return DexPlatformConfig.tokenNetworks[token];
+};
 
 export {
   getTvSymbol,
@@ -31,4 +34,5 @@ export {
   getPythFeedIds_to_USD,
   getRpcEndpoint,
   getSplTokenAddress,
+  getTokenNetwork,
 };

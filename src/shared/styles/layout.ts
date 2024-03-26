@@ -12,6 +12,14 @@ const mkLayoutStyles = () => {
     ),
     cardPaddings: cn("p-[12px]"),
     strongSurface: cn("bg-strong", "rounded-[16px]"),
+    dialogSurface: cn(
+      "bg-dialog",
+      "bg-opacity-[0.99]",
+      "rounded-[16px]",
+      "border-[1px]",
+      "border-white",
+      "border-opacity-[0.03]",
+    ),
   };
 };
 

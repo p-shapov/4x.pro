@@ -13,6 +13,7 @@
   --rgb-green: 81 249 189;
   --rgb-red: 249 81 145;
   --rgb-backdrop: 0 0 0;
+  --rgb-dialog: 38 41 47;
   color-scheme: dark;
 }
 
@@ -30,6 +31,7 @@
   --color-green: rgb(var(--rgb-green));
   --color-red: rgb(var(--rgb-red));
   --color-backdrop: rgb(var(--rgb-backdrop));
+  --color-dialog: var(--color-card-dialog);
 
   --tv-color-platform-background: var(--color-card-solid);
   --tv-color-pane-background: var(--color-card-solid);
@@ -47,7 +49,7 @@
   --tv-color-toolbar-divider-background: var(--color-strong);
   --tv-color-toolbar-save-layout-loader: var(--color-primary);
 
-  --tv-color-popup-background: var(--color-card-solid);
+  --tv-color-popup-background: rgba(var(--rgb-dialog) / 0.99);
   --tv-color-popup-element-text: var(--color-content-1);
   --tv-color-popup-element-text-hover: var(--color-content-1);
   --tv-color-popup-element-background-hover: var(--color-strong);

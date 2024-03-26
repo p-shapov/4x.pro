@@ -1,4 +1,6 @@
-import { Popover } from "@headlessui/react";
+"use client";
+import { offset, useFloating } from "@floating-ui/react-dom";
+import { Listbox } from "@headlessui/react";
 import type { FC } from "react";
 
 import type { Token } from "@4x.pro/configs/dex-platform";
@@ -17,17 +19,27 @@ type Props = {
 const assetList: Token[] = ["SOL", "BTC", "ETH"];
 
 const AssetSelector: FC<Props> = ({ onChange }) => {
+  const { refs, floatingStyles } = useFloating({
+    placement: "bottom-end",
+    middleware: [offset({ mainAxis: 8, crossAxis: 40 })],
+    strategy: "fixed",
+  });
   const assetSelectorStyles = mkAssetSelectorStyles();
-  const { selectedAsset } = useTradeModule((state) => ({
+  const { selectedAsset, selectAsset } = useTradeModule((state) => ({
     selectedAsset: state.selectedAsset,
+    selectAsset: state.selectAsset,
   }));
-  const mkHandleChange = (asset: Token, close: () => void) => () => {
+  const handleChange = (asset: Token) => {
     onChange?.(asset);
-    close();
+    selectAsset(asset);
   };
   return (
-    <Popover className={assetSelectorStyles.root}>
-      <Popover.Button className={assetSelectorStyles.button}>
+    <Listbox
+      as="div"
+      className={assetSelectorStyles.root}
+      onChange={handleChange}
+    >
+      <Listbox.Button className={assetSelectorStyles.button}>
         {({ open }) => (
           <>
             <img
@@ -41,26 +53,25 @@ const AssetSelector: FC<Props> = ({ onChange }) => {
               {formatRate(100)}
             </span>
             <Icon
+              ref={refs.setReference}
               src={open ? "/icons/arrow-up-1.svg" : "/icons/arrow-down-1.svg"}
               className={assetSelectorStyles.icon}
             />
           </>
         )}
-      </Popover.Button>
-      <Popover.Panel className={assetSelectorStyles.panel}>
-        {({ close }) => (
-          <ul className={assetSelectorStyles.options}>
-            {assetList.map((token) => (
-              <AssetItem
-                key={token}
-                token={token}
-                onChange={mkHandleChange(token, close)}
-              />
-            ))}
-          </ul>
-        )}
-      </Popover.Panel>
-    </Popover>
+      </Listbox.Button>
+      <Listbox.Options
+        as="ul"
+        ref={refs.setFloating}
+        className={assetSelectorStyles.options}
+        style={floatingStyles}
+      >
+        <span className={assetSelectorStyles.optionsArrow}></span>
+        {assetList.map((token) => (
+          <AssetItem key={token} token={token} />
+        ))}
+      </Listbox.Options>
+    </Listbox>
   );
 };
 

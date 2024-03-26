@@ -54,8 +54,8 @@ const mkPopoverStyles = (size: Size, position: PopoverPosition) => {
     "z-10",
     "top-[calc(100%+0.4rem)]",
     "w-max",
-    "bg-strong",
-    "border-content-3",
+    "bg-dialog",
+    "bg-opacity-[0.99]",
     "rounded-[0.6rem]",
     {
       [cn("rounded-[0.6rem]")]: size === "sm",
@@ -78,7 +78,6 @@ const mkOptionStyles = (size: Size) => {
     "rounded-[0.3rem]",
     "hover:bg-content-3",
     "transition-colors",
-    "border-[1px]",
     {
       [cn("rounded-[0.6rem]", "p-[0.4rem]", "gap-[0.4rem]")]: size === "sm",
     },
@@ -112,8 +111,8 @@ const mkFieldStyles = ({
     popover: mkPopoverStyles(size, popoverPosition),
     options: mkOptionsStyles(size),
     option: mkOptionStyles(size),
-    optionInactive: cn("border-transparent"),
-    optionSelected: cn("border-accent"),
+    optionInactive: cn(),
+    optionSelected: cn("bg-content-3"),
     optionActive: cn("bg-content-3"),
     optionText: mkOptionTextStyles(size),
   };

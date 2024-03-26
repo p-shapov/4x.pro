@@ -11,7 +11,7 @@ const mkSidebarStyles = () => {
       "grid",
       "pb-[32px]",
       "gap-[inherit]",
-      "overflow-y-auto",
+      "overflow-auto",
       "scrollbar-none",
     ),
     tabs: cn(layoutStyles.cardSurface),

@@ -12,7 +12,7 @@ const mkWalletButtonStyles = () => {
       "h-full",
       "gap-[12px]",
       "bg-transparent",
-      "hover:bg-strong",
+      "hover:bg-body",
       "transition-colors",
     ),
     label: cn(
@@ -25,6 +25,7 @@ const mkWalletButtonStyles = () => {
       "text-content-1",
       "border-strong",
       "border-b-[1px]",
+      "group-hover/wallet-button:border-transparent",
       "group-last/wallet-button:border-none",
     ),
     text: cn("text-h5"),

@@ -15,7 +15,7 @@ const mkTableStyles = () => {
       "col-[1/calc(var(--tw-table-cols)+1)]",
       "auto-rows-max",
       "h-full",
-      "overflow-y-auto",
+      "overflow-auto",
       "scrollbar-none",
       "overscroll-contain",
     ),

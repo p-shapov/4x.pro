@@ -1,7 +1,11 @@
 import cn from "classnames";
 import type { FC } from "react";
 
-import { getTokenLogo, getTokenSymbol } from "@4x.pro/configs/dex-platform";
+import {
+  getTokenLogo,
+  getTokenNetwork,
+  getTokenSymbol,
+} from "@4x.pro/configs/dex-platform";
 import type { Token } from "@4x.pro/configs/dex-platform";
 import { mkTokenStyles } from "@4x.pro/shared/styles/token-badge";
 import type { PropsWithStyles } from "@4x.pro/shared/types";
@@ -36,7 +40,9 @@ const TokenBadge: FC<
       <img src={getTokenLogo(token)} alt={token} width={16} height={16} />
       <span className={tokenStyles.info}>
         <span className={tokenStyles.symbol}>{getTokenSymbol(token)}</span>
-        {showNetwork && <span className={tokenStyles.network}>Solana</span>}
+        {showNetwork && (
+          <span className={tokenStyles.network}>{getTokenNetwork(token)}</span>
+        )}
       </span>
       {changePercentage && (
         <span className={tokenStyles.tradeDir}>

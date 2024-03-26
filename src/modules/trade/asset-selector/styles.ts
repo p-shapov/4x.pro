@@ -4,7 +4,36 @@ import { mkBadgeStyles } from "@4x.pro/shared/styles/badge";
 
 const mkAssetItemStyles = () => {
   return {
-    option: cn("flex", "gap-[8px]", "text-h5", "items-center"),
+    option: cn("cursor-pointer", "px-[1.2rem]", "group/asset-option"),
+    item: cn(
+      "flex",
+      "gap-[0.8rem]",
+      "py-[0.8rem]",
+      "items-center",
+      "border-b-[1px]",
+      "border-content-3",
+      "group-last/asset-option:border-none",
+    ),
+    logo: cn("size-[2.8rem]", "mr-[0.2rem]"),
+    info: cn(
+      "flex-1",
+      "grid",
+      "grid-rows-[max-content_max-content]",
+      "grid-cols-[max-content_max-content]",
+      "justify-between",
+    ),
+    symbol: cn("text-h6", "col-[1]", "row-[1]", "text-content-1"),
+    network: cn("text-body-12", "col-[1]", "row-[2]", "text-content-2"),
+    price: cn(
+      "text-h6",
+      "col-[2]",
+      "row-[1]",
+      "text-content-1",
+      "justify-self-end",
+    ),
+    change: cn("text-h6", "col-[2]", "row-[2]", "justify-self-end"),
+    changePositive: cn("text-green"),
+    changeNegative: cn("text-red"),
     star: cn("size-[1.6rem]", "transition-colors"),
     starActive: cn("text-accent"),
     starInactive: cn("text-content-3"),
@@ -14,7 +43,7 @@ const mkAssetItemStyles = () => {
 const mkAssetSelectorStyles = () => {
   const badgeStyles = mkBadgeStyles();
   return {
-    root: cn("relative"),
+    root: cn(),
     button: cn(
       "flex",
       "gap-[4px]",
@@ -31,16 +60,22 @@ const mkAssetSelectorStyles = () => {
       "text-primary",
     ),
     icon: cn("size-[2rem]", "ml-[12px]"),
-    panel: cn(
-      "absolute",
-      "top-[calc(100%+5px)]",
-      "left-0",
-      "w-[300px]",
+    options: cn(
+      "grid",
+      "w-[240px]",
       "z-[1000]",
-      "p-[24px]",
-      "bg-card",
+      "bg-dialog",
+      "rounded-[16px]",
+      "py-[4px]",
     ),
-    options: cn("grid", "gap-[10px]"),
+    optionsArrow: cn(
+      "absolute",
+      "bottom-[calc(100%-8px)]",
+      "right-[44px]",
+      "size-[12px]",
+      "bg-dialog",
+      "rotate-45",
+    ),
   };
 };
 

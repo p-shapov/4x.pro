@@ -30,6 +30,8 @@ const WalletButton: FC<Props> = ({ wallet }) => {
         src={wallet.adapter.icon}
         alt={wallet.adapter.name}
         className={walletButtonStyles.walletIcon}
+        width={36}
+        height={36}
       />
       <span className={walletButtonStyles.label}>
         <span className={walletButtonStyles.text}> {wallet.adapter.name}</span>

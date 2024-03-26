@@ -20,6 +20,7 @@ module.exports = {
       green: "rgba(var(--rgb-green) / <alpha-value>)",
       red: "rgba(var(--rgb-red) / <alpha-value>)",
       backdrop: "rgba(var(--rgb-backdrop) / <alpha-value>)",
+      dialog: "rgba(var(--rgb-dialog) / <alpha-value>)",
       transparent: "transparent",
     },
     fontSize: {

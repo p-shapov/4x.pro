@@ -13,6 +13,7 @@ type Config = {
   pythFeedIds_to_USD: Record<Token, string>;
   tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>>;
   tokenSymbols: Record<Token, string>;
+  tokenNetworks: Record<Token, string>;
   splTokenAddresses: Record<Token, string>;
 };
 
@@ -35,10 +36,18 @@ const tokenSymbols: Record<Token, string> = {
   ETH: "ETH",
 };
 
+const tokenNetworks: Record<Token, string> = {
+  SOL: "solana",
+  USDC: "solana",
+  BTC: "bitcoin",
+  ETH: "ethereum",
+};
+
 const DexPlatformConfig: Config = {
   tvSymbols,
   tokenLogos,
   tokenSymbols,
+  tokenNetworks,
   rpcEndpoints: {
     helius: `https://devnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY}`,
   },
