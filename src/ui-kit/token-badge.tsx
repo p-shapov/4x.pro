@@ -16,21 +16,15 @@ import { Icon } from "./icon";
 type Props = {
   token: Token;
   showNetwork?: boolean;
-  priceData?: {
-    price: number;
-    previousPrice: number;
-  };
+  priceChange?: number;
 };
 
 const TokenBadge: FC<
   Omit<PropsWithStyles<Props, typeof mkTokenStyles>, "dir">
-> = ({ token, showNetwork, priceData, bold = true, gap = 4 }) => {
-  const changePercentage = priceData
-    ? (priceData.price - priceData.previousPrice) / priceData.previousPrice
-    : undefined;
+> = ({ token, showNetwork, priceChange, bold = true, gap = 4 }) => {
   const dir =
-    typeof changePercentage === "number"
-      ? changePercentage > 0
+    typeof priceChange === "number"
+      ? priceChange > 0
         ? "up"
         : "down"
       : undefined;
@@ -44,17 +38,15 @@ const TokenBadge: FC<
           <span className={tokenStyles.network}>{getTokenNetwork(token)}</span>
         )}
       </span>
-      {changePercentage && (
+      {priceChange && (
         <span className={tokenStyles.tradeDir}>
           <Icon
             className={tokenStyles.icon}
             src={dir === "up" ? "/icons/arrow-up.svg" : "/icons/arrow-down.svg"}
           />
-          {changePercentage && (
-            <span className={cn(tokenStyles.percentage)}>
-              {formatPercentage(changePercentage, 1)}
-            </span>
-          )}
+          <span className={cn(tokenStyles.percentage)}>
+            {formatPercentage(priceChange, 1)}
+          </span>
         </span>
       )}
     </span>

@@ -34,13 +34,7 @@ const AssetItem: FC<Props> = ({ onChange, coin }) => {
         [assetItemStyles.inactiveAsset]: coin !== selectedAsset,
       })}
     >
-      <TokenBadge
-        token={coin}
-        priceData={{
-          price: priceData.price,
-          previousPrice: priceData.price * 0.9,
-        }}
-      />
+      <TokenBadge token={coin} priceChange={0.12} />
     </button>
   );
 };

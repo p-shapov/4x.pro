@@ -27,6 +27,8 @@ const tvSymbols: Record<Token, string> = {
 const tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>> = {
   BTC: "/coins/BTC.svg",
   ETH: "/coins/ETH.svg",
+  SOL: "/coins/SOL.svg",
+  USDC: "/coins/USDC.svg",
 };
 
 const tokenSymbols: Record<Token, string> = {
@@ -37,10 +39,10 @@ const tokenSymbols: Record<Token, string> = {
 };
 
 const tokenNetworks: Record<Token, string> = {
-  SOL: "solana",
-  USDC: "solana",
-  BTC: "bitcoin",
-  ETH: "ethereum",
+  SOL: "Solana",
+  USDC: "Solana",
+  BTC: "Bitcoin",
+  ETH: "Ethereum",
 };
 
 const DexPlatformConfig: Config = {
