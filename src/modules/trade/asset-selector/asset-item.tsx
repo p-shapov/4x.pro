@@ -56,7 +56,7 @@ const AssetItem: FC<Props> = ({ token }) => {
             {getTokenNetwork(token)}
           </span>
           <span className={assetItemStyles.price}>
-            <TokenPrice token={token} />
+            <TokenPrice token={token} fractionalDigits={2} />
           </span>
           <span
             className={cn(assetItemStyles.change, {

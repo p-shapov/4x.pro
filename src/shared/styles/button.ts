@@ -1,21 +1,19 @@
 import cn from "classnames";
 
-type Variant = "primary" | "accent";
+type Variant = "primary" | "accent" | "red";
 
 const mkRootFilled = (variant: Variant) =>
   cn({
-    "bg-primary": variant === "primary",
-    "border-primary": variant === "primary",
-    "text-body": variant === "primary",
-    "bg-accent": variant === "accent",
-    "border-accent": variant === "accent",
-    "text-content-1": variant === "accent",
+    [cn("bg-primary", "border-primary", "text-body")]: variant === "primary",
+    [cn("bg-accent", "border-accent", "text-content-1")]: variant === "accent",
+    [cn("bg-red", "border-red", "text-content-1")]: variant === "red",
   });
 
 const mkRootOutlined = (variant: Variant) =>
   cn("bg-transparent", "text-content-1", {
     "border-primary": variant === "primary",
     "border-accent": variant === "accent",
+    "border-red": variant === "red",
   });
 
 type Props = {

@@ -17,7 +17,7 @@ import { mkTradeFormStyles } from "./styles";
 
 type Props = {
   form: UseFormReturn<SubmitData>;
-  title: string;
+  type: "buy" | "sell";
 };
 
 const useTradeForm = () => {
@@ -41,19 +41,35 @@ const useTradeForm = () => {
   return form;
 };
 
-const TradeForm: FC<Props> = ({ title, form }) => {
+const TradeForm: FC<Props> = ({ type, form }) => {
   const tradeFormStyles = mkTradeFormStyles();
   const handleSubmit = form.handleSubmit((data) => {
     alert(JSON.stringify(data));
   });
+  const getTitle = () => {
+    switch (type) {
+      case "buy":
+        return "Long / Buy";
+      case "sell":
+        return "Short / Sell";
+    }
+  };
+  const getButtonVariant = () => {
+    switch (type) {
+      case "buy":
+        return "primary";
+      case "sell":
+        return "red";
+    }
+  };
   return (
     <form className={tradeFormStyles.root} onSubmit={handleSubmit}>
       <Position form={form} />
       <Leverage form={form} />
       <Slippage form={form} />
       <ClosingOptions form={form} />
-      <Button type="submit" variant="primary">
-        {title}
+      <Button type="submit" variant={getButtonVariant()}>
+        {getTitle()}
       </Button>
     </form>
   );

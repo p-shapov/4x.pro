@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useWatch } from "react-hook-form";
 
-import { TradeFormProvider, useTradeForm } from "@4x.pro/components/trade-form";
+import {
+  TradeForm,
+  TradeFormProvider,
+  useTradeForm,
+} from "@4x.pro/components/trade-form";
 import { TradeStats } from "@4x.pro/components/trade-stats";
-import { TradeLongForm } from "@4x.pro/containers/trade-long-form";
-import { TradeShortForm } from "@4x.pro/containers/trade-short-form";
 import { Tabs } from "@4x.pro/ui-kit/tabs";
 
 import { mkSidebarStyles } from "./styles";
@@ -53,8 +55,8 @@ const Sidebar = () => {
               },
             ]}
             panels={{
-              long: <TradeLongForm form={tradeForm} />,
-              short: <TradeShortForm form={tradeForm} />,
+              long: <TradeForm type="buy" form={tradeForm} />,
+              short: <TradeForm type="sell" form={tradeForm} />,
             }}
           />
         </TradeFormProvider>
