@@ -24,7 +24,7 @@ const TableRow: FC<{ publicKey: PublicKey | null; asset: Token }> = ({
   const tokenBalance = useTokenBalance(connection)({
     variables: {
       token: asset,
-      publicKeyBase58: publicKey?.toBase58(),
+      account: publicKey?.toBase58(),
     },
   });
   return (

@@ -78,7 +78,6 @@ const getDatafeed = (pythConnection: PythConnection): IBasicDataFeed => ({
           onHistoryCallback(bars, { noData: false });
         })
         .catch((error) => {
-          console.log("[getBars]: Get error", error);
           onErrorCallback(error);
         });
     });

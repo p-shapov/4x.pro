@@ -1,5 +1,4 @@
 import type { Connection } from "@solana/web3.js";
-import { PublicKey } from "@solana/web3.js";
 import { createQuery } from "react-query-kit";
 
 import type { Token } from "@4x.pro/configs/dex-platform";
@@ -11,17 +10,13 @@ const useTokenBalance = (connection: Connection) => {
     queryKey: ["token-balance"],
     fetcher: async ({
       token,
-      publicKeyBase58,
+      account,
     }: {
       token?: Token;
-      publicKeyBase58?: string;
+      account?: string;
     }) => {
-      if (!publicKeyBase58 || !token) return null;
-      return fetchSplTokenBalance(
-        token,
-        new PublicKey(publicKeyBase58),
-        connection,
-      );
+      if (!account || !token) return null;
+      return fetchSplTokenBalance(token, account, connection);
     },
   });
 };

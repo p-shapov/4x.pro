@@ -7,7 +7,7 @@ const pythFeedIds_to_USD: Record<Token, string> = {
   ETH: "EdVCmQ9FSPcVe5YySXDPCRmc8aDQLKJ9xvYBMZPie1Vw",
 };
 
-const splTokenAddresses: Record<Token, string> = {
+const publicKeys: Record<Token, string> = {
   SOL: "So11111111111111111111111111111111111111112",
   USDC: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
   BTC: "9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E",
@@ -16,7 +16,7 @@ const splTokenAddresses: Record<Token, string> = {
 
 const mainnetConfig = {
   pythFeedIds_to_USD,
-  splTokenAddresses,
+  publicKeys,
 };
 
 export { mainnetConfig };

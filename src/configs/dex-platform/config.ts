@@ -14,7 +14,7 @@ type Config = {
   tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>>;
   tokenSymbols: Record<Token, string>;
   tokenNetworks: Record<Token, string>;
-  splTokenAddresses: Record<Token, string>;
+  publicKeys: Record<Token, string>;
 };
 
 const tvSymbols: Record<Token, string> = {

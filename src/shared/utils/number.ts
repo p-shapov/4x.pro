@@ -8,42 +8,42 @@ const roundToFirstNonZeroDecimal = (value: number) => {
 const formatDefault: Formatter = (value, fractionalDigits) => {
   if (typeof value !== "number") return "-";
   if (fractionalDigits) return value.toFixed(fractionalDigits);
-  return value ? roundToFirstNonZeroDecimal(value).toString() : "-";
+  return roundToFirstNonZeroDecimal(value).toString();
 };
 const formatPercentage: Formatter = (value, fractionalDigits) => {
   if (typeof value !== "number") return "-";
   if (fractionalDigits) return value.toFixed(fractionalDigits) + "%";
-  return value ? roundToFirstNonZeroDecimal(value) + "%" : "-";
+  return roundToFirstNonZeroDecimal(value) + "%";
 };
 const formatRate: Formatter = (value, fractionalDigits) => {
   if (typeof value !== "number") return "-";
   if (fractionalDigits) return value.toFixed(fractionalDigits) + "x";
-  return value ? roundToFirstNonZeroDecimal(value) + "x" : "-";
+  return roundToFirstNonZeroDecimal(value) + "x";
 };
 const formatCurrency_USD: Formatter = (value, fractionalDigits) => {
   if (typeof value !== "number") return "-";
   if (fractionalDigits) return "$ " + value.toFixed(fractionalDigits);
-  return value ? "$ " + roundToFirstNonZeroDecimal(value) : "-";
+  return "$ " + roundToFirstNonZeroDecimal(value);
 };
 const formatCurrency_BTC: Formatter = (value, fractionalDigits) => {
   if (typeof value !== "number") return "-";
   if (fractionalDigits) return value.toFixed(fractionalDigits) + " BTC";
-  return value ? roundToFirstNonZeroDecimal(value) + " BTC" : "-";
+  return roundToFirstNonZeroDecimal(value) + " BTC";
 };
 const formatCurrency_ETH: Formatter = (value, fractionalDigits) => {
   if (typeof value !== "number") return "-";
   if (fractionalDigits) return value.toFixed(fractionalDigits) + " ETH";
-  return value ? roundToFirstNonZeroDecimal(value) + " ETH" : "-";
+  return roundToFirstNonZeroDecimal(value) + " ETH";
 };
 const formatCurrency_SOL: Formatter = (value, fractionalDigits) => {
   if (typeof value !== "number") return "-";
   if (fractionalDigits) return value.toFixed(fractionalDigits) + " SOL";
-  return value ? roundToFirstNonZeroDecimal(value) + " SOL" : "-";
+  return roundToFirstNonZeroDecimal(value) + " SOL";
 };
 const formatCurrency_USDC: Formatter = (value, fractionalDigits) => {
   if (typeof value !== "number") return "-";
   if (fractionalDigits) return value.toFixed(fractionalDigits) + " USDC";
-  return value ? roundToFirstNonZeroDecimal(value) + " USDC" : "-";
+  return roundToFirstNonZeroDecimal(value) + " USDC";
 };
 const formatCurrency = (token: Token | "$") => {
   return currencyFormatters[token];

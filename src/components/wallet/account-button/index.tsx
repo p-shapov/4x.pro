@@ -30,7 +30,7 @@ const AccountButton: FC = () => {
   const balance = useTokenBalance(connection)({
     variables: {
       token: "SOL",
-      publicKeyBase58: publicKey?.toBase58(),
+      account: publicKey?.toBase58(),
     },
   });
   const handleCopyAddress = async () => {

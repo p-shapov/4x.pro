@@ -3,7 +3,7 @@ import type { Connection } from "@solana/web3.js";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
 import type { Token } from "@4x.pro/configs/dex-platform";
-import { getSplTokenAddress } from "@4x.pro/configs/dex-platform";
+import { getTokenPublicKey } from "@4x.pro/configs/dex-platform";
 
 const checkIfAccountExists = async (
   account: PublicKey,
@@ -15,16 +15,18 @@ const checkIfAccountExists = async (
 
 const fetchSplTokenBalance = async (
   token: Token,
-  publicKey: PublicKey,
+  account: string,
   connection: Connection,
 ) => {
-  const tokenATA = await getAssociatedTokenAddress(
-    new PublicKey(getSplTokenAddress(token)),
-    publicKey,
-  );
   if (token === "SOL") {
-    return (await connection.getBalance(publicKey)) / LAMPORTS_PER_SOL;
+    return (
+      (await connection.getBalance(new PublicKey(account))) / LAMPORTS_PER_SOL
+    );
   }
+  const tokenATA = await getAssociatedTokenAddress(
+    new PublicKey(getTokenPublicKey(token)),
+    new PublicKey(account),
+  );
   if (await checkIfAccountExists(tokenATA, connection)) {
     return (await connection.getTokenAccountBalance(tokenATA)).value.uiAmount;
   }

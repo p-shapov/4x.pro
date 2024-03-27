@@ -85,7 +85,6 @@ const Position: FC<Props> = ({ form }) => {
           token: base.token,
         });
       }
-      console.log(data);
       onChange({
         size: data.amount,
         token: data.token,
@@ -119,6 +118,7 @@ const Position: FC<Props> = ({ form }) => {
               amount: data.size || "",
               token: data.token,
             }}
+            showBalance
             onChange={mkHandleChangeBase(onChange)}
           />
         )}
