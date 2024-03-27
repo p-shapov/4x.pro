@@ -1,4 +1,5 @@
 import { Dialog } from "@headlessui/react";
+import cn from "classnames";
 import type { ComponentProps, FC } from "react";
 
 import { mkDialogStyles } from "@4x.pro/shared/styles/dialog";
@@ -32,8 +33,8 @@ const MessageDialog: FC<Props & ComponentProps<typeof StatusIcon>> = ({
       onClose={onClose}
     >
       <div className={dialogStyles.layout}>
-        <Dialog.Panel className={dialogStyles.panel}>
-          <div className={dialogStyles.header}>
+        <Dialog.Panel className={cn(dialogStyles.panel, "max-w-[360px]")}>
+          <div className={cn(dialogStyles.header, "gap-[12px]", "mb-[20px]")}>
             <StatusIcon type={type} />
             <span className={dialogStyles.title}>{title}</span>
           </div>

@@ -15,6 +15,9 @@ type Props = Omit<
 const ConnectButton: FC<Props> = (props) => {
   const { connected, publicKey } = useWallet();
   const open = useWalletsDialog((state) => state.open);
+  const handleOpen = () => {
+    open();
+  };
   const children = () => {
     if (connected && publicKey) {
       return trim(publicKey.toString(), 4, 4);
@@ -22,7 +25,7 @@ const ConnectButton: FC<Props> = (props) => {
     return "Get started";
   };
   return (
-    <Button {...props} onClick={open}>
+    <Button {...props} onClick={handleOpen}>
       {children()}
     </Button>
   );

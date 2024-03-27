@@ -20,7 +20,10 @@ type Actions = {
 
 const useWalletsDialog = create<Store & Actions>((set) => ({
   isOpen: false,
-  open: () => set({ isOpen: true }),
+  open: () => {
+    console.log("open");
+    set({ isOpen: true });
+  },
   close: () => set({ isOpen: false }),
 }));
 

@@ -76,7 +76,7 @@ const useDexPlatformConfig = create<Store & Actions>()(
         rpcEndpoint: state.rpcEndpoint,
       }),
       merge: (persistedState, state) => {
-        if (localStorageSchema.isType(persistedState)) {
+        if (persistedState && localStorageSchema.isType(persistedState)) {
           const connection = new Connection(persistedState.rpcEndpoint);
           const pythConnection = new PythConnection(
             connection,
@@ -98,7 +98,6 @@ const useDexPlatformConfig = create<Store & Actions>()(
           connection.commitment,
           pythFeedIds_to_USD.map((feedId) => new PublicKey(feedId)),
         );
-
         return { ...state, pythConnection, hydrated: true };
       },
     },

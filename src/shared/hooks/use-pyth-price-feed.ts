@@ -29,7 +29,6 @@ const emit = () => {
 
 const useWatchPythPriceFeed = (token: Token): PriceFeed => {
   const pythConnection = useDexPlatformConfig((state) => state.pythConnection);
-
   return useSyncExternalStore<PriceFeed>(
     (listener) => {
       if (listeners.size === 0) {

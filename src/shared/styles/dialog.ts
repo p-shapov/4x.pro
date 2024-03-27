@@ -22,10 +22,9 @@ const mkDialogStyles = () => {
       "z-[1]",
       "w-full",
       "py-[20px]",
-      "max-w-[360px]",
     ),
     content: cn("px-[20px]"),
-    header: cn("flex", "items-center", "px-[20px]", "mb-[14px]", "gap-[12px]"),
+    header: cn("flex", "items-center", "px-[20px]"),
     closeBtn: cn(
       "cursor-pointer",
       "text-content-1",

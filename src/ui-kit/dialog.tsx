@@ -28,8 +28,10 @@ const Dialog: FC<PropsWithChildren<Props>> = ({
       onClose={onClose}
     >
       <div className={dialogStyles.layout}>
-        <Dialog_.Panel className={dialogStyles.panel}>
-          <div className={cn(dialogStyles.header, "justify-between")}>
+        <Dialog_.Panel className={cn(dialogStyles.panel, "max-w-[360px]")}>
+          <div
+            className={cn(dialogStyles.header, "justify-between", "mb-[14px]")}
+          >
             <Dialog_.Title className={dialogStyles.title}>
               {title}
             </Dialog_.Title>

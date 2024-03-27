@@ -68,7 +68,11 @@ const TradeForm: FC<Props> = ({ type, form }) => {
       <Leverage form={form} />
       <Slippage form={form} />
       <ClosingOptions form={form} />
-      <Button type="submit" variant={getButtonVariant()}>
+      <Button
+        type="submit"
+        variant={getButtonVariant()}
+        disabled={!form.formState.isValid}
+      >
         {getTitle()}
       </Button>
     </form>

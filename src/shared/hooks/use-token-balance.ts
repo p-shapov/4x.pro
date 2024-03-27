@@ -13,10 +13,10 @@ const useTokenBalance = (connection: Connection) => {
       token,
       publicKeyBase58,
     }: {
-      token: Token;
+      token?: Token;
       publicKeyBase58?: string;
     }) => {
-      if (!publicKeyBase58) return null;
+      if (!publicKeyBase58 || !token) return null;
       return fetchSplTokenBalance(
         token,
         new PublicKey(publicKeyBase58),

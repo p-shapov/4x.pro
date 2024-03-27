@@ -1,3 +1,4 @@
+"use client";
 import { offset, size, useFloating } from "@floating-ui/react-dom";
 import { Menu } from "@headlessui/react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
