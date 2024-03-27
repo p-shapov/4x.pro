@@ -1,5 +1,5 @@
 "use client";
-import { useDeferredValue, useEffect } from "react";
+import { useCallback, useDeferredValue, useEffect } from "react";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useWatch } from "react-hook-form";
@@ -23,19 +23,25 @@ const Position: FC<Props> = ({ form }) => {
   const { lastTouchedPosition, setLastTouchedPosition } =
     useLastTouchedPosition();
   const positionStyles = mkPositionStyles();
-  const base = useDeferredValue(
-    useWatch({ control: form.control, name: "position.base" }),
+  const baseToken = useDeferredValue(
+    useWatch({ control: form.control, name: "position.base.token" }),
   );
-  const quote = useDeferredValue(
-    useWatch({ control: form.control, name: "position.quote" }),
+  const baseSize = useDeferredValue(
+    useWatch({ control: form.control, name: "position.base.size" }),
+  );
+  const quoteToken = useDeferredValue(
+    useWatch({ control: form.control, name: "position.quote.token" }),
+  );
+  const quoteSize = useDeferredValue(
+    useWatch({ control: form.control, name: "position.quote.size" }),
   );
   const leverage =
     useDeferredValue(useWatch({ control: form.control, name: "leverage" })) ||
     1;
   const { priceData: baseTokenPriceData } =
-    useWatchPythPriceFeed(base?.token) || {};
+    useWatchPythPriceFeed(baseToken) || {};
   const { priceData: quoteTokenPriceData } =
-    useWatchPythPriceFeed(quote?.token) || {};
+    useWatchPythPriceFeed(quoteToken) || {};
   const rate =
     baseTokenPriceData?.price && quoteTokenPriceData?.price
       ? quoteTokenPriceData.price / baseTokenPriceData.price
@@ -45,97 +51,105 @@ const Position: FC<Props> = ({ form }) => {
     switch (lastTouchedPosition) {
       case "base":
         form.setValue("position.quote", {
-          size: roundToFirstNonZeroDecimal((base.size / rate) * leverage),
-          token: quote.token,
+          size: roundToFirstNonZeroDecimal((baseSize / rate) * leverage),
+          token: quoteToken,
         });
         break;
       case "quote":
         form.setValue("position.base", {
-          size: roundToFirstNonZeroDecimal((quote.size * rate) / leverage),
-          token: base.token,
+          size: roundToFirstNonZeroDecimal((quoteSize * rate) / leverage),
+          token: baseToken,
         });
         break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [base.token, leverage, quote.token]);
-  const mkHandleChangeBase =
+  }, [quoteToken, baseToken, leverage]);
+  const mkHandleChangeBase = useCallback(
     (onChange: (data: { size: number; token: Token }) => void) =>
-    (data: { amount: number; token: Token }) => {
-      if (!rate) return;
-      if (base.size !== data.amount) {
-        setLastTouchedPosition("base");
-        form.setValue("position.quote", {
-          size: roundToFirstNonZeroDecimal((data.amount / rate) * leverage),
-          token: quote.token,
+      (data: { amount: number; token: Token }) => {
+        if (!rate) return;
+        if (baseSize !== data.amount) {
+          setLastTouchedPosition("base");
+          form.setValue("position.quote", {
+            size: roundToFirstNonZeroDecimal((data.amount / rate) * leverage),
+            token: quoteToken,
+          });
+        }
+        onChange({
+          size: data.amount,
+          token: data.token,
         });
-      }
-      onChange({
-        size: data.amount,
-        token: data.token,
-      });
-    };
-  const mkHandleChangeQuote =
+      },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [baseSize, form, leverage, quoteToken, setLastTouchedPosition],
+  );
+  const mkHandleChangeQuote = useCallback(
     (onChange: (data: { size: number; token: Token }) => void) =>
-    (data: { amount: number; token: Token }) => {
-      if (!rate) return;
-      if (quote.size !== data.amount) {
-        setLastTouchedPosition("quote");
-        form.setValue("position.base", {
-          size: roundToFirstNonZeroDecimal((data.amount * rate) / leverage),
-          token: base.token,
+      (data: { amount: number; token: Token }) => {
+        if (!rate) return;
+        if (quoteSize !== data.amount) {
+          setLastTouchedPosition("quote");
+          form.setValue("position.base", {
+            size: roundToFirstNonZeroDecimal((data.amount * rate) / leverage),
+            token: baseToken,
+          });
+        }
+        onChange({
+          size: data.amount,
+          token: data.token,
         });
-      }
-      onChange({
-        size: data.amount,
-        token: data.token,
-      });
-    };
+      },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [baseToken, form, leverage, quoteSize, setLastTouchedPosition],
+  );
   return (
     <fieldset className={positionStyles.root}>
       <div className={positionStyles.stats}>
         <span className={positionStyles.statsItem}>
           Market:{" "}
           <span className={positionStyles.statsValue}>
-            <TokenPrice token={quote.token} fractionalDigits={2} />
+            <TokenPrice token={quoteToken} fractionalDigits={2} />
           </span>
         </span>
         <span className={positionStyles.statsDelimiter} />
         <span className={positionStyles.statsItem}>
           Limit:{" "}
           <span className={positionStyles.statsValue}>
-            <TokenPrice token={quote.token} fractionalDigits={2} />
+            <TokenPrice token={quoteToken} fractionalDigits={2} />
           </span>
         </span>
       </div>
       <Controller<SubmitData, "position.base">
         name="position.base"
         control={form.control}
-        render={({ field: { onChange, value: data } }) => (
-          <TokenField
-            placeholder="0.00"
-            tokenList={tokenList}
-            value={{
-              amount: data.size || "",
-              token: data.token,
-            }}
-            showBalance
-            onChange={mkHandleChangeBase(onChange)}
-          />
+        render={useCallback(
+          ({ field: { onChange, value: data } }) => (
+            <TokenField
+              placeholder="0.00"
+              tokenList={tokenList}
+              value={data.size || ""}
+              token={data.token}
+              showBalance
+              onChange={mkHandleChangeBase(onChange)}
+            />
+          ),
+          [mkHandleChangeBase],
         )}
       />
       <Controller<SubmitData, "position.quote">
         name="position.quote"
         control={form.control}
-        render={({ field: { onChange, value: data } }) => (
-          <TokenField
-            placeholder="0.00"
-            tokenList={[quote.token]}
-            value={{
-              amount: data.size || "",
-              token: data.token,
-            }}
-            onChange={mkHandleChangeQuote(onChange)}
-          />
+        render={useCallback(
+          ({ field: { onChange, value: data } }) => (
+            <TokenField
+              placeholder="0.00"
+              tokenList={[data.token]}
+              value={data.size || ""}
+              token={data.token}
+              onChange={mkHandleChangeQuote(onChange)}
+            />
+          ),
+          [mkHandleChangeQuote],
         )}
       />
     </fieldset>

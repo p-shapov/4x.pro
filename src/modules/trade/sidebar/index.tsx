@@ -55,8 +55,8 @@ const Sidebar = () => {
               },
             ]}
             panels={{
-              long: <TradeForm type="buy" form={tradeForm} />,
-              short: <TradeForm type="sell" form={tradeForm} />,
+              long: <TradeForm side="long" form={tradeForm} />,
+              short: <TradeForm side="short" form={tradeForm} />,
             }}
           />
         </TradeFormProvider>

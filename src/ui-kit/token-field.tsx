@@ -14,11 +14,12 @@ import { Select } from "./select";
 import { TokenBadge } from "./token-badge";
 
 type Props = {
-  token?: Token;
   tokenList?: ReadonlyArray<Token>;
   label?: string;
-  value?: { amount: number | ""; token: Token };
-  defaultValue?: { amount: number | ""; token: Token };
+  value?: number | "";
+  defaultValue?: number | "";
+  token?: Token;
+  defaultToken?: Token;
   placeholder?: string;
   readonly?: boolean;
   showBalance?: boolean;
@@ -29,25 +30,21 @@ type Props = {
 const TokenField: FC<Props> = ({
   tokenList,
   token,
+  defaultToken,
   onChange,
   defaultValue,
   value,
   showBalance,
   label,
+  placeholder,
   ...rest
 }) => {
-  if ((!tokenList || tokenList.length === 0) && !token) {
-    throw new Error("Should be at least one token");
-  }
   const fieldStyles = mkFieldStyles({ outlined: true, size: "md" });
   const { connection } = useConnection();
   const id = useId();
-  const [amount, setAmount] = useState<number>(
-    value?.amount || defaultValue?.amount || 0,
-  );
-  const [currentToken, setCurrentToken] = useState(
-    value?.token || defaultValue?.token || tokenList?.[0] || token!,
-  );
+  const [amount, setAmount] = useState<number>(value || defaultValue || 0);
+  const [currentToken, setCurrentToken] = useState(token || defaultToken);
+  if (!currentToken) throw new Error("Token is required");
   const { publicKey } = useWallet();
   const tokenBalance = useTokenBalance(connection)({
     variables: {
@@ -57,10 +54,8 @@ const TokenField: FC<Props> = ({
   });
   const tokenListKey = tokenList?.join("");
   useEffect(() => {
-    setCurrentToken(
-      value?.token || defaultValue?.token || tokenList?.[0] || token!,
-    );
-    setAmount(value?.amount || defaultValue?.amount || 0);
+    setCurrentToken(token || defaultToken);
+    setAmount(value || defaultValue || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenListKey, token]);
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -103,9 +98,10 @@ const TokenField: FC<Props> = ({
             "[&::-webkit-inner-spin-button]:appearance-none",
             fieldStyles.input,
           )}
-          value={value?.amount}
-          defaultValue={defaultValue?.amount}
+          value={value}
+          defaultValue={defaultValue}
           onChange={handleChange}
+          placeholder={placeholder}
           {...rest}
         />
         {tokenList && (
@@ -118,8 +114,8 @@ const TokenField: FC<Props> = ({
                 content: <TokenBadge token={token} gap={8} />,
               }))}
               outlined={false}
-              value={value?.token}
-              defaultValue={defaultValue?.token}
+              value={token}
+              defaultValue={defaultToken}
               onChange={handleSelect}
               popoverPosition="right"
             />

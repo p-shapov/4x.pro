@@ -17,7 +17,7 @@ import { mkTradeFormStyles } from "./styles";
 
 type Props = {
   form: UseFormReturn<SubmitData>;
-  type: "buy" | "sell";
+  side: "short" | "long";
 };
 
 const useTradeForm = () => {
@@ -41,24 +41,24 @@ const useTradeForm = () => {
   return form;
 };
 
-const TradeForm: FC<Props> = ({ type, form }) => {
+const TradeForm: FC<Props> = ({ side, form }) => {
   const tradeFormStyles = mkTradeFormStyles();
   const handleSubmit = form.handleSubmit((data) => {
     alert(JSON.stringify(data));
   });
   const getTitle = () => {
-    switch (type) {
-      case "buy":
+    switch (side) {
+      case "long":
         return "Long / Buy";
-      case "sell":
+      case "short":
         return "Short / Sell";
     }
   };
   const getButtonVariant = () => {
-    switch (type) {
-      case "buy":
+    switch (side) {
+      case "long":
         return "primary";
-      case "sell":
+      case "short":
         return "red";
     }
   };
