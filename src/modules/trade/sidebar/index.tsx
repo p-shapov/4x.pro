@@ -1,37 +1,30 @@
-import { useEffect, useState } from "react";
+import type { FC } from "react";
+import { useState } from "react";
 import { useWatch } from "react-hook-form";
 
-import {
-  TradeForm,
-  TradeFormProvider,
-  useTradeForm,
-} from "@4x.pro/components/trade-form";
+import type { useTradeForm } from "@4x.pro/components/trade-form";
+import { TradeForm, TradeFormProvider } from "@4x.pro/components/trade-form";
 import { TradeStats } from "@4x.pro/components/trade-stats";
 import { Tabs } from "@4x.pro/ui-kit/tabs";
 
 import { mkSidebarStyles } from "./styles";
 import { useTradeModule } from "../store";
 
-const Sidebar = () => {
+type Props = {
+  tradeForm: ReturnType<typeof useTradeForm>;
+};
+
+const Sidebar: FC<Props> = ({ tradeForm }) => {
   const sidebarStyles = mkSidebarStyles();
-  const selectedAsset = useTradeModule((state) => state.selectedAsset);
-  const tradeModuleHydrated = useTradeModule((state) => state.hydrated);
-  const tradeForm = useTradeForm();
+  const { selectedAsset, favorites } = useTradeModule((state) => ({
+    selectedAsset: state.selectedAsset,
+    favorites: state.favorites,
+  }));
   const leverage = useWatch({ control: tradeForm.control, name: "leverage" });
   const [side, setSide] = useState<"long" | "short">("long");
-  const quote = useWatch({
-    control: tradeForm.control,
-    name: "position.quote",
-  });
-  useEffect(() => {
-    if (tradeModuleHydrated) {
-      tradeForm.setValue("position.quote", {
-        size: quote.size,
-        token: selectedAsset,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAsset, tradeModuleHydrated]);
+  const collateralTokens = favorites.includes(selectedAsset)
+    ? favorites
+    : [selectedAsset, ...favorites];
   return (
     <div className={sidebarStyles.root}>
       <div className={sidebarStyles.tabs}>
@@ -55,8 +48,20 @@ const Sidebar = () => {
               },
             ]}
             panels={{
-              long: <TradeForm side="long" form={tradeForm} />,
-              short: <TradeForm side="short" form={tradeForm} />,
+              long: (
+                <TradeForm
+                  side="long"
+                  form={tradeForm}
+                  collateralTokens={collateralTokens}
+                />
+              ),
+              short: (
+                <TradeForm
+                  side="short"
+                  form={tradeForm}
+                  collateralTokens={collateralTokens}
+                />
+              ),
             }}
           />
         </TradeFormProvider>

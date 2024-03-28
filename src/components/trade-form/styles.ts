@@ -45,11 +45,12 @@ const mkPositionStyles = () => {
     stats: cn(
       layoutStyles.strongSurface,
       "flex",
+      "text-body-12",
       "gap-[1.2rem]",
       "px-[1.6rem]",
       "py-[0.8rem]",
     ),
-    statsItem: cn("flex-1", "text-body-12", "text-content-2"),
+    statsTitle: cn("flex-1", "text-content-2"),
     statsValue: cn("text-content-1"),
     statsDelimiter: cn(
       "inline-block",

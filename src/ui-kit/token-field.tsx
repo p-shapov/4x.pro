@@ -4,7 +4,6 @@ import cn from "classnames";
 import { useEffect, useId, useState } from "react";
 import type { ChangeEventHandler, FC } from "react";
 
-import { getTokenSymbol } from "@4x.pro/configs/dex-platform";
 import type { Token } from "@4x.pro/configs/dex-platform";
 import { useTokenBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import { mkFieldStyles } from "@4x.pro/shared/styles/field";
@@ -28,8 +27,8 @@ type Props = {
 };
 
 const TokenField: FC<Props> = ({
-  tokenList,
   token,
+  tokenList,
   defaultToken,
   onChange,
   defaultValue,
@@ -76,7 +75,7 @@ const TokenField: FC<Props> = ({
           className={cn(fieldStyles.label, "flex", "justify-between")}
         >
           <span>{label}</span>
-          {showBalance && (
+          {showBalance && typeof tokenBalance.data === "number" && (
             <span>
               <span className={cn("text-h6", "text-content-2")}>Balance: </span>
               <span className={cn("text-h6", "text-green")}>
@@ -102,10 +101,14 @@ const TokenField: FC<Props> = ({
           defaultValue={defaultValue}
           onChange={handleChange}
           placeholder={placeholder}
+          style={{
+            minWidth: (placeholder || "").length + 2 + "ch",
+            width: (value || amount).toString().length + 2 + "ch",
+          }}
           {...rest}
         />
         {tokenList && (
-          <span className={fieldStyles.postfix}>
+          <span className={cn(fieldStyles.postfix, "flex-1", "justify-end")}>
             <Select
               size="sm"
               readonly={rest.readonly}
@@ -120,9 +123,6 @@ const TokenField: FC<Props> = ({
               popoverPosition="right"
             />
           </span>
-        )}
-        {token && !tokenList && (
-          <span className={fieldStyles.postfix}>{getTokenSymbol(token)}</span>
         )}
       </span>
     </div>

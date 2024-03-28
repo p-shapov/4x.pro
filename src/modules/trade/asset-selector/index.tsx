@@ -4,7 +4,11 @@ import { Listbox } from "@headlessui/react";
 import type { FC } from "react";
 
 import type { Token } from "@4x.pro/configs/dex-platform";
-import { getTokenLogo, getTokenSymbol } from "@4x.pro/configs/dex-platform";
+import {
+  collateralTokens,
+  getTokenLogo,
+  getTokenSymbol,
+} from "@4x.pro/configs/dex-platform";
 import { formatRate } from "@4x.pro/shared/utils/number";
 import { Icon } from "@4x.pro/ui-kit/icon";
 
@@ -15,8 +19,6 @@ import { useTradeModule } from "../store";
 type Props = {
   onChange?: (asset: Token) => void;
 };
-
-const assetList: Token[] = ["SOL", "BTC", "ETH"];
 
 const AssetSelector: FC<Props> = ({ onChange }) => {
   const { refs, floatingStyles } = useFloating({
@@ -67,7 +69,7 @@ const AssetSelector: FC<Props> = ({ onChange }) => {
         style={floatingStyles}
       >
         <span className={assetSelectorStyles.optionsArrow}></span>
-        {assetList.map((token) => (
+        {collateralTokens.map((token) => (
           <AssetItem key={token} token={token} />
         ))}
       </Listbox.Options>

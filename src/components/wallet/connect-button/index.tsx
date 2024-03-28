@@ -22,7 +22,7 @@ const ConnectButton: FC<Props> = (props) => {
     if (connected && publicKey) {
       return trim(publicKey.toString(), 4, 4);
     }
-    return "Get started";
+    return "Connect wallet";
   };
   return (
     <Button {...props} onClick={handleOpen}>

@@ -1,5 +1,6 @@
 import {
   PythConnection,
+  PythHttpClient,
   getPythProgramKeyForCluster,
 } from "@pythnetwork/client";
 import { Connection, PublicKey } from "@solana/web3.js";
@@ -15,6 +16,7 @@ import { getPythFeedIds_to_USD, getRpcEndpoint } from "./utils";
 type Store = {
   hydrated: boolean;
   pythConnection: PythConnection | null;
+  pythHttpClient: PythHttpClient | null;
   rpcEndpoint: string;
   rpcProvider: RpcProvider | "custom";
 };
@@ -37,6 +39,7 @@ const useDexPlatformConfig = create<Store & Actions>()(
     immer((set) => ({
       hydrated: false,
       pythConnection: null,
+      pythHttpClient: null,
       rpcEndpoint: getRpcEndpoint("helius"),
       rpcProvider: "helius",
       setRpcProvider: (rpcProvider) => {
@@ -51,6 +54,11 @@ const useDexPlatformConfig = create<Store & Actions>()(
             solanaConnection.commitment,
             pythFeedIds_to_USD.map((feedId) => new PublicKey(feedId)),
           );
+          state.pythHttpClient = new PythHttpClient(
+            solanaConnection,
+            pythProgramKey,
+            solanaConnection.commitment,
+          );
           state.rpcEndpoint = rpcEndpoint;
         });
       },
@@ -64,6 +72,11 @@ const useDexPlatformConfig = create<Store & Actions>()(
             pythProgramKey,
             connection.commitment,
             pythFeedIds_to_USD.map((feedId) => new PublicKey(feedId)),
+          );
+          state.pythHttpClient = new PythHttpClient(
+            connection,
+            pythProgramKey,
+            connection.commitment,
           );
           state.rpcProvider = "custom";
         });
@@ -84,9 +97,15 @@ const useDexPlatformConfig = create<Store & Actions>()(
             connection.commitment,
             pythFeedIds_to_USD.map((feedId) => new PublicKey(feedId)),
           );
+          const pythHttpClient = new PythHttpClient(
+            connection,
+            pythProgramKey,
+            connection.commitment,
+          );
           return {
             ...state,
             ...persistedState,
+            pythHttpClient,
             pythConnection,
             hydrated: true,
           };
@@ -98,7 +117,12 @@ const useDexPlatformConfig = create<Store & Actions>()(
           connection.commitment,
           pythFeedIds_to_USD.map((feedId) => new PublicKey(feedId)),
         );
-        return { ...state, pythConnection, hydrated: true };
+        const pythHttpClient = new PythHttpClient(
+          connection,
+          pythProgramKey,
+          connection.commitment,
+        );
+        return { ...state, pythConnection, pythHttpClient, hydrated: true };
       },
     },
   ),

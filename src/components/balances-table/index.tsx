@@ -36,12 +36,12 @@ const TableRow: FC<{ publicKey: PublicKey | null; asset: Token }> = ({
         {formatCurrency(asset)(tokenBalance.data)}
       </td>
       <td className={tableStyles.cell}>
-        <TokenPrice token={asset} fractionalDigits={2}>
+        <TokenPrice token={asset} fractionalDigits={2} watch>
           {tokenBalance.data}
         </TokenPrice>
       </td>
       <td className={tableStyles.cell}>
-        <TokenPrice token={asset} fractionalDigits={2} />
+        <TokenPrice token={asset} fractionalDigits={2} watch />
       </td>
     </tr>
   );

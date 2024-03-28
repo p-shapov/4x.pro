@@ -57,24 +57,22 @@ const subscribeOnStream =
         onRealtimeCallback(bar);
       }
     };
-    pythConnection.onPriceChangeVerbose(listener);
-    listenersCache.set(listenerGuid, listener);
-    if (pythConnection.callbacks.length === 1) {
+    if (pythConnection.callbacks.length === 0) {
       pythConnection.start();
     }
+    pythConnection.onPriceChangeVerbose(listener);
+    listenersCache.set(listenerGuid, listener);
   };
 
 const unsubscribeOnStream =
   (pythConnection: PythConnection) => (listenerGuid: string) => {
-    if (pythConnection.callbacks.length === 1) {
+    const listener = listenersCache.get(listenerGuid);
+    pythConnection.callbacks = pythConnection.callbacks.filter(
+      (callback) => callback !== listener,
+    );
+    listenersCache.delete(listenerGuid);
+    if (pythConnection.callbacks.length === 0) {
       pythConnection.stop();
-      return;
-    } else {
-      const listener = listenersCache.get(listenerGuid);
-      pythConnection.callbacks = pythConnection.callbacks.filter(
-        (callback) => callback !== listener,
-      );
-      listenersCache.delete(listenerGuid);
     }
   };
 

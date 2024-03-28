@@ -4,6 +4,7 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useForm } from "react-hook-form";
 
+import type { Token } from "@4x.pro/configs/dex-platform";
 import { Button } from "@4x.pro/ui-kit/button";
 
 import { ClosingOptions } from "./closing-options";
@@ -18,6 +19,7 @@ import { mkTradeFormStyles } from "./styles";
 type Props = {
   form: UseFormReturn<SubmitData>;
   side: "short" | "long";
+  collateralTokens: readonly Token[];
 };
 
 const useTradeForm = () => {
@@ -41,7 +43,7 @@ const useTradeForm = () => {
   return form;
 };
 
-const TradeForm: FC<Props> = ({ side, form }) => {
+const TradeForm: FC<Props> = ({ side, form, collateralTokens }) => {
   const tradeFormStyles = mkTradeFormStyles();
   const handleSubmit = form.handleSubmit((data) => {
     alert(JSON.stringify(data));
@@ -64,7 +66,7 @@ const TradeForm: FC<Props> = ({ side, form }) => {
   };
   return (
     <form className={tradeFormStyles.root} onSubmit={handleSubmit}>
-      <Position form={form} />
+      <Position form={form} collateralTokens={collateralTokens} />
       <Leverage form={form} />
       <Slippage form={form} />
       <ClosingOptions form={form} />

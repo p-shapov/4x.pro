@@ -8,7 +8,6 @@ const mkInputStyles = (outlined: boolean, size: Size) =>
     "appearance-none",
     "text-content-1",
     "placeholder:text-content-3",
-    "flex-1",
     "outline-none",
     "w-full",
     {

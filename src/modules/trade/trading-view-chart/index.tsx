@@ -17,12 +17,13 @@ const TRADING_VIEW_ID = "tw-widget-advanced-chart";
 
 type Props = {
   height: number;
+  onChange?: (asset: Token) => void;
 };
 
 const TradingViewChart = forwardRef<
   IChartingLibraryWidget | null,
   PropsWithStyles<Props, typeof mkTradingViewChartStyles>
->(({ height, layoutIsDragging }, ref) => {
+>(({ height, layoutIsDragging, onChange }, ref) => {
   const [tvContentWindowLoaded, setTvContentWindowLoaded] = useState(false);
   const tradingViewChartStyles = mkTradingViewChartStyles({ layoutIsDragging });
   const selectedAsset = useTradeModule((state) => state.selectedAsset);
@@ -35,6 +36,7 @@ const TradingViewChart = forwardRef<
   >(ref, () => tvWidget, [tvWidget]);
   const handleAssetChange = (asset: Token) => {
     tvWidget?.chart().setSymbol(getTvSymbol(asset));
+    onChange?.(asset);
   };
   useEffect(() => {
     const iframe = document
@@ -57,7 +59,7 @@ const TradingViewChart = forwardRef<
         <AssetSelector onChange={handleAssetChange} />
         <div className={tradingViewChartStyles.headerSeparator} />
         <span className={tradingViewChartStyles.marketPrice}>
-          <TokenPrice token={selectedAsset} fractionalDigits={2} />
+          <TokenPrice token={selectedAsset} fractionalDigits={2} watch />
         </span>
         <div className={tradingViewChartStyles.headerSeparator} />
         <span>

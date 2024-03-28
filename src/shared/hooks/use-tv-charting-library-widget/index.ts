@@ -26,17 +26,12 @@ const useTvChartingLibraryWidget = (
   const visible = useVisibilityChange();
 
   useEffect(() => {
-    let container: HTMLElement | undefined | null = null;
-    if (typeof config.container === "string") {
-      container = document.getElementById(config.container);
-    } else {
-      container = config.container;
+    if (visible && tvChartingLibraryWidget) {
+      tvChartingLibraryWidget.onChartReady(() => {
+        tvChartingLibraryWidget.chart().resetData();
+      });
     }
-    const iframe = container?.querySelector("iframe");
-    if (visible && iframe) {
-      iframe.contentWindow?.location.reload();
-    }
-  }, [config.container, visible]);
+  }, [tvChartingLibraryWidget, visible]);
 
   useEffect(() => {
     const loadTvChartingLibraryWidget = async () => {

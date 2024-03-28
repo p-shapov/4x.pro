@@ -6,6 +6,8 @@ type RpcProvider = (typeof rpcProviders)[number];
 
 const tokenList = ["BTC", "ETH", "USDC", "SOL"] as const;
 type Token = (typeof tokenList)[number];
+const depositTokens: readonly Token[] = ["BTC", "ETH", "USDC", "SOL"];
+const collateralTokens: readonly Token[] = ["SOL", "ETH", "BTC"];
 
 type Config = {
   rpcEndpoints: Record<RpcProvider, string>;
@@ -59,4 +61,10 @@ const DexPlatformConfig: Config = {
 };
 
 export type { Token, RpcProvider };
-export { DexPlatformConfig, tokenList, rpcProviders };
+export {
+  DexPlatformConfig,
+  tokenList,
+  rpcProviders,
+  depositTokens,
+  collateralTokens,
+};
