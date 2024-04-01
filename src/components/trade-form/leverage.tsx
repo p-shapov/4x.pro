@@ -18,6 +18,7 @@ type Props = {
 
 const Leverage: FC<Props> = ({ form }) => {
   const leverageStyles = mkLeverageStyles();
+  const errors = form.formState.errors;
   return (
     <fieldset className={leverageStyles.root}>
       <span className={leverageStyles.label}>Leverage</span>
@@ -27,10 +28,12 @@ const Leverage: FC<Props> = ({ form }) => {
           control={form.control}
           render={({ field: { value, onChange } }) => (
             <NumberField
-              value={value}
+              value={value || ""}
               min={1.1}
               max={100}
               step={0.1}
+              placeholder="0.00"
+              error={!!errors.leverage}
               onChange={onChange}
             />
           )}
@@ -44,7 +47,7 @@ const Leverage: FC<Props> = ({ form }) => {
             options={[25, 50, 75, 100]}
             value={value}
             onChange={onChange}
-            formatValue={formatRate}
+            formatValue={(value) => formatRate(value, 0)}
           />
         )}
       />

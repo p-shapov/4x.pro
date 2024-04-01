@@ -5,37 +5,42 @@ import type { UseFormReturn } from "react-hook-form";
 import { NumberField } from "@4x.pro/ui-kit/number-field";
 
 import type { SubmitData } from "./schema";
-import { mkClosingOptionsStyles } from "./styles";
+import { mkTriggerPriceStyles } from "./styles";
 
 type Props = {
   form: UseFormReturn<SubmitData>;
 };
 
-const ClosingOptions: FC<Props> = ({ form }) => {
-  const closingOptionsStyles = mkClosingOptionsStyles();
+const TriggerPrice: FC<Props> = ({ form }) => {
+  const errors = form.formState.errors;
+  const triggerPriceStyles = mkTriggerPriceStyles();
   return (
-    <fieldset className={closingOptionsStyles.root}>
+    <fieldset className={triggerPriceStyles.root}>
       <Controller<SubmitData, "takeProfit">
         name="takeProfit"
         control={form.control}
-        render={({ field: { onChange } }) => (
+        render={({ field: { value, onChange } }) => (
           <NumberField
             label="Take profit"
             placeholder="0.00"
             postfix="$"
+            value={value || ""}
             onChange={onChange}
+            error={!!errors.takeProfit}
           />
         )}
       />
       <Controller<SubmitData, "stopLoss">
         name="stopLoss"
         control={form.control}
-        render={({ field: { onChange } }) => (
+        render={({ field: { value, onChange } }) => (
           <NumberField
             label="Stop loss"
             placeholder="0.00"
             postfix="$"
+            value={value || ""}
             onChange={onChange}
+            error={!!errors.stopLoss}
           />
         )}
       />
@@ -43,4 +48,4 @@ const ClosingOptions: FC<Props> = ({ form }) => {
   );
 };
 
-export { ClosingOptions };
+export { TriggerPrice };

@@ -1,52 +1,32 @@
-const POSITIONS = [
+import type { ComponentProps } from "react";
+
+import type { PositionsTable } from "@4x.pro/components/positions-table";
+
+const POSITIONS: ComponentProps<typeof PositionsTable>["items"] = [
   {
     id: "1",
-    asset: "SOL",
-    side: "short",
-    leverage: 5,
-    size: 100,
-    collateral: 1000,
-    pnl: 100,
-    entryPrice: 100,
-    markPrice: 100,
-    liquidationPrice: 100,
+    collateralToken: "SOL",
+    side: "long",
+    leverage: 3,
+    collateral: 0.0519,
+    entryPrice: 95.8,
   },
   {
     id: "2",
-    asset: "BTC",
-    side: "long",
+    collateralToken: "BTC",
+    side: "short",
     leverage: 5,
-    size: 100,
-    collateral: 1000,
-    pnl: 100,
-    entryPrice: 100,
-    markPrice: 100,
-    liquidationPrice: 100,
+    collateral: 0.0001,
+    entryPrice: 66000,
   },
   {
     id: "3",
-    asset: "USDC",
-    side: "short",
-    leverage: 5,
-    size: 100,
-    collateral: 1000,
-    pnl: 100,
-    entryPrice: 100,
-    markPrice: 100,
-    liquidationPrice: 100,
-  },
-  {
-    id: "4",
-    asset: "ETH",
+    collateralToken: "ETH",
     side: "long",
-    leverage: 5,
-    size: 100,
-    collateral: 1000,
-    pnl: 100,
-    entryPrice: 100,
-    markPrice: 100,
-    liquidationPrice: 100,
+    leverage: 3,
+    collateral: 0.5,
+    entryPrice: 3500,
   },
-] as const;
+];
 
 export { POSITIONS };

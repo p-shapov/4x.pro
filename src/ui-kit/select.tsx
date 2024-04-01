@@ -3,7 +3,7 @@ import { Listbox } from "@headlessui/react";
 import cn from "classnames";
 import type { FC, ReactNode } from "react";
 
-import { mkFieldStyles } from "@4x.pro/shared/styles/field";
+import { mkSelectStyles } from "@4x.pro/shared/styles/select";
 import type { PropsWithStyles } from "@4x.pro/shared/types";
 
 import { Icon } from "./icon";
@@ -13,43 +13,41 @@ type Props = {
     value: string;
     content: ReactNode;
   }[];
-  label?: string;
   value?: string;
   readonly?: boolean;
   defaultValue?: string;
   onChange?: (value: string) => void;
 };
 
-const Select: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
+const Select: FC<PropsWithStyles<Props, typeof mkSelectStyles>> = ({
   options,
-  label,
-  outlined,
-  size,
+  inline,
   popoverPosition,
   readonly,
   ...rest
 }) => {
-  const fieldStyles = mkFieldStyles({ outlined, size, popoverPosition });
+  const selectStyles = mkSelectStyles({ inline, popoverPosition });
   return (
-    <div className={fieldStyles.root}>
-      {label && (
-        <Listbox.Label className={fieldStyles.label}>{label}</Listbox.Label>
-      )}
+    <div className={selectStyles.root}>
       <Listbox {...rest} disabled={readonly || options.length === 1}>
-        <Listbox.Button className={fieldStyles.inputWrap}>
+        <Listbox.Button className={cn(selectStyles.inputWrap, "w-max")}>
           {({ value, open }) => {
             const current = options.find((opt) => opt.value === value);
             return (
               <div
-                className={cn(fieldStyles.option, fieldStyles.optionInactive)}
+                className={cn({
+                  [cn(selectStyles.option, selectStyles.optionInactive)]:
+                    !inline,
+                  [cn(selectStyles.optionInline)]: inline,
+                })}
               >
-                <span className={fieldStyles.optionText}>
+                <span className={selectStyles.optionText}>
                   {current?.content}
                 </span>
                 {options.length > 1 && (
-                  <span className={fieldStyles.postfix}>
+                  <span className={selectStyles.postfix}>
                     <Icon
-                      className={fieldStyles.icon}
+                      className={selectStyles.icon}
                       src={
                         open
                           ? "/icons/arrow-up-1.svg"
@@ -63,21 +61,21 @@ const Select: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
           }}
         </Listbox.Button>
         <Listbox.Options
-          className={cn(fieldStyles.options, fieldStyles.popover)}
+          className={cn(selectStyles.options, selectStyles.popover)}
         >
           {options.map((option) => (
             <Listbox.Option
               key={option.value}
               value={option.value}
               className={({ active, selected }) =>
-                cn(fieldStyles.option, {
-                  [fieldStyles.optionActive]: active,
-                  [fieldStyles.optionSelected]: selected,
-                  [fieldStyles.optionInactive]: !selected && !active,
+                cn(selectStyles.option, {
+                  [selectStyles.optionActive]: active,
+                  [selectStyles.optionSelected]: selected,
+                  [selectStyles.optionInactive]: !selected && !active,
                 })
               }
             >
-              <span className={fieldStyles.optionText}>{option.content}</span>
+              <span className={selectStyles.optionText}>{option.content}</span>
             </Listbox.Option>
           ))}
         </Listbox.Options>

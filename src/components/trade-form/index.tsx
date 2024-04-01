@@ -1,13 +1,14 @@
 "use client";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useConnection } from "@solana/wallet-adapter-react";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import type { Token } from "@4x.pro/configs/dex-platform";
+import { useIsInsufficientBalance } from "@4x.pro/shared/hooks/use-is-insufficient-balance";
 import { Button } from "@4x.pro/ui-kit/button";
 
-import { ClosingOptions } from "./closing-options";
 import { Leverage } from "./leverage";
 import { Position } from "./position";
 import { TradeFormProvider } from "./provider";
@@ -15,6 +16,7 @@ import type { SubmitData } from "./schema";
 import { submitDataSchema } from "./schema";
 import { Slippage } from "./slippage";
 import { mkTradeFormStyles } from "./styles";
+import { TriggerPrice } from "./trigger-price";
 
 type Props = {
   form: UseFormReturn<SubmitData>;
@@ -48,6 +50,15 @@ const TradeForm: FC<Props> = ({ side, form, collateralTokens }) => {
   const handleSubmit = form.handleSubmit((data) => {
     alert(JSON.stringify(data));
   });
+  const position = useWatch({
+    control: form.control,
+    name: "position.base",
+  });
+  const { connection } = useConnection();
+  const isInsufficientBalance = useIsInsufficientBalance(connection)(
+    position.token,
+    position.size,
+  );
   const getTitle = () => {
     switch (side) {
       case "long":
@@ -65,15 +76,15 @@ const TradeForm: FC<Props> = ({ side, form, collateralTokens }) => {
     }
   };
   return (
-    <form className={tradeFormStyles.root} onSubmit={handleSubmit}>
+    <form className={tradeFormStyles.root} onSubmit={handleSubmit} noValidate>
       <Position form={form} collateralTokens={collateralTokens} />
       <Leverage form={form} />
       <Slippage form={form} />
-      <ClosingOptions form={form} />
+      <TriggerPrice form={form} />
       <Button
         type="submit"
         variant={getButtonVariant()}
-        disabled={!form.formState.isValid}
+        disabled={isInsufficientBalance}
       >
         {getTitle()}
       </Button>

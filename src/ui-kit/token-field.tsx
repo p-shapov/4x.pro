@@ -4,6 +4,7 @@ import cn from "classnames";
 import { useEffect, useId, useState } from "react";
 import type { ChangeEventHandler, FC } from "react";
 
+import { getTokenSymbol } from "@4x.pro/configs/dex-platform";
 import type { Token } from "@4x.pro/configs/dex-platform";
 import { useTokenBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import { mkFieldStyles } from "@4x.pro/shared/styles/field";
@@ -21,7 +22,10 @@ type Props = {
   defaultToken?: Token;
   placeholder?: string;
   readonly?: boolean;
-  showBalance?: boolean;
+  labelVariant?: "balance" | "max";
+  showPostfix?: boolean;
+  max?: number;
+  error?: boolean;
   onFocus?: () => void;
   onChange?: (data: { amount: number; token: Token }) => void;
 };
@@ -33,12 +37,15 @@ const TokenField: FC<Props> = ({
   onChange,
   defaultValue,
   value,
-  showBalance,
+  labelVariant,
   label,
   placeholder,
+  showPostfix,
+  max,
+  error,
   ...rest
 }) => {
-  const fieldStyles = mkFieldStyles({ outlined: true, size: "md" });
+  const fieldStyles = mkFieldStyles({ error });
   const { connection } = useConnection();
   const id = useId();
   const [amount, setAmount] = useState<number>(value || defaultValue || 0);
@@ -47,7 +54,7 @@ const TokenField: FC<Props> = ({
   const { publicKey } = useWallet();
   const tokenBalance = useTokenBalance(connection)({
     variables: {
-      token: showBalance ? currentToken : undefined,
+      token: labelVariant === "balance" ? currentToken : undefined,
       account: publicKey?.toBase58(),
     },
   });
@@ -69,17 +76,33 @@ const TokenField: FC<Props> = ({
   };
   return (
     <div className={fieldStyles.root}>
-      {(label || showBalance) && (
+      {(label || labelVariant) && (
         <label
           htmlFor={id}
           className={cn(fieldStyles.label, "flex", "justify-between")}
         >
           <span>{label}</span>
-          {showBalance && typeof tokenBalance.data === "number" && (
+          {labelVariant === "balance" &&
+            typeof tokenBalance.data === "number" && (
+              <span>
+                <span className={cn("text-h6", "text-content-2")}>
+                  Balance:{" "}
+                </span>
+                <span
+                  className={cn("text-h6", {
+                    "text-green": !!tokenBalance.data,
+                    "text-red": !tokenBalance.data,
+                  })}
+                >
+                  {formatCurrency(currentToken)(tokenBalance.data || 0)}
+                </span>
+              </span>
+            )}
+          {labelVariant === "max" && typeof max === "number" && (
             <span>
-              <span className={cn("text-h6", "text-content-2")}>Balance: </span>
-              <span className={cn("text-h6", "text-green")}>
-                {formatCurrency(currentToken)(tokenBalance.data)}
+              <span className={cn("text-h6", "text-content-2")}>Max: </span>
+              <span className={cn("text-h6", "text-content-2")}>
+                {formatCurrency(currentToken)(max)}
               </span>
             </span>
           )}
@@ -101,40 +124,32 @@ const TokenField: FC<Props> = ({
           defaultValue={defaultValue}
           onChange={handleChange}
           placeholder={placeholder}
-          style={{
-            minWidth: (placeholder || "").length + 2 + "ch",
-            width: (value || amount).toString().length + 2 + "ch",
-          }}
+          min={0}
+          max={max}
           {...rest}
         />
+        {showPostfix && (
+          <span className={fieldStyles.postfix}>
+            {getTokenSymbol(currentToken)}
+          </span>
+        )}
         {tokenList && (
-          <span className={cn(fieldStyles.postfix, "flex-1", "justify-end")}>
+          <span className={cn(fieldStyles.postfix, "justify-end")}>
             <Select
-              size="sm"
               readonly={rest.readonly}
               options={tokenList.map((token) => ({
                 value: token,
                 content: <TokenBadge token={token} gap={8} />,
               }))}
-              outlined={false}
               value={token}
               defaultValue={defaultToken}
               onChange={handleSelect}
-              popoverPosition="right"
+              popoverPosition="left"
             />
           </span>
         )}
       </span>
     </div>
-    // <NumberField
-    //   postfix={
-
-    //   }
-    //   onChange={handleChange}
-    //   value={value?.amount}
-    //   defaultValue={defaultValue?.amount}
-    //   {...rest}
-    // />
   );
 };
 

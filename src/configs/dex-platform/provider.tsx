@@ -10,6 +10,7 @@ import {
   WalletConnectWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect } from "react";
 import type { FC, PropsWithChildren } from "react";
 
 import { useDexPlatformConfig } from "./store";
@@ -44,7 +45,16 @@ const dexPlatformQueryClient = new QueryClient({
 });
 
 const DexPlatformProvider: FC<PropsWithChildren> = ({ children }) => {
-  const rpcEndpoint = useDexPlatformConfig((state) => state.rpcEndpoint);
+  const { rpcEndpoint, pythConnection } = useDexPlatformConfig((state) => ({
+    pythConnection: state.pythConnection,
+    rpcEndpoint: state.rpcEndpoint,
+  }));
+  useEffect(() => {
+    pythConnection?.start();
+    return () => {
+      pythConnection?.stop();
+    };
+  }, [pythConnection]);
   return (
     <QueryClientProvider client={dexPlatformQueryClient}>
       <ConnectionProvider endpoint={rpcEndpoint}>

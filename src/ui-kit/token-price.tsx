@@ -27,33 +27,30 @@ const WatchTokenPrice: FC<Props> = ({
     if (!price) return formatCurrency(currency)(undefined);
     if (typeof children === "function") {
       const result = children(price);
-      if (
-        typeof result === "number" ||
-        typeof result === "undefined" ||
-        result === null
-      ) {
-        return formatCurrency(currency)(result, fractionalDigits);
-      }
       return result;
     }
     if (typeof children === "number") {
-      return formatCurrency(currency)(price * children, fractionalDigits);
+      return price * children;
     }
-    return formatCurrency(currency)(undefined);
+    return undefined;
   };
   const tokenPrice = getPrice(priceData?.price);
   return currency === "$" ? (
-    tokenPrice
+    typeof tokenPrice === "number" || typeof tokenPrice === "undefined" ? (
+      formatCurrency(currency)(tokenPrice, fractionalDigits)
+    ) : (
+      tokenPrice
+    )
   ) : (
     <WatchTokenPrice token={currency} currency="$">
       {(currencyPrice) => {
-        if (!currencyPrice) return formatCurrency(token)(undefined);
+        if (!currencyPrice) return formatCurrency(currency)(undefined);
         if (typeof tokenPrice === "number")
-          return formatCurrency(token)(
+          return formatCurrency(currency)(
             tokenPrice / currencyPrice,
             fractionalDigits,
           );
-        return tokenPrice;
+        return formatCurrency(currency)(undefined);
       }}
     </WatchTokenPrice>
   );

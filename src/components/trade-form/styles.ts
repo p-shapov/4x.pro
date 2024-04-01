@@ -60,7 +60,7 @@ const mkPositionStyles = () => {
     ),
   };
 };
-const mkClosingOptionsStyles = () => {
+const mkTriggerPriceStyles = () => {
   return {
     root: cn("flex", "gap-[1.2rem]"),
   };
@@ -71,5 +71,5 @@ export {
   mkLeverageStyles,
   mkPositionStyles,
   mkSlippageStyles,
-  mkClosingOptionsStyles,
+  mkTriggerPriceStyles,
 };

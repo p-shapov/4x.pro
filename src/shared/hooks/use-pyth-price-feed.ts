@@ -41,7 +41,6 @@ const useWatchPythPriceFeed =
     return useSyncExternalStore<PriceFeed>(
       (listener) => {
         if (listeners.size === 0) {
-          pythConnection?.start();
           pythConnection?.onPriceChange((product, priceData) => {
             const token = TokenMap[product.base];
             if (!token) return;
@@ -52,9 +51,6 @@ const useWatchPythPriceFeed =
         listeners.add(listener);
         return () => {
           listeners.delete(listener);
-          if (listeners.size === 0) {
-            pythConnection?.stop();
-          }
         };
       },
       () => PriceFeeds[token],

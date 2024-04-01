@@ -68,7 +68,7 @@ const Sidebar: FC<Props> = ({ tradeForm }) => {
       </div>
       <div className={sidebarStyles.stats}>
         <TradeStats
-          collateral={selectedAsset}
+          collateralToken={selectedAsset}
           side={side}
           leverage={leverage}
         />

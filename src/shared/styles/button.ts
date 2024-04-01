@@ -4,18 +4,21 @@ type Variant = "primary" | "accent" | "red";
 
 const mkRootFilled = (variant: Variant, disabled: boolean) =>
   cn({
-    "bg-opacity-50": disabled,
-    [cn("bg-primary", "border-primary", "text-body")]: variant === "primary",
-    [cn("bg-accent", "border-accent", "text-content-1")]: variant === "accent",
-    [cn("bg-red", "border-red", "text-content-1")]: variant === "red",
+    [cn("bg-primary", "border-primary", "text-body")]:
+      variant === "primary" && !disabled,
+    [cn("bg-accent", "border-accent", "text-content-1")]:
+      variant === "accent" && !disabled,
+    [cn("bg-red", "border-red", "text-content-1")]:
+      variant === "red" && !disabled,
+    [cn("bg-content-3", "text-content-2", "border-content-3")]: disabled,
   });
 
 const mkRootOutlined = (variant: Variant, disabled: boolean) =>
   cn("bg-transparent", "text-content-1", {
-    "border-opacity-50": disabled,
-    "border-primary": variant === "primary",
-    "border-accent": variant === "accent",
-    "border-red": variant === "red",
+    [cn("border-primary")]: variant === "primary" && !disabled,
+    [cn("border-accent")]: variant === "accent" && !disabled,
+    [cn("border-red")]: variant === "red" && !disabled,
+    [cn("border-content-3", "text-content-2")]: disabled,
   });
 
 type Props = {

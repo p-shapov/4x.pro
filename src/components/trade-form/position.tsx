@@ -24,6 +24,7 @@ type Props = {
 };
 
 const Position: FC<Props> = ({ form, collateralTokens }) => {
+  const errors = form.formState.errors;
   const { lastTouchedPosition, setLastTouchedPosition } =
     useLastTouchedPosition();
   const positionStyles = mkPositionStyles();
@@ -118,7 +119,9 @@ const Position: FC<Props> = ({ form, collateralTokens }) => {
             tokenList={depositTokens}
             value={data.size || ""}
             token={data.token}
-            showBalance
+            error={
+              !!(errors.position?.quote?.size && errors.position?.base?.size)
+            }
             onChange={mkHandleChangeBase(onChange)}
           />
         )}
@@ -131,6 +134,9 @@ const Position: FC<Props> = ({ form, collateralTokens }) => {
             placeholder="0.00"
             tokenList={collateralTokens}
             value={data.size || ""}
+            error={
+              !!(errors.position?.quote?.size && errors.position?.base?.size)
+            }
             token={data.token}
             onChange={mkHandleChangeQuote(onChange)}
           />

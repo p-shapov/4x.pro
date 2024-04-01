@@ -15,6 +15,7 @@ type Props = {
 
 const Slippage: FC<Props> = ({ form }) => {
   const slippageStyles = mkSlippageStyles();
+  const errors = form.formState.errors;
   return (
     <fieldset className={slippageStyles.root}>
       <span className={slippageStyles.label}>Slippage Tolerance</span>
@@ -24,12 +25,14 @@ const Slippage: FC<Props> = ({ form }) => {
           control={form.control}
           render={({ field: { value, onChange } }) => (
             <NumberField
-              value={value}
+              value={value || ""}
               min={0}
               max={1}
               step={0.1}
+              placeholder="0.00"
               postfix="%"
               onChange={onChange}
+              error={!!errors.slippage}
             />
           )}
         />

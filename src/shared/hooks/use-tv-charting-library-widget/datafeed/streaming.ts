@@ -57,9 +57,6 @@ const subscribeOnStream =
         onRealtimeCallback(bar);
       }
     };
-    if (pythConnection.callbacks.length === 0) {
-      pythConnection.start();
-    }
     pythConnection.onPriceChangeVerbose(listener);
     listenersCache.set(listenerGuid, listener);
   };
@@ -71,9 +68,6 @@ const unsubscribeOnStream =
       (callback) => callback !== listener,
     );
     listenersCache.delete(listenerGuid);
-    if (pythConnection.callbacks.length === 0) {
-      pythConnection.stop();
-    }
   };
 
 export { subscribeOnStream, unsubscribeOnStream };

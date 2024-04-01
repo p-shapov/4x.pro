@@ -19,13 +19,12 @@ type Props = {
 const TextField: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
   label,
   postfix,
-  outlined = true,
-  size = "md",
   onChange,
+  error,
   ...rest
 }) => {
   const id = useId();
-  const fieldStyles = mkFieldStyles({ outlined, size });
+  const fieldStyles = mkFieldStyles({ error });
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange?.(event.target.value);
   };

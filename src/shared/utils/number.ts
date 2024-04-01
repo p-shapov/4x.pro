@@ -5,45 +5,37 @@ type Formatter = (value?: number | null, fractionalDigits?: number) => string;
 const roundToFirstNonZeroDecimal = (value: number) => {
   return Number(value.toFixed(20).match(/^-?\d*\.?0*\d{0,2}/)?.[0] || 0);
 };
-const formatDefault: Formatter = (value, fractionalDigits) => {
+const formatDefault: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number") return "-";
-  if (fractionalDigits) return value.toFixed(fractionalDigits);
-  return roundToFirstNonZeroDecimal(value).toString();
+  return value.toFixed(fractionalDigits);
 };
-const formatPercentage: Formatter = (value, fractionalDigits) => {
+const formatPercentage: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number") return "-";
-  if (fractionalDigits) return value.toFixed(fractionalDigits) + "%";
-  return roundToFirstNonZeroDecimal(value) + "%";
+  return value.toFixed(fractionalDigits) + "%";
 };
-const formatRate: Formatter = (value, fractionalDigits) => {
+const formatRate: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number") return "-";
-  if (fractionalDigits) return value.toFixed(fractionalDigits) + "x";
-  return roundToFirstNonZeroDecimal(value) + "x";
+  return value.toFixed(fractionalDigits) + "x";
 };
-const formatCurrency_USD: Formatter = (value, fractionalDigits) => {
+const formatCurrency_USD: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number") return "-";
-  if (fractionalDigits) return "$ " + value.toFixed(fractionalDigits);
-  return "$ " + roundToFirstNonZeroDecimal(value);
+  return "$" + value.toFixed(fractionalDigits);
 };
-const formatCurrency_BTC: Formatter = (value, fractionalDigits) => {
+const formatCurrency_BTC: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number") return "-";
-  if (fractionalDigits) return value.toFixed(fractionalDigits) + " BTC";
-  return roundToFirstNonZeroDecimal(value) + " BTC";
+  return value.toFixed(fractionalDigits) + " BTC";
 };
-const formatCurrency_ETH: Formatter = (value, fractionalDigits) => {
+const formatCurrency_ETH: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number") return "-";
-  if (fractionalDigits) return value.toFixed(fractionalDigits) + " ETH";
-  return roundToFirstNonZeroDecimal(value) + " ETH";
+  return value.toFixed(fractionalDigits) + " ETH";
 };
-const formatCurrency_SOL: Formatter = (value, fractionalDigits) => {
+const formatCurrency_SOL: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number") return "-";
-  if (fractionalDigits) return value.toFixed(fractionalDigits) + " SOL";
-  return roundToFirstNonZeroDecimal(value) + " SOL";
+  return value.toFixed(fractionalDigits) + " SOL";
 };
-const formatCurrency_USDC: Formatter = (value, fractionalDigits) => {
+const formatCurrency_USDC: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number") return "-";
-  if (fractionalDigits) return value.toFixed(fractionalDigits) + " USDC";
-  return roundToFirstNonZeroDecimal(value) + " USDC";
+  return value.toFixed(fractionalDigits) + " USDC";
 };
 const formatCurrency = (token: Token | "$") => {
   return currencyFormatters[token];
@@ -66,11 +58,33 @@ const calculateLiquidationPrice = (
   }
   return entryPrice * (1 + margin / leverage);
 };
+const calculatePnL = (
+  entryPrice: number,
+  exitPrice: number,
+  size: number,
+  isLong: boolean,
+) => {
+  if (isLong) {
+    return size * (exitPrice - entryPrice);
+  }
+  return size * (entryPrice - exitPrice);
+};
+const calculatePnLPercentage = (
+  entryPrice: number,
+  exitPrice: number,
+  size: number,
+  isLong: boolean,
+) => {
+  return (
+    calculatePnL(entryPrice, exitPrice, size, isLong) / (entryPrice * size)
+  );
+};
 
 export {
   formatDefault,
   formatPercentage,
   formatRate,
+  formatCurrency_USD,
   formatCurrency_BTC,
   formatCurrency_ETH,
   formatCurrency_SOL,
@@ -79,5 +93,7 @@ export {
   calculateLiquidationPrice,
   roundToFirstNonZeroDecimal,
   formatCurrency,
+  calculatePnL,
+  calculatePnLPercentage,
 };
 export type { Formatter };

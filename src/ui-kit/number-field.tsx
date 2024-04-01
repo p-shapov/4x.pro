@@ -17,21 +17,20 @@ type Props = {
   step?: number;
   readonly?: boolean;
   onFocus?: () => void;
-  onChange?: (value: number) => void;
+  onChange?: (value: number | "") => void;
 };
 
 const NumberField: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
   label,
   postfix,
-  outlined = true,
-  size = "md",
+  error,
   onChange,
   ...rest
 }) => {
   const id = useId();
-  const fieldStyles = mkFieldStyles({ outlined, size });
+  const fieldStyles = mkFieldStyles({ error });
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange?.(Number(event.target.value));
+    onChange?.(Number(event.target.value) || "");
   };
   return (
     <div className={fieldStyles.root}>
