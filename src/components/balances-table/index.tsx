@@ -1,9 +1,8 @@
-import { useConnection } from "@solana/wallet-adapter-react";
 import type { PublicKey } from "@solana/web3.js";
 import cn from "classnames";
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/configs/dex-platform";
+import type { Token } from "@4x.pro/app-config";
 import { useTokenBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import { mkTableStyles } from "@4x.pro/shared/styles/table";
 import { formatCurrency } from "@4x.pro/shared/utils/number";
@@ -19,13 +18,10 @@ const TableRow: FC<{ publicKey: PublicKey | null; asset: Token }> = ({
   publicKey,
   asset,
 }) => {
-  const { connection } = useConnection();
   const tableStyles = mkTableStyles();
-  const tokenBalance = useTokenBalance(connection)({
-    variables: {
-      token: asset,
-      account: publicKey?.toBase58(),
-    },
+  const tokenBalance = useTokenBalance({
+    token: asset,
+    account: publicKey?.toBase58(),
   });
   return (
     <tr className={cn(tableStyles.row, tableStyles.rowDelimiter)} key={asset}>

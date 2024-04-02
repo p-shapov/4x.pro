@@ -1,9 +1,8 @@
 import cn from "classnames";
 import type { FC } from "react";
 
-import { useDexPlatformConfig } from "@4x.pro/configs/dex-platform";
-import type { Token } from "@4x.pro/configs/dex-platform";
-import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-price-feed";
+import type { Token } from "@4x.pro/app-config";
+import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
 
 import { mkAssetItemStyles } from "./styles";
@@ -16,8 +15,7 @@ type Props = {
 
 const AssetItem: FC<Props> = ({ onChange, coin }) => {
   const assetItemStyles = mkAssetItemStyles();
-  const pythConnection = useDexPlatformConfig((state) => state.pythConnection);
-  const { priceData } = useWatchPythPriceFeed(pythConnection)(coin);
+  const { priceData } = useWatchPythPriceFeed(coin);
   const { selectedAsset, selectAsset } = useTradeModule((state) => ({
     selectedAsset: state.selectedAsset,
     selectAsset: state.selectAsset,

@@ -1,7 +1,7 @@
 "use client";
 import { offset, size, useFloating } from "@floating-ui/react-dom";
 import { Menu } from "@headlessui/react";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import type { FC } from "react";
 
 import { useTokenBalance } from "@4x.pro/shared/hooks/use-token-balance";
@@ -25,13 +25,10 @@ const AccountButton: FC = () => {
     ],
   });
   const accountButtonStyles = mkAccountButtonStyles();
-  const { connection } = useConnection();
   const { wallet, publicKey } = useWallet();
-  const balance = useTokenBalance(connection)({
-    variables: {
-      token: "SOL",
-      account: publicKey?.toBase58(),
-    },
+  const balance = useTokenBalance({
+    token: "SOL",
+    account: publicKey?.toBase58(),
   });
   const handleCopyAddress = async () => {
     if (publicKey) {

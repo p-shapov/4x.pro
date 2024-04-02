@@ -1,12 +1,9 @@
 "use client";
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/configs/dex-platform";
-import {
-  getTokenSymbol,
-  useDexPlatformConfig,
-} from "@4x.pro/configs/dex-platform";
-import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-price-feed";
+import type { Token } from "@4x.pro/app-config";
+import { getTokenSymbol } from "@4x.pro/app-config";
+import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import {
   calculatePnL,
   calculatePnLPercentage,
@@ -25,9 +22,8 @@ type Props = {
 };
 
 const ProfNLoss: FC<Props> = ({ side, size, collateralToken, entryPrice }) => {
-  const pythConnection = useDexPlatformConfig((state) => state.pythConnection);
   const { price: marketPrice } =
-    useWatchPythPriceFeed(pythConnection)(collateralToken).priceData || {};
+    useWatchPythPriceFeed(collateralToken).priceData || {};
   const pnl =
     marketPrice && calculatePnL(entryPrice, marketPrice, size, side === "long");
   const pnlPercentage =

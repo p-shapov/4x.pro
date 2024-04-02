@@ -7,19 +7,16 @@ import type {
   ResolutionString,
 } from "@public/vendor/charting_library/charting_library";
 
-import type { Token } from "@4x.pro/configs/dex-platform";
-import {
-  useDexPlatformConfig,
-  getTvSymbol,
-} from "@4x.pro/configs/dex-platform";
+import type { Token } from "@4x.pro/app-config";
+import { getTvSymbol } from "@4x.pro/app-config";
 
-import { getDatafeed } from "./datafeed";
+import { useDataFeed } from "./datafeed";
 
 const useTvChartingLibraryWidget = (
   token: Token,
   config: Partial<ChartingLibraryWidgetOptions>,
 ) => {
-  const pythConnection = useDexPlatformConfig((state) => state.pythConnection);
+  const datafeed = useDataFeed();
   const [tvChartingLibraryWidget, setTvChartingLibraryWidget] =
     useState<IChartingLibraryWidget | null>(null);
 
@@ -35,7 +32,6 @@ const useTvChartingLibraryWidget = (
 
   useEffect(() => {
     const loadTvChartingLibraryWidget = async () => {
-      if (!pythConnection) return null;
       try {
         await import("@public/vendor/charting_library/charting_library");
       } catch {
@@ -48,7 +44,7 @@ const useTvChartingLibraryWidget = (
         timezone: "Etc/UTC",
         locale: "en",
         interval: "1" as ResolutionString,
-        datafeed: getDatafeed(pythConnection),
+        datafeed: datafeed,
         symbol: getTvSymbol(token),
         overrides: {
           "paneProperties.background": "#151719",
@@ -87,7 +83,7 @@ const useTvChartingLibraryWidget = (
       setTvChartingLibraryWidget(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pythConnection]);
+  }, [datafeed]);
 
   return tvChartingLibraryWidget;
 };

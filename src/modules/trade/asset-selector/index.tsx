@@ -3,12 +3,12 @@ import { offset, useFloating } from "@floating-ui/react-dom";
 import { Listbox } from "@headlessui/react";
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/configs/dex-platform";
+import type { Token } from "@4x.pro/app-config";
 import {
   collateralTokens,
   getTokenLogo,
   getTokenSymbol,
-} from "@4x.pro/configs/dex-platform";
+} from "@4x.pro/app-config";
 import { formatRate } from "@4x.pro/shared/utils/number";
 import { Icon } from "@4x.pro/ui-kit/icon";
 

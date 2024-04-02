@@ -1,12 +1,12 @@
 "use client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useForm, useWatch } from "react-hook-form";
 
-import type { Token } from "@4x.pro/configs/dex-platform";
-import { useIsInsufficientBalance } from "@4x.pro/shared/hooks/use-is-insufficient-balance";
+import type { Token } from "@4x.pro/app-config";
+import { useIsInsufficientBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import { Button } from "@4x.pro/ui-kit/button";
 
 import { Leverage } from "./leverage";
@@ -55,12 +55,11 @@ const TradeForm: FC<Props> = ({ side, form, collateralTokens }) => {
     control: form.control,
     name: "position.base",
   });
-  const { connection } = useConnection();
   const { connected } = useWallet();
-  const isInsufficientBalance = useIsInsufficientBalance(connection)(
-    position.token,
-    position.size,
-  );
+  const isInsufficientBalance = useIsInsufficientBalance({
+    token: position.token,
+    amount: position.size,
+  });
   const getTitle = () => {
     switch (side) {
       case "long":
@@ -89,7 +88,7 @@ const TradeForm: FC<Props> = ({ side, form, collateralTokens }) => {
         <Button
           type={connected ? "submit" : "button"}
           variant={getButtonVariant()}
-          disabled={isInsufficientBalance}
+          disabled={isInsufficientBalance.data}
         >
           {getTitle()}
         </Button>

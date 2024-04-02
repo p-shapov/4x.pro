@@ -3,8 +3,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { tokenList } from "@4x.pro/configs/dex-platform";
-import type { Token } from "@4x.pro/configs/dex-platform";
+import { tokenList } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 
 type Store = {
   hydrated: boolean;
@@ -58,7 +58,7 @@ const useTradeModule = create<Store & Actions>()(
         }),
     })),
     {
-      name: "4xpro-trade-module",
+      name: "4xprotocol-trade-module",
       partialize: (state) => ({
         selectedAsset: state.selectedAsset,
         favorites: state.favorites,

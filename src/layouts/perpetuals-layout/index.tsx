@@ -10,21 +10,21 @@ import type { PropsWithClassName } from "@4x.pro/shared/types";
 import { IconButton } from "@4x.pro/ui-kit/icon-button";
 import { Link } from "@4x.pro/ui-kit/link";
 
-import { mkPlatformLayoutStyles } from "./styles";
+import { mkPerpetualsLayoutStyles } from "./styles";
 
-const PlatformLayout: FC<PropsWithClassName<PropsWithChildren>> = ({
+const PerpetualsLayout: FC<PropsWithClassName<PropsWithChildren>> = ({
   className,
   children,
 }) => {
   const isMounted = useIsMounted();
-  const platformLayoutStyles = mkPlatformLayoutStyles();
+  const perpetualsLayoutStyles = mkPerpetualsLayoutStyles();
   const { connected } = useWallet();
   if (!isMounted) return null;
   return (
-    <div className={cn(platformLayoutStyles.overlay, className)}>
+    <div className={cn(perpetualsLayoutStyles.overlay, className)}>
       <Wallet.Dialog />
-      <div className={platformLayoutStyles.root}>
-        <header className={platformLayoutStyles.header}>
+      <div className={perpetualsLayoutStyles.root}>
+        <header className={perpetualsLayoutStyles.header}>
           <nav>
             <ul>
               <li>
@@ -39,12 +39,12 @@ const PlatformLayout: FC<PropsWithClassName<PropsWithChildren>> = ({
           </nav>
           <Image
             src="/images/logo.svg"
-            className={platformLayoutStyles.logo}
+            className={perpetualsLayoutStyles.logo}
             alt="4X logo"
             width={242}
             height={20}
           />
-          <div className={platformLayoutStyles.controls}>
+          <div className={perpetualsLayoutStyles.controls}>
             <IconButton src="/icons/more.svg" variant="accent" outlined />
             {connected ? (
               <Wallet.Account />
@@ -53,10 +53,10 @@ const PlatformLayout: FC<PropsWithClassName<PropsWithChildren>> = ({
             )}
           </div>
         </header>
-        <main className={platformLayoutStyles.main}>{children}</main>
+        <main className={perpetualsLayoutStyles.main}>{children}</main>
       </div>
     </div>
   );
 };
 
-export { PlatformLayout };
+export { PerpetualsLayout };

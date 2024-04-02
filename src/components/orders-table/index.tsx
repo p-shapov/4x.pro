@@ -1,7 +1,7 @@
 import cn from "classnames";
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/configs/dex-platform";
+import type { Token } from "@4x.pro/app-config";
 import { mkTableStyles } from "@4x.pro/shared/styles/table";
 import { formatRate } from "@4x.pro/shared/utils/number";
 import { Link } from "@4x.pro/ui-kit/link";

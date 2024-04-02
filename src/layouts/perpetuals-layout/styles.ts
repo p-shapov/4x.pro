@@ -1,6 +1,6 @@
 import cn from "classnames";
 
-const mkPlatformLayoutStyles = () => {
+const mkPerpetualsLayoutStyles = () => {
   return {
     overlay: cn(
       "w-full",
@@ -33,4 +33,4 @@ const mkPlatformLayoutStyles = () => {
   };
 };
 
-export { mkPlatformLayoutStyles };
+export { mkPerpetualsLayoutStyles };

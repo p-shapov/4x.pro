@@ -3,8 +3,8 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
 import type { IChartingLibraryWidget } from "@public/vendor/charting_library/charting_library";
 
-import type { Token } from "@4x.pro/configs/dex-platform";
-import { getTvSymbol } from "@4x.pro/configs/dex-platform";
+import type { Token } from "@4x.pro/app-config";
+import { getTvSymbol } from "@4x.pro/app-config";
 import { useTvChartingLibraryWidget } from "@4x.pro/shared/hooks/use-tv-charting-library-widget";
 import type { PropsWithStyles } from "@4x.pro/shared/types";
 import { TokenPrice } from "@4x.pro/ui-kit/token-price";

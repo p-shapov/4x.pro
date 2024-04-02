@@ -1,11 +1,10 @@
 import type { FC, ReactNode } from "react";
 
-import { useDexPlatformConfig } from "@4x.pro/configs/dex-platform";
-import type { Token } from "@4x.pro/configs/dex-platform";
+import type { Token } from "@4x.pro/app-config";
 import {
   usePythPriceFeed,
   useWatchPythPriceFeed,
-} from "@4x.pro/shared/hooks/use-pyth-price-feed";
+} from "@4x.pro/shared/hooks/use-pyth-connection";
 import { formatCurrency } from "@4x.pro/shared/utils/number";
 
 type Props = {
@@ -21,8 +20,7 @@ const WatchTokenPrice: FC<Props> = ({
   currency = "$",
   fractionalDigits,
 }) => {
-  const pythConnection = useDexPlatformConfig((state) => state.pythConnection);
-  const { priceData } = useWatchPythPriceFeed(pythConnection)(token);
+  const { priceData } = useWatchPythPriceFeed(token);
   const getPrice = (price?: number) => {
     if (!price) return formatCurrency(currency)(undefined);
     if (typeof children === "function") {
@@ -61,10 +59,7 @@ const FetchTokenPrice: FC<Props> = ({
   currency = "$",
   fractionalDigits,
 }) => {
-  const pythHttpClient = useDexPlatformConfig((state) => state.pythHttpClient);
-  const { data: priceData } = usePythPriceFeed(pythHttpClient)({
-    variables: { token },
-  });
+  const { data: priceData } = usePythPriceFeed({ token });
   const getPrice = (price?: number) => {
     if (!price) return formatCurrency(currency)(undefined);
     if (typeof children === "function") {

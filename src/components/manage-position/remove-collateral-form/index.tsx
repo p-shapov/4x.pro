@@ -5,9 +5,9 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
+import { getTokenSymbol } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
-import { getTokenSymbol } from "@4x.pro/configs/dex-platform";
-import type { Token } from "@4x.pro/configs/dex-platform";
 import {
   calculateLiquidationPrice,
   formatCurrency_USD,
@@ -26,13 +26,11 @@ import type { SubmitData } from "./schema";
 import { submitDataSchema } from "./schema";
 import { mkRemoveCollateralFormStyles } from "./styles";
 
-const useRemoveCollateralForm = (collateralToken: Token) => {
+const useRemoveCollateralForm = (receiveToken: Token) => {
   return useForm<SubmitData>({
     defaultValues: {
-      collateral: {
-        withdrawal: 0,
-        token: collateralToken,
-      },
+      receiveToken,
+      withdrawalAmount: 0,
     },
     resolver: yupResolver(submitDataSchema),
   });
@@ -41,6 +39,7 @@ const useRemoveCollateralForm = (collateralToken: Token) => {
 type Props = {
   form: UseFormReturn<SubmitData>;
   collateral: number;
+  collateralToken: Token;
   leverage: number;
   entryPrice: number;
   side: "long" | "short";
@@ -53,20 +52,17 @@ const RemoveCollateralForm: FC<Props> = ({
   collateral,
   leverage,
   entryPrice,
+  collateralToken,
   side,
 }) => {
   const errors = form.formState.errors;
   const removeCollateralFormStyles = mkRemoveCollateralFormStyles();
-  const collateralToken = useWatch({
+  const withdrawalAmount = useWatch({
     control: form.control,
-    name: "collateral.token",
-  });
-  const withdrawal = useWatch({
-    control: form.control,
-    name: "collateral.withdrawal",
+    name: "withdrawalAmount",
   });
   const size = collateral * leverage;
-  const collateralAfterWithdraw = collateral - withdrawal || undefined;
+  const collateralAfterWithdraw = collateral - withdrawalAmount || undefined;
   const leverageAfterWithdraw = collateralAfterWithdraw
     ? size / collateralAfterWithdraw
     : undefined;
@@ -89,51 +85,46 @@ const RemoveCollateralForm: FC<Props> = ({
     alert(JSON.stringify(data));
   });
   const mkHandleFieldChange =
-    (onChange: (data: { withdrawal: number; token: Token }) => void) =>
+    (onChange: (withdrawalAmount: number) => void) =>
     (data: { amount: number }) => {
-      const token = form.getValues("collateral.token");
-      onChange({ withdrawal: data.amount, token });
+      onChange(data.amount);
     };
   const mkHandleRangeChange =
-    (onChange: (data: { withdrawal: number; token: Token }) => void) =>
-    (percentage: number) => {
-      const token = form.getValues("collateral.token");
-      onChange({ withdrawal: (collateral / 100) * percentage, token });
+    (onChange: (withdrawalAmount: number) => void) => (percentage: number) => {
+      onChange((collateral / 100) * percentage);
     };
   const mkHandleSelectChange =
-    (onChange: (data: { withdrawal: number; token: Token }) => void) =>
-    (token: string) => {
-      const withdrawal = form.getValues("collateral.withdrawal");
-      onChange({ withdrawal, token: token as Token });
+    (onChange: (receiveToken: Token) => void) => (token: string) => {
+      onChange(token as Token);
     };
-  const isInsufficientBalance = withdrawal > collateral;
+  const isInsufficientBalance = withdrawalAmount > collateral;
   return (
     <form onSubmit={handleSubmit} className={removeCollateralFormStyles.root}>
       <fieldset className={removeCollateralFormStyles.fieldset}>
-        <Controller<SubmitData, "collateral">
-          name="collateral"
+        <Controller<SubmitData, "withdrawalAmount">
+          name="withdrawalAmount"
           control={form.control}
           render={({ field: { value, onChange } }) => (
             <TokenField
               label="Withdraw"
-              value={value.withdrawal || ""}
+              value={value || ""}
               token={collateralToken}
               max={collateral}
               placeholder="0.00"
               labelVariant="max"
               onChange={mkHandleFieldChange(onChange)}
-              error={!!errors.collateral?.withdrawal}
+              error={!!errors.withdrawalAmount}
               showPostfix
               showPresets
             />
           )}
         />
-        <Controller<SubmitData, "collateral">
-          name="collateral"
+        <Controller<SubmitData, "withdrawalAmount">
+          name="withdrawalAmount"
           control={form.control}
           render={({ field: { value, onChange } }) => (
             <RangeSlider
-              value={(value.withdrawal / collateral) * 100}
+              value={(value / collateral) * 100}
               min={0}
               max={100}
               step={1}
@@ -147,8 +138,8 @@ const RemoveCollateralForm: FC<Props> = ({
         <Definition
           term="Receive"
           content={
-            <Controller<SubmitData, "collateral">
-              name="collateral"
+            <Controller<SubmitData, "receiveToken">
+              name="receiveToken"
               control={form.control}
               render={({ field: { onChange, value } }) => (
                 <Select
@@ -162,18 +153,18 @@ const RemoveCollateralForm: FC<Props> = ({
                           currency={token}
                           watch
                         >
-                          {withdrawal}
+                          {withdrawalAmount}
                         </TokenPrice>{" "}
                         (
                         <TokenPrice token={collateralToken} watch>
-                          {withdrawal}
+                          {withdrawalAmount}
                         </TokenPrice>
                         )
                       </>
                     ),
                   }))}
                   popoverPosition="right"
-                  value={value.token}
+                  value={value}
                   onChange={mkHandleSelectChange(onChange)}
                 />
               )}
@@ -224,7 +215,7 @@ const RemoveCollateralForm: FC<Props> = ({
           disabled={isInsufficientBalance}
           size="lg"
         >
-          {withdrawal > 0 ? "Remove collateral" : "Enter amount"}
+          {withdrawalAmount > 0 ? "Remove collateral" : "Enter amount"}
         </Button>
       )}
     </form>

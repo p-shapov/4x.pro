@@ -1,11 +1,11 @@
 "use client";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import cn from "classnames";
 import { useEffect, useId, useState } from "react";
 import type { ChangeEventHandler, FC } from "react";
 
-import { getTokenSymbol } from "@4x.pro/configs/dex-platform";
-import type { Token } from "@4x.pro/configs/dex-platform";
+import { getTokenSymbol } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 import { useTokenBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import { mkFieldStyles } from "@4x.pro/shared/styles/field";
 import { formatCurrency, formatPercentage } from "@4x.pro/shared/utils/number";
@@ -49,17 +49,14 @@ const TokenField: FC<Props> = ({
   ...rest
 }) => {
   const fieldStyles = mkFieldStyles({ error });
-  const { connection } = useConnection();
   const id = useId();
   const [amount, setAmount] = useState<number>(value || defaultValue || 0);
   const [currentToken, setCurrentToken] = useState(token || defaultToken);
   if (!currentToken) throw new Error("Token is required");
   const { publicKey } = useWallet();
-  const tokenBalance = useTokenBalance(connection)({
-    variables: {
-      token: labelVariant === "balance" ? currentToken : undefined,
-      account: publicKey?.toBase58(),
-    },
+  const tokenBalance = useTokenBalance({
+    token: labelVariant === "balance" ? currentToken : undefined,
+    account: publicKey?.toBase58(),
   });
   const tokenListKey = tokenList?.join("");
   useEffect(() => {

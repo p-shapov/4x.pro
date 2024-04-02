@@ -2,8 +2,8 @@ import { getAssociatedTokenAddress } from "@solana/spl-token";
 import type { Connection } from "@solana/web3.js";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
-import type { Token } from "@4x.pro/configs/dex-platform";
-import { getTokenPublicKey } from "@4x.pro/configs/dex-platform";
+import type { Token } from "@4x.pro/app-config";
+import { getTokenPublicKey } from "@4x.pro/app-config";
 
 const checkIfAccountExists = async (
   account: PublicKey,

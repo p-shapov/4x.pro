@@ -10,16 +10,14 @@ import {
   WalletConnectWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect } from "react";
 import type { FC, PropsWithChildren } from "react";
 
-import { useDexPlatformConfig } from "./store";
+import { useAppConfig } from "./store";
 
 const network =
   process.env.NEXT_PUBLIC_IS_DEVNET === "true"
     ? WalletAdapterNetwork.Devnet
     : WalletAdapterNetwork.Mainnet;
-
 const wallets: Adapter[] = [
   new SolflareWalletAdapter({ network }),
   new WalletConnectWalletAdapter({
@@ -33,8 +31,7 @@ const wallets: Adapter[] = [
     },
   }),
 ];
-
-const dexPlatformQueryClient = new QueryClient({
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: true,
@@ -44,19 +41,12 @@ const dexPlatformQueryClient = new QueryClient({
   },
 });
 
-const DexPlatformProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { rpcEndpoint, pythConnection } = useDexPlatformConfig((state) => ({
-    pythConnection: state.pythConnection,
+const AppConfigProvider: FC<PropsWithChildren> = ({ children }) => {
+  const { rpcEndpoint } = useAppConfig((state) => ({
     rpcEndpoint: state.rpcEndpoint,
   }));
-  useEffect(() => {
-    pythConnection?.start();
-    return () => {
-      pythConnection?.stop();
-    };
-  }, [pythConnection]);
   return (
-    <QueryClientProvider client={dexPlatformQueryClient}>
+    <QueryClientProvider client={queryClient}>
       <ConnectionProvider endpoint={rpcEndpoint}>
         <WalletProvider wallets={wallets}>{children}</WalletProvider>
       </ConnectionProvider>
@@ -64,4 +54,4 @@ const DexPlatformProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-export { dexPlatformQueryClient, DexPlatformProvider };
+export { queryClient, AppConfigProvider };

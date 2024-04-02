@@ -4,13 +4,10 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
+import type { Token } from "@4x.pro/app-config";
+import { getTokenSymbol } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
-import type { Token } from "@4x.pro/configs/dex-platform";
-import {
-  getTokenSymbol,
-  useDexPlatformConfig,
-} from "@4x.pro/configs/dex-platform";
-import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-price-feed";
+import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import {
   calculateLiquidationPrice,
   calculatePnL,
@@ -57,10 +54,9 @@ const StopLossForm: FC<Props> = ({
     control: form.control,
     name: "triggerPrice",
   });
-  const pythConnection = useDexPlatformConfig((state) => state.pythConnection);
   const { connected } = useWallet();
   const { price: marketPrice } =
-    useWatchPythPriceFeed(pythConnection)(collateralToken).priceData || {};
+    useWatchPythPriceFeed(collateralToken).priceData || {};
   const size = collateral * leverage;
   const liquidationPrice = calculateLiquidationPrice(
     entryPrice,

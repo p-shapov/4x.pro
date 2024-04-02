@@ -1,12 +1,12 @@
 "use client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
-import { getTokenSymbol } from "@4x.pro/configs/dex-platform";
-import type { Token } from "@4x.pro/configs/dex-platform";
+import { getTokenSymbol } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 import { useTokenBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import {
   calculateLiquidationPrice,
@@ -25,13 +25,10 @@ import { submitDataSchema } from "./schema";
 import { mkAddCollateralFormStyles } from "./styles";
 import { Wallet } from "../../wallet";
 
-const useAddCollateralForm = (collateralToken: Token) => {
+const useAddCollateralForm = () => {
   return useForm<SubmitData>({
     defaultValues: {
-      collateral: {
-        deposit: 0,
-        token: collateralToken,
-      },
+      depositAmount: 0,
     },
     resolver: yupResolver(submitDataSchema),
   });
@@ -40,6 +37,7 @@ const useAddCollateralForm = (collateralToken: Token) => {
 type Props = {
   entryPrice: number;
   collateral: number;
+  collateralToken: Token;
   leverage: number;
   side: "long" | "short";
   form: UseFormReturn<SubmitData>;
@@ -50,29 +48,23 @@ const AddCollateralForm: FC<Props> = ({
   collateral,
   leverage,
   side,
+  collateralToken,
   form,
 }) => {
-  const { connection } = useConnection();
   const { publicKey } = useWallet();
   const addCollateralFormStyles = mkAddCollateralFormStyles();
-  const collateralToken = useWatch({
+  const depositAmount = useWatch({
     control: form.control,
-    name: "collateral.token",
+    name: "depositAmount",
   });
-  const deposit = useWatch({
-    control: form.control,
-    name: "collateral.deposit",
-  });
-  const { data: collateralBalance } = useTokenBalance(connection)({
-    variables: {
-      token: collateralToken,
-      account: publicKey?.toBase58(),
-    },
+  const { data: collateralBalance } = useTokenBalance({
+    token: collateralToken,
+    account: publicKey?.toBase58(),
   });
   const { connected } = useWallet();
   const errors = form.formState.errors;
   const size = collateral * leverage;
-  const collateralAfterDeposit = collateral + deposit;
+  const collateralAfterDeposit = collateral + depositAmount;
   const leverageAfterDeposit = size / collateralAfterDeposit;
   const sizeAfterWithdraw =
     collateralAfterDeposit > size ? collateralAfterDeposit : size;
@@ -92,50 +84,45 @@ const AddCollateralForm: FC<Props> = ({
     alert(JSON.stringify(data));
   });
   const mkHandleFieldChange =
-    (onChange: (data: { deposit: number; token: Token }) => void) =>
-    (data: { amount: number; token: Token }) => {
-      onChange({ deposit: data.amount, token: data.token });
+    (onChange: (depositAmount: number) => void) =>
+    ({ amount }: { amount: number }) => {
+      onChange(amount);
     };
   const mkHandleRangeChange =
-    (onChange: (data: { deposit: number; token: Token }) => void) =>
-    (percentage: number) => {
+    (onChange: (percentage: number) => void) => (percentage: number) => {
       if (typeof collateralBalance === "number") {
-        const token = form.getValues("collateral.token");
-        onChange({
-          deposit: (collateralBalance / 100) * percentage,
-          token,
-        });
+        onChange((collateralBalance / 100) * percentage);
       }
     };
-  const isInsufficientBalance = deposit > (collateralBalance || 0);
+  const isInsufficientBalance = depositAmount > (collateralBalance || 0);
   return (
     <form onSubmit={handleSubmit} className={addCollateralFormStyles.root}>
       <fieldset className={addCollateralFormStyles.fieldset}>
-        <Controller<SubmitData, "collateral">
-          name="collateral"
+        <Controller<SubmitData, "depositAmount">
+          name="depositAmount"
           control={form.control}
           render={({ field: { value, onChange } }) => (
             <TokenField
-              value={value.deposit || ""}
-              token={value.token}
+              value={value || ""}
+              token={collateralToken}
               onChange={mkHandleFieldChange(onChange)}
               label="Deposit"
               placeholder="0.00"
               labelVariant="balance"
-              error={!!errors.collateral?.deposit}
+              error={!!errors.depositAmount}
               showPresets
               showPostfix
             />
           )}
         />
-        <Controller<SubmitData, "collateral">
-          name="collateral"
+        <Controller<SubmitData, "depositAmount">
+          name="depositAmount"
           control={form.control}
           render={({ field: { value, onChange } }) => (
             <RangeSlider
               value={
                 collateralBalance
-                  ? (value.deposit / collateralBalance) * 100
+                  ? (value / collateralBalance) * 100
                   : undefined
               }
               step={1}
@@ -186,7 +173,7 @@ const AddCollateralForm: FC<Props> = ({
           disabled={isInsufficientBalance}
           size="lg"
         >
-          {deposit > 0 ? "Add collateral" : "Enter amount"}
+          {depositAmount > 0 ? "Add collateral" : "Enter amount"}
         </Button>
       )}
     </form>

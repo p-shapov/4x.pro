@@ -4,12 +4,9 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useWatch } from "react-hook-form";
 
-import {
-  depositTokens,
-  useDexPlatformConfig,
-} from "@4x.pro/configs/dex-platform";
-import type { Token } from "@4x.pro/configs/dex-platform";
-import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-price-feed";
+import { depositTokens } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
+import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import { roundToFirstNonZeroDecimal } from "@4x.pro/shared/utils/number";
 import { TokenField } from "@4x.pro/ui-kit/token-field";
 import { TokenPrice } from "@4x.pro/ui-kit/token-price";
@@ -37,11 +34,10 @@ const Position: FC<Props> = ({ form, collateralTokens }) => {
     name: "position.quote.token",
   });
   const leverage = useWatch({ control: form.control, name: "leverage" });
-  const pythConnection = useDexPlatformConfig((state) => state.pythConnection);
   const { priceData: baseTokenPriceData } =
-    useWatchPythPriceFeed(pythConnection)(baseToken) || {};
+    useWatchPythPriceFeed(baseToken) || {};
   const { priceData: quoteTokenPriceData } =
-    useWatchPythPriceFeed(pythConnection)(quoteToken) || {};
+    useWatchPythPriceFeed(quoteToken) || {};
   const rate =
     baseTokenPriceData?.price && quoteTokenPriceData?.price
       ? quoteTokenPriceData.price / baseTokenPriceData.price

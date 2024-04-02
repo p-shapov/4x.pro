@@ -6,8 +6,8 @@ import {
   getTokenLogo,
   getTokenNetwork,
   getTokenSymbol,
-} from "@4x.pro/configs/dex-platform";
-import type { Token } from "@4x.pro/configs/dex-platform";
+} from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 import { Icon } from "@4x.pro/ui-kit/icon";
 import { TokenPrice } from "@4x.pro/ui-kit/token-price";
 

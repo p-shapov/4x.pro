@@ -1,22 +1,18 @@
 import * as yup from "yup";
 
-import type { Token } from "@4x.pro/configs/dex-platform";
+import type { Token } from "@4x.pro/app-config";
 
 type SubmitData = {
-  collateral: {
-    withdrawal: number;
-    token: Token;
-  };
+  receiveToken: Token;
+  withdrawalAmount: number;
 };
 
 const submitDataSchema = yup.object<SubmitData>().shape({
-  collateral: yup
-    .object()
-    .shape({
-      withdrawal: yup.number().moreThan(0).required(),
-      token: yup.string().oneOf<Token>(["BTC", "ETH", "USDC"]).required(),
-    })
+  receiveToken: yup
+    .string()
+    .oneOf<Token>(["SOL", "USDC", "BTC", "ETH"])
     .required(),
+  withdrawalAmount: yup.number().moreThan(0).required(),
 });
 
 export type { SubmitData };

@@ -3,9 +3,9 @@ import { useEffect, useRef } from "react";
 
 import type { IChartingLibraryWidget } from "@public/vendor/charting_library/charting_library";
 
+import type { Token } from "@4x.pro/app-config";
+import { getTvSymbol } from "@4x.pro/app-config";
 import { useTradeForm } from "@4x.pro/components/trade-form";
-import type { Token } from "@4x.pro/configs/dex-platform";
-import { getTvSymbol } from "@4x.pro/configs/dex-platform";
 import { useResizableLayout } from "@4x.pro/shared/hooks/use-resizable-layout";
 
 import { AssetsToolbar } from "./assets-toolbar";

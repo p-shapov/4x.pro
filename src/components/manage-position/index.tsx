@@ -2,7 +2,7 @@
 import { Dialog } from "@headlessui/react";
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/configs/dex-platform";
+import type { Token } from "@4x.pro/app-config";
 import { Icon } from "@4x.pro/ui-kit/icon";
 import { Tabs } from "@4x.pro/ui-kit/tabs";
 
@@ -38,7 +38,7 @@ const ManagePosition: FC<Props> = ({
   side,
 }) => {
   const managePositionStyles = mkManagePositionStyles();
-  const addCollateralForm = useAddCollateralForm(collateralToken);
+  const addCollateralForm = useAddCollateralForm();
   const removeCollateralForm = useRemoveCollateralForm(collateralToken);
   const stopLossForm = useStopLossForm(triggerPrice);
   const takeProfitForm = useTakeProfitForm(triggerPrice);
@@ -84,6 +84,7 @@ const ManagePosition: FC<Props> = ({
                   side={side}
                   form={addCollateralForm}
                   collateral={collateral}
+                  collateralToken={collateralToken}
                   leverage={leverage}
                 />
               ),
@@ -92,6 +93,7 @@ const ManagePosition: FC<Props> = ({
                   form={removeCollateralForm}
                   side={side}
                   collateral={collateral}
+                  collateralToken={collateralToken}
                   leverage={leverage}
                   entryPrice={entryPrice}
                 />

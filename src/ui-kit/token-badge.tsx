@@ -5,8 +5,8 @@ import {
   getTokenLogo,
   getTokenNetwork,
   getTokenSymbol,
-} from "@4x.pro/configs/dex-platform";
-import type { Token } from "@4x.pro/configs/dex-platform";
+} from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 import { mkTokenStyles } from "@4x.pro/shared/styles/token-badge";
 import type { PropsWithStyles } from "@4x.pro/shared/types";
 import { formatPercentage } from "@4x.pro/shared/utils/number";
