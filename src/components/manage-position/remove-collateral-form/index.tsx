@@ -1,9 +1,11 @@
 "use client";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useWallet } from "@solana/wallet-adapter-react";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
+import { Wallet } from "@4x.pro/components/wallet";
 import { getTokenSymbol } from "@4x.pro/configs/dex-platform";
 import type { Token } from "@4x.pro/configs/dex-platform";
 import {
@@ -74,6 +76,7 @@ const RemoveCollateralForm: FC<Props> = ({
     0.1,
     side === "long",
   );
+  const { connected } = useWallet();
   const liquidationPriceAfterWithdraw = leverageAfterWithdraw
     ? calculateLiquidationPrice(
         entryPrice,
@@ -121,6 +124,7 @@ const RemoveCollateralForm: FC<Props> = ({
               onChange={mkHandleFieldChange(onChange)}
               error={!!errors.collateral?.withdrawal}
               showPostfix
+              showPresets
             />
           )}
         />
@@ -161,7 +165,7 @@ const RemoveCollateralForm: FC<Props> = ({
                           {withdrawal}
                         </TokenPrice>{" "}
                         (
-                        <TokenPrice token={collateralToken}>
+                        <TokenPrice token={collateralToken} watch>
                           {withdrawal}
                         </TokenPrice>
                         )
@@ -211,9 +215,18 @@ const RemoveCollateralForm: FC<Props> = ({
           }
         />
       </dl>
-      <Button type="submit" variant="accent" disabled={isInsufficientBalance}>
-        {withdrawal > 0 ? "Remove collateral" : "Enter amount"}
-      </Button>
+      {!connected ? (
+        <Wallet.Connect variant="accent" size="lg" />
+      ) : (
+        <Button
+          type="submit"
+          variant="accent"
+          disabled={isInsufficientBalance}
+          size="lg"
+        >
+          {withdrawal > 0 ? "Remove collateral" : "Enter amount"}
+        </Button>
+      )}
     </form>
   );
 };

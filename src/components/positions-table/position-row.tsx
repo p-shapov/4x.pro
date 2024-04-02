@@ -17,7 +17,6 @@ import {
 } from "@4x.pro/shared/utils/number";
 import { Link } from "@4x.pro/ui-kit/link";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
-import { TokenPrice } from "@4x.pro/ui-kit/token-price";
 
 import { mkPositionRowStyles } from "./styles";
 import { ManagePosition } from "../manage-position";
@@ -77,13 +76,13 @@ const PositionRow: FC<Props> = ({
           </span>
         </td>
         <td className={positionRowStyles.cell}>
-          <TokenPrice token={collateralToken}>{size}</TokenPrice>
+          {formatCurrency_USD(size * entryPrice)}
           <span className={positionRowStyles.secondaryText}>
             ({formatCurrency(collateralToken)(size)})
           </span>
         </td>
         <td className={positionRowStyles.cell}>
-          <TokenPrice token={collateralToken}>{collateral}</TokenPrice>
+          {formatCurrency_USD(collateral * entryPrice)}
           <span className={positionRowStyles.secondaryText}>
             ({formatCurrency(collateralToken)(collateral)})
           </span>
@@ -120,15 +119,10 @@ const PositionRow: FC<Props> = ({
             />
             <Link
               variant="accent"
-              text="Manage"
               iconSrc="/icons/setting-2.svg"
               onClick={handleOpenManagePosition}
             ></Link>
-            <Link
-              variant="red"
-              text="Close"
-              iconSrc="/icons/close-circle.svg"
-            ></Link>
+            <Link variant="red" iconSrc="/icons/close-circle.svg"></Link>
           </span>
         </td>
       </tr>

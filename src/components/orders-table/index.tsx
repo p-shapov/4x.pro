@@ -62,11 +62,7 @@ const OrdersTable: FC<Props> = ({ items }) => {
             <td className={tableStyles.cell}>{item.triggerPrice}</td>
             <td className={tableStyles.cell}>
               <div className={cn("flex", "gap-[2rem]")}>
-                <Link
-                  variant="red"
-                  text="Cancel"
-                  iconSrc="/icons/close-circle.svg"
-                ></Link>
+                <Link variant="red" iconSrc="/icons/close-circle.svg"></Link>
               </div>
             </td>
           </tr>

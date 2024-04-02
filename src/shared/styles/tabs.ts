@@ -7,27 +7,36 @@ type Props = {
 const mkTabsStyles = ({ stretchTabs }: Props) => {
   return {
     root: cn("grid", "h-full", "grid-rows-[max-content_1fr]"),
-    items: cn("flex", "gap-[0.4rem]", "border-b-[1px]", "border-content-3", {
+    items: cn("flex", {
       flex: !stretchTabs,
       grid: stretchTabs,
       "grid-flow-col": stretchTabs,
       "grid-cols-fr": stretchTabs,
     }),
     tab: cn(
-      "inline-block",
+      "relative",
+      "inline-grid",
+      "justify-items-center",
       "text-h3",
-      "border-b-[2px]",
       "transition-colors",
       "uppercase",
       "outline-none",
+      "transition-colors",
+      "pt-[10px]",
+      "after:absolute",
+      "after:content-['']",
+      "after:z-10",
+      "after:block",
+      "after:w-full",
+      "after:bottom-[calc(100%-4px)]",
+      "after:border-t-[4px]",
+      "after:transition-colors",
+      "after:rounded-bl-[4px]",
+      "after:rounded-br-[4px]",
     ),
     panel: cn("pt-[4px]"),
-    activeTab: cn("text-accent", "mb-[-1px]", "border-accent"),
-    inactiveTab: cn(
-      "text-content-1",
-      "border-transparent",
-      "hover:text-opacity-50",
-    ),
+    activeTab: cn("after:border-accent", "text-accent"),
+    inactiveTab: cn("after:border-transparent", "hover:text-content-2"),
   };
 };
 

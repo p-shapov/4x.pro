@@ -4,7 +4,6 @@ import { Controller } from "react-hook-form";
 
 import { formatPercentage } from "@4x.pro/shared/utils/number";
 import { NumberField } from "@4x.pro/ui-kit/number-field";
-import { Presets } from "@4x.pro/ui-kit/presets";
 
 import type { SubmitData } from "./schema";
 import { mkSlippageStyles } from "./styles";
@@ -18,34 +17,22 @@ const Slippage: FC<Props> = ({ form }) => {
   const errors = form.formState.errors;
   return (
     <fieldset className={slippageStyles.root}>
-      <span className={slippageStyles.label}>Slippage Tolerance</span>
-      <div className={slippageStyles.field}>
-        <Controller<SubmitData, "slippage">
-          name="slippage"
-          control={form.control}
-          render={({ field: { value, onChange } }) => (
-            <NumberField
-              value={value || ""}
-              min={0}
-              max={1}
-              step={0.1}
-              placeholder="0.00"
-              postfix="%"
-              onChange={onChange}
-              error={!!errors.slippage}
-            />
-          )}
-        />
-      </div>
       <Controller<SubmitData, "slippage">
         name="slippage"
         control={form.control}
         render={({ field: { value, onChange } }) => (
-          <Presets
-            options={[0.1, 0.5, 0.8]}
-            value={value}
-            onChange={onChange}
+          <NumberField
+            value={value || ""}
+            min={0}
+            max={1}
+            step={0.1}
+            label="Slippage Tolerance"
+            placeholder="0.00"
+            postfix="%"
+            presets={[0.1, 0.5, 0.8]}
             formatValue={(value) => formatPercentage(value, 1)}
+            onChange={onChange}
+            error={!!errors.slippage}
           />
         )}
       />

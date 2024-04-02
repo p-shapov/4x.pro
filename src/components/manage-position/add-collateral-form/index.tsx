@@ -23,6 +23,7 @@ import { TokenField } from "@4x.pro/ui-kit/token-field";
 import type { SubmitData } from "./schema";
 import { submitDataSchema } from "./schema";
 import { mkAddCollateralFormStyles } from "./styles";
+import { Wallet } from "../../wallet";
 
 const useAddCollateralForm = (collateralToken: Token) => {
   return useForm<SubmitData>({
@@ -68,6 +69,7 @@ const AddCollateralForm: FC<Props> = ({
       account: publicKey?.toBase58(),
     },
   });
+  const { connected } = useWallet();
   const errors = form.formState.errors;
   const size = collateral * leverage;
   const collateralAfterDeposit = collateral + deposit;
@@ -121,6 +123,7 @@ const AddCollateralForm: FC<Props> = ({
               placeholder="0.00"
               labelVariant="balance"
               error={!!errors.collateral?.deposit}
+              showPresets
               showPostfix
             />
           )}
@@ -174,9 +177,18 @@ const AddCollateralForm: FC<Props> = ({
           }
         />
       </dl>
-      <Button type="submit" variant="accent" disabled={isInsufficientBalance}>
-        {deposit > 0 ? "Add collateral" : "Enter amount"}
-      </Button>
+      {!connected ? (
+        <Wallet.Connect variant="accent" size="lg" />
+      ) : (
+        <Button
+          type="submit"
+          variant="accent"
+          disabled={isInsufficientBalance}
+          size="lg"
+        >
+          {deposit > 0 ? "Add collateral" : "Enter amount"}
+        </Button>
+      )}
     </form>
   );
 };

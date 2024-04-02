@@ -52,7 +52,7 @@ const AssetSelector: FC<Props> = ({ onChange }) => {
             />
             <span>{getTokenSymbol(selectedAsset)}/USDC</span>
             <span className={assetSelectorStyles.leverage}>
-              {formatRate(100)}
+              {formatRate(100, 0)}
             </span>
             <Icon
               ref={refs.setReference}

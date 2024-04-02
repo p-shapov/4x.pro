@@ -15,8 +15,9 @@ const mkSidebarStyles = () => {
       "scrollbar-none",
     ),
     tabs: cn(layoutStyles.cardSurface),
-    tab: cn(layoutStyles.cardPaddings),
+    tab: cn("px-[20px]"),
     tabContent: cn(layoutStyles.cardPaddings),
+    tabsList: cn("px-[20px]", "gap-[20px]"),
     stats: cn(layoutStyles.cardSurface, layoutStyles.cardPaddings),
   };
 };

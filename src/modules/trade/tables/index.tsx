@@ -17,6 +17,7 @@ const Tables: FC = () => {
           tab: tablesStyles.tab,
           panels: tablesStyles.tabContent,
           panel: tablesStyles.tabPanel,
+          items: tablesStyles.tabsList,
         }}
         items={[
           {

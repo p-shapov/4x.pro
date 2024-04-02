@@ -8,7 +8,6 @@ const mkInputStyles = () =>
     "outline-none",
     "w-full",
     "text-body-14",
-    "px-[1.2rem]",
     "py-[1rem]",
     "bg-transparent",
   );
@@ -22,16 +21,18 @@ const mkInputWrapStyles = (error: boolean) => {
     "border-content-3",
     "hover:border-content-2",
     "focus-within:border-content-2",
+    "px-[1.2rem]",
+    "gap-[1.2rem]",
     {
       [cn("border-red", "hover:border-red", "focus-within:border-red")]: error,
     },
   );
 };
 const mkPostfixStyles = () => {
-  return cn("inline-flex", "text-body-14", "text-content-2", "mr-[1.2rem]");
+  return cn("inline-flex", "text-body-14", "text-content-2");
 };
 const mkPrefixStyles = () => {
-  return cn("inline-flex", "text-body-14", "text-content-2", "ml-[1.2rem]");
+  return cn("inline-flex", "text-body-14", "text-content-2");
 };
 
 type Props = {

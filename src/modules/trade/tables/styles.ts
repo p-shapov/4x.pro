@@ -6,7 +6,8 @@ const mkTablesStyles = () => {
   const layoutStyles = mkLayoutStyles();
   return {
     root: cn(layoutStyles.cardSurface),
-    tab: cn(layoutStyles.cardPaddings, "*:px-[4px]"),
+    tab: cn(),
+    tabsList: cn("gap-[20px]", "px-[36px]"),
     tabContent: cn(layoutStyles.cardPaddings, "h-full", "min-h-[200px]"),
     tabPanel: cn("h-full", "pb-[0px]"),
   };

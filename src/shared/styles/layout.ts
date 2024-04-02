@@ -4,7 +4,7 @@ const mkLayoutStyles = () => {
   return {
     cardSurface: cn(
       "bg-card",
-      "bg-opacity-80",
+      "bg-opacity-[0.62]",
       "rounded-[16px]",
       "border-[1px]",
       "border-white",

@@ -8,8 +8,9 @@ import { getTokenSymbol } from "@4x.pro/configs/dex-platform";
 import type { Token } from "@4x.pro/configs/dex-platform";
 import { useTokenBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import { mkFieldStyles } from "@4x.pro/shared/styles/field";
-import { formatCurrency } from "@4x.pro/shared/utils/number";
+import { formatCurrency, formatPercentage } from "@4x.pro/shared/utils/number";
 
+import { Presets } from "./presets";
 import { Select } from "./select";
 import { TokenBadge } from "./token-badge";
 
@@ -24,6 +25,7 @@ type Props = {
   readonly?: boolean;
   labelVariant?: "balance" | "max";
   showPostfix?: boolean;
+  showPresets?: boolean;
   max?: number;
   error?: boolean;
   onFocus?: () => void;
@@ -41,6 +43,7 @@ const TokenField: FC<Props> = ({
   label,
   placeholder,
   showPostfix,
+  showPresets,
   max,
   error,
   ...rest
@@ -73,6 +76,13 @@ const TokenField: FC<Props> = ({
     // TODO :: make Select component generic
     setCurrentToken(token as Token);
     onChange?.({ amount, token: token as Token });
+  };
+  const handleSetPresets = (percentage: number) => {
+    setAmount((tokenBalance.data || max || 1) * (percentage / 100));
+    onChange?.({
+      amount: (tokenBalance.data || max || 1) * (percentage / 100),
+      token: currentToken,
+    });
   };
   return (
     <div className={fieldStyles.root}>
@@ -132,6 +142,14 @@ const TokenField: FC<Props> = ({
           <span className={fieldStyles.postfix}>
             {getTokenSymbol(currentToken)}
           </span>
+        )}
+        {showPresets && (tokenBalance.data || max) && (
+          <Presets
+            value={amount / (tokenBalance.data || max || 1)}
+            options={[20, 40, 60, 80]}
+            onChange={handleSetPresets}
+            formatValue={(value) => formatPercentage(value, 0)}
+          />
         )}
         {tokenList && (
           <span className={cn(fieldStyles.postfix, "justify-end")}>

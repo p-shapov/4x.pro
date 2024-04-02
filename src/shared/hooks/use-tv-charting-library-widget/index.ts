@@ -51,7 +51,7 @@ const useTvChartingLibraryWidget = (
         datafeed: getDatafeed(pythConnection),
         symbol: getTvSymbol(token),
         overrides: {
-          "paneProperties.background": "#1a1c1f",
+          "paneProperties.background": "#151719",
           "paneProperties.backgroundType": "solid",
         },
         toolbar_bg: "transparent",
@@ -68,7 +68,7 @@ const useTvChartingLibraryWidget = (
           "use_localstorage_for_settings",
         ],
         loading_screen: {
-          backgroundColor: "var(--color-card-solid)",
+          backgroundColor: "transparent",
           foregroundColor: "var(--color-primary)",
         },
         enabled_features: ["header_saveload"],

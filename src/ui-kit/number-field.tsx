@@ -5,6 +5,9 @@ import type { ChangeEvent, FC, ReactNode } from "react";
 
 import { mkFieldStyles } from "@4x.pro/shared/styles/field";
 import type { PropsWithStyles } from "@4x.pro/shared/types";
+import type { Formatter } from "@4x.pro/shared/utils/number";
+
+import { Presets } from "./presets";
 
 type Props = {
   label?: string;
@@ -16,6 +19,8 @@ type Props = {
   max?: number;
   step?: number;
   readonly?: boolean;
+  presets?: number[];
+  formatValue?: Formatter;
   onFocus?: () => void;
   onChange?: (value: number | "") => void;
 };
@@ -25,6 +30,10 @@ const NumberField: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
   postfix,
   error,
   onChange,
+  formatValue,
+  presets,
+  value,
+  defaultValue,
   ...rest
 }) => {
   const id = useId();
@@ -51,10 +60,21 @@ const NumberField: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
             "[&::-webkit-inner-spin-button]:appearance-none",
             fieldStyles.input,
           )}
+          value={value}
+          defaultValue={defaultValue}
           onChange={handleChange}
           {...rest}
         />
         {postfix && <span className={fieldStyles.postfix}>{postfix}</span>}
+        {presets && (
+          <Presets
+            options={presets}
+            onChange={onChange}
+            value={value}
+            defaultValue={defaultValue}
+            formatValue={formatValue}
+          />
+        )}
       </span>
     </div>
   );

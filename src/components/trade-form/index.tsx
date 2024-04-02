@@ -1,6 +1,6 @@
 "use client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useConnection } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useForm, useWatch } from "react-hook-form";
@@ -17,6 +17,7 @@ import { submitDataSchema } from "./schema";
 import { Slippage } from "./slippage";
 import { mkTradeFormStyles } from "./styles";
 import { TriggerPrice } from "./trigger-price";
+import { Wallet } from "../wallet";
 
 type Props = {
   form: UseFormReturn<SubmitData>;
@@ -55,6 +56,7 @@ const TradeForm: FC<Props> = ({ side, form, collateralTokens }) => {
     name: "position.base",
   });
   const { connection } = useConnection();
+  const { connected } = useWallet();
   const isInsufficientBalance = useIsInsufficientBalance(connection)(
     position.token,
     position.size,
@@ -81,13 +83,17 @@ const TradeForm: FC<Props> = ({ side, form, collateralTokens }) => {
       <Leverage form={form} />
       <Slippage form={form} />
       <TriggerPrice form={form} />
-      <Button
-        type="submit"
-        variant={getButtonVariant()}
-        disabled={isInsufficientBalance}
-      >
-        {getTitle()}
-      </Button>
+      {!connected ? (
+        <Wallet.Connect variant={getButtonVariant()} />
+      ) : (
+        <Button
+          type={connected ? "submit" : "button"}
+          variant={getButtonVariant()}
+          disabled={isInsufficientBalance}
+        >
+          {getTitle()}
+        </Button>
+      )}
     </form>
   );
 };

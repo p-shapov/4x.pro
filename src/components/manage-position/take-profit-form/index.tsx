@@ -1,8 +1,10 @@
 "use client";
+import { useWallet } from "@solana/wallet-adapter-react";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
+import { Wallet } from "@4x.pro/components/wallet";
 import type { Token } from "@4x.pro/configs/dex-platform";
 import {
   getTokenSymbol,
@@ -58,6 +60,7 @@ const TakeProfitForm: FC<Props> = ({
   const pythConnection = useDexPlatformConfig((state) => state.pythConnection);
   const { price: marketPrice } =
     useWatchPythPriceFeed(pythConnection)(collateralToken).priceData || {};
+  const { connected } = useWallet();
   const size = collateral * leverage;
   const liquidationPrice = calculateLiquidationPrice(
     entryPrice,
@@ -122,9 +125,13 @@ const TakeProfitForm: FC<Props> = ({
           content={formatCurrency_USD(liquidationPrice)}
         />
       </dl>
-      <Button type="submit" variant="accent">
-        {newTriggerPrice > 0 ? "Set take profit" : "Enter amount"}
-      </Button>
+      {!connected ? (
+        <Wallet.Connect variant="accent" size="lg" />
+      ) : (
+        <Button type="submit" variant="accent" size="lg">
+          {newTriggerPrice > 0 ? "Set take profit" : "Enter amount"}
+        </Button>
+      )}
     </form>
   );
 };

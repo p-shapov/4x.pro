@@ -7,7 +7,7 @@ import type { PropsWithStyles } from "@4x.pro/shared/types";
 import { Icon } from "./icon";
 
 type Props = {
-  text: string;
+  text?: string;
   href?: string;
   iconSrc?: `/icons/${string}.svg`;
   external?: boolean;
@@ -28,7 +28,7 @@ const Link: FC<PropsWithStyles<Props, typeof mkLinkStyles>> = ({
   const innerSlot = (
     <>
       {iconSrc && <Icon src={iconSrc} className={linkStyles.icon} />}
-      <span>{text}</span>
+      {text && <span>{text}</span>}
     </>
   );
   if (!href)

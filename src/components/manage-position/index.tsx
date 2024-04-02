@@ -65,62 +65,61 @@ const ManagePosition: FC<Props> = ({
               />
             </button>
           </div>
-          <div className={managePositionStyles.content}>
-            <Tabs
-              classNames={{
-                items: managePositionStyles.tabs,
-                tab: managePositionStyles.tab,
-              }}
-              items={[
-                { id: "add", content: "Add collateral" },
-                { id: "remove", content: "Remove collateral" },
-                { id: "sl", content: "Stop loss" },
-                { id: "tp", content: "Take profit" },
-              ]}
-              panels={{
-                add: (
-                  <AddCollateralForm
-                    entryPrice={entryPrice}
-                    side={side}
-                    form={addCollateralForm}
-                    collateral={collateral}
-                    leverage={leverage}
-                  />
-                ),
-                remove: (
-                  <RemoveCollateralForm
-                    form={removeCollateralForm}
-                    side={side}
-                    collateral={collateral}
-                    leverage={leverage}
-                    entryPrice={entryPrice}
-                  />
-                ),
-                sl: (
-                  <StopLossForm
-                    form={stopLossForm}
-                    side={side}
-                    triggerPrice={triggerPrice}
-                    collateral={collateral}
-                    collateralToken={collateralToken}
-                    leverage={leverage}
-                    entryPrice={entryPrice}
-                  />
-                ),
-                tp: (
-                  <TakeProfitForm
-                    form={takeProfitForm}
-                    side={side}
-                    triggerPrice={triggerPrice}
-                    collateral={collateral}
-                    collateralToken={collateralToken}
-                    leverage={leverage}
-                    entryPrice={entryPrice}
-                  />
-                ),
-              }}
-            />
-          </div>
+          <Tabs
+            classNames={{
+              items: managePositionStyles.tabsList,
+              tab: managePositionStyles.tab,
+              panel: managePositionStyles.content,
+            }}
+            items={[
+              { id: "add", content: "Add collateral" },
+              { id: "remove", content: "Remove collateral" },
+              { id: "sl", content: "Stop loss" },
+              { id: "tp", content: "Take profit" },
+            ]}
+            panels={{
+              add: (
+                <AddCollateralForm
+                  entryPrice={entryPrice}
+                  side={side}
+                  form={addCollateralForm}
+                  collateral={collateral}
+                  leverage={leverage}
+                />
+              ),
+              remove: (
+                <RemoveCollateralForm
+                  form={removeCollateralForm}
+                  side={side}
+                  collateral={collateral}
+                  leverage={leverage}
+                  entryPrice={entryPrice}
+                />
+              ),
+              sl: (
+                <StopLossForm
+                  form={stopLossForm}
+                  side={side}
+                  triggerPrice={triggerPrice}
+                  collateral={collateral}
+                  collateralToken={collateralToken}
+                  leverage={leverage}
+                  entryPrice={entryPrice}
+                />
+              ),
+              tp: (
+                <TakeProfitForm
+                  form={takeProfitForm}
+                  side={side}
+                  triggerPrice={triggerPrice}
+                  collateral={collateral}
+                  collateralToken={collateralToken}
+                  leverage={leverage}
+                  entryPrice={entryPrice}
+                />
+              ),
+            }}
+          />
         </Dialog.Panel>
       </div>
     </Dialog>

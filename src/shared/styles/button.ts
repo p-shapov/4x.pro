@@ -26,12 +26,14 @@ type Props = {
   outlined?: boolean;
   size?: "md" | "lg";
   disabled?: boolean;
+  loading?: boolean;
 };
 
 const mkBaseStyles = (
   variant: Variant,
   outlined: boolean,
   disabled: boolean,
+  loading: boolean,
 ) => {
   return cn(
     "hover:bg-opacity-50",
@@ -45,8 +47,9 @@ const mkBaseStyles = (
     {
       [mkRootFilled(variant, disabled)]: !outlined,
       [mkRootOutlined(variant, disabled)]: outlined,
-      "cursor-pointer": !disabled,
+      "cursor-pointer": !(disabled && loading),
       "cursor-not-allowed": disabled,
+      "cursor-wait": loading,
     },
   );
 };
@@ -57,19 +60,31 @@ const mkButtonStyles = ({
   fill = true,
   size = "md",
   disabled = false,
+  loading = false,
 }: Props & { fill?: boolean }) => {
-  const baseStyles = mkBaseStyles(variant, outlined, disabled);
+  const baseStyles = mkBaseStyles(variant, outlined, disabled, loading);
   return {
-    root: cn(baseStyles, {
+    root: cn(baseStyles, "relative", {
       "w-full": fill,
-      [cn("px-[1.6rem]", "py-[0.8rem]", "text-h5")]: size === "md",
+      [cn("px-[1.6rem]", "text-h5", "h-[3.6rem]")]: size === "md",
       [cn(
         "px-[2.4rem]",
-        "py-[1.2rem]",
         "text-[1.6rem]",
         "font-bold",
         "leading-loose",
+        "h-[4.7rem]",
       )]: size === "lg",
+    }),
+    spinner: cn(
+      "absolute",
+      "inset-0",
+      "flex",
+      "items-center",
+      "justify-center",
+    ),
+    spinnerIcon: cn("animate-spin", "text-current", {
+      [cn("size-[2rem]")]: size === "md",
+      [cn("size-[3rem]")]: size === "lg",
     }),
   };
 };
@@ -79,8 +94,9 @@ const mkIconButtonStyles = ({
   outlined = false,
   size = "md",
   disabled = false,
+  loading = false,
 }: Props) => {
-  const baseStyles = mkBaseStyles(variant, outlined, disabled);
+  const baseStyles = mkBaseStyles(variant, outlined, disabled, loading);
   return {
     root: cn(baseStyles, {
       [cn("size-[3.83rem]", "p-[0.8rem]")]: size === "md",

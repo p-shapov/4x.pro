@@ -1,12 +1,21 @@
 import cn from "classnames";
 
-import { mkBadgeStyles } from "./badge";
-
 const mkPresetsStyles = () => {
-  const badgeStyles = mkBadgeStyles();
   return {
     root: cn("flex", "gap-[0.4rem]"),
-    option: cn(badgeStyles.root, "cursor-pointer"),
+    option: cn(
+      "inline-flex",
+      "w-max",
+      "h-max",
+      "pt-[0.2rem]",
+      "pb-[0.3rem]",
+      "px-[0.4rem]",
+      "rounded-[0.7rem]",
+      "text-h6",
+      "bg-strong",
+      "text-accent",
+      "cursor-pointer",
+    ),
   };
 };
 

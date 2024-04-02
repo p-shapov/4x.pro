@@ -22,6 +22,7 @@ module.exports = {
       backdrop: "rgba(var(--rgb-backdrop) / <alpha-value>)",
       dialog: "rgba(var(--rgb-dialog) / <alpha-value>)",
       transparent: "transparent",
+      current: "currentColor",
     },
     fontSize: {
       sm: "1.2rem",

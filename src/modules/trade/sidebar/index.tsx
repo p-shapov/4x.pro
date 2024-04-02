@@ -36,6 +36,7 @@ const Sidebar: FC<Props> = ({ tradeForm }) => {
             classNames={{
               tab: sidebarStyles.tab,
               panels: sidebarStyles.tabContent,
+              items: sidebarStyles.tabsList,
             }}
             items={[
               {

@@ -1,6 +1,5 @@
 import cn from "classnames";
 
-import { mkFieldStyles } from "@4x.pro/shared/styles/field";
 import { mkLayoutStyles } from "@4x.pro/shared/styles/layout";
 
 const mkTradeFormStyles = () => {
@@ -10,31 +9,14 @@ const mkTradeFormStyles = () => {
 };
 
 const mkLeverageStyles = () => {
-  const fieldStyles = mkFieldStyles({});
   return {
-    root: cn(
-      "grid",
-      "gap-[1rem_1.2rem]",
-      "grid-cols-[max-content_max-content]",
-      "items-center",
-    ),
-    field: cn("w-[6.7rem]"),
-    label: cn(fieldStyles.label, "col-span-2"),
-    range: cn("col-span-2"),
+    root: cn("grid", "gap-[1.2rem]", "items-center"),
   };
 };
 
 const mkSlippageStyles = () => {
-  const fieldStyles = mkFieldStyles({});
   return {
-    root: cn(
-      "grid",
-      "gap-[1rem_1.2rem]",
-      "grid-cols-[max-content_max-content]",
-      "items-center",
-    ),
-    field: cn("w-[9.6rem]"),
-    label: cn(fieldStyles.label, "col-span-2"),
+    root: cn(),
   };
 };
 

@@ -8,8 +8,8 @@ import { formatDefault } from "@4x.pro/shared/utils/number";
 
 type Props = {
   options: number[];
-  value?: number;
-  defaultValue?: number;
+  value?: number | "";
+  defaultValue?: number | "";
   formatValue?: Formatter;
   onChange?: (value: number) => void;
 };
