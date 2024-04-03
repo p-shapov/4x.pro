@@ -21,6 +21,7 @@
     "paths": {
       "@4x.pro/*": ["./src/*"],
       "@public/*": ["./public/*"],
+      "@target/*": ["./target/*"],
       "@generated/*": ["./generated/*"],
       "tailwindcss-classnames": ["./generated/tailwindcss-classnames.ts"]
     }

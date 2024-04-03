@@ -22,6 +22,8 @@ const useTokenBalanceQuery = createQuery({
     const connection = new Connection(rpcEndpoint);
     return fetchSplTokenBalance(token, account, connection);
   },
+  staleTime: 0,
+  gcTime: 0,
 });
 
 const useTokenBalance = ({

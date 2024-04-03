@@ -174,7 +174,7 @@
         "pathGroups": [
           {
             "group": "parent",
-            "pattern": "@generated/**",
+            "pattern": "@target/**",
             "position": "before"
           },
           {

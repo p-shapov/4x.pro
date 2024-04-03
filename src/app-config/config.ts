@@ -16,6 +16,7 @@ type Config = {
   tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>>;
   tokenSymbols: Record<Token, string>;
   tokenNetworks: Record<Token, string>;
+  tokenIds: Record<Token, string>;
   publicKeys: Record<Token, string>;
 };
 
@@ -47,11 +48,19 @@ const tokenNetworks: Record<Token, string> = {
   ETH: "Ethereum",
 };
 
+const tokenIds: Record<Token, string> = {
+  SOL: "solana",
+  USDC: "usd-coin",
+  BTC: "bitcoin",
+  ETH: "ethereum",
+};
+
 const DexPlatformConfig: Config = {
   tvSymbols,
   tokenLogos,
   tokenSymbols,
   tokenNetworks,
+  tokenIds,
   rpcEndpoints: {
     helius: `https://devnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY}`,
   },

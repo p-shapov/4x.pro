@@ -11,6 +11,7 @@ import { createQuery } from "react-query-kit";
 import type { Token } from "@4x.pro/app-config";
 import {
   getPythFeedIds_to_USD,
+  getRpcEndpoint,
   getTokenPythFeedId_to_USD,
   useAppConfig,
 } from "@4x.pro/app-config";
@@ -24,8 +25,16 @@ const pythFeedIds_to_USD = getPythFeedIds_to_USD();
 const usePythConnection = () => {
   const { rpcEndpoint } = useAppConfig();
   const pythConnection = useMemo(() => {
-    const connection = new Connection(rpcEndpoint);
-    let pythConnection = connectionsMap.get(rpcEndpoint);
+    const connection = new Connection(
+      process.env.NODE_ENV === "development"
+        ? getRpcEndpoint("helius")
+        : rpcEndpoint,
+    );
+    let pythConnection = connectionsMap.get(
+      process.env.NODE_ENV === "development"
+        ? getRpcEndpoint("helius")
+        : rpcEndpoint,
+    );
     if (!pythConnection) {
       pythConnection = new PythConnection(
         connection,
@@ -96,18 +105,23 @@ const usePythPriceFeedQuery = createQuery({
     rpcEndpoint: string;
   }) => {
     if (!token) return null;
-    const connection = new Connection(rpcEndpoint);
+    const connection = new Connection(
+      process.env.NODE_ENV === "development"
+        ? getRpcEndpoint("helius")
+        : rpcEndpoint,
+    );
     const client = new PythHttpClient(connection, pythProgramKey, "confirmed");
     const [priceData] = await client.getAssetPricesFromAccounts([
       new PublicKey(getTokenPythFeedId_to_USD(token)),
     ]);
     return priceData;
   },
+  staleTime: 0,
+  gcTime: 0,
 });
 
 const usePythPriceFeed = ({ token }: { token?: Token }) => {
   const { rpcEndpoint } = useAppConfig();
-
   return usePythPriceFeedQuery({
     variables: {
       token,

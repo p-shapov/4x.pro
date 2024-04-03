@@ -1,11 +1,15 @@
 "use client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useForm, useWatch } from "react-hook-form";
 
 import type { Token } from "@4x.pro/app-config";
+import { useOpenPosition } from "@4x.pro/services/perpetuals/hooks/use-open-position";
+import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
+import { Side } from "@4x.pro/services/perpetuals/lib/types";
+import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import { useIsInsufficientBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import { Button } from "@4x.pro/ui-kit/button";
 
@@ -48,17 +52,40 @@ const useTradeForm = () => {
 
 const TradeForm: FC<Props> = ({ side, form, collateralTokens }) => {
   const tradeFormStyles = mkTradeFormStyles();
+  const walletContextState = useWallet();
+  const { connection } = useConnection();
+  const openPosition = useOpenPosition();
+  const { data: poolData } = usePools();
+  const pool = Object.values(poolData || {})[0];
   const handleSubmit = form.handleSubmit((data) => {
-    alert(JSON.stringify(data));
+    if (priceData?.price && pool) {
+      openPosition.mutate({
+        walletContextState,
+        connection,
+        pool,
+        payAmount: data.position.base.size,
+        payToken: data.position.base.token,
+        positionAmount: data.position.quote.size,
+        positionToken: data.position.quote.token,
+        leverage: data.leverage,
+        price: priceData.price,
+        side: side === "long" ? Side.Long : Side.Short,
+      });
+    }
   });
-  const position = useWatch({
+  const positionBase = useWatch({
     control: form.control,
     name: "position.base",
   });
+  const positionQuote = useWatch({
+    control: form.control,
+    name: "position.quote",
+  });
+  const { priceData } = useWatchPythPriceFeed(positionQuote.token);
   const { connected } = useWallet();
   const isInsufficientBalance = useIsInsufficientBalance({
-    token: position.token,
-    amount: position.size,
+    token: positionBase.token,
+    amount: positionBase.size,
   });
   const getTitle = () => {
     switch (side) {
@@ -89,6 +116,7 @@ const TradeForm: FC<Props> = ({ side, form, collateralTokens }) => {
           type={connected ? "submit" : "button"}
           variant={getButtonVariant()}
           disabled={isInsufficientBalance.data}
+          loading={openPosition.isPending}
         >
           {getTitle()}
         </Button>

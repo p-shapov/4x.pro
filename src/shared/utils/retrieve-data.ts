@@ -46,4 +46,4 @@ const fetchLPBalance = async (
   return 0;
 };
 
-export { fetchSplTokenBalance, fetchLPBalance };
+export { checkIfAccountExists, fetchSplTokenBalance, fetchLPBalance };

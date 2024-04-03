@@ -25,6 +25,14 @@ const getTokenPublicKey = (token: Token) => {
 const getTokenNetwork = (token: Token) => {
   return DexPlatformConfig.tokenNetworks[token];
 };
+const tokenAddressToToken = (tokenAddress: string) => {
+  return (Object.keys(DexPlatformConfig.publicKeys) as readonly Token[]).find(
+    (token) => DexPlatformConfig.publicKeys[token] === tokenAddress,
+  ) as Token;
+};
+const getTokenId = (token: Token) => {
+  return DexPlatformConfig.tokenIds[token];
+};
 
 export {
   getTvSymbol,
@@ -35,4 +43,6 @@ export {
   getRpcEndpoint,
   getTokenPublicKey,
   getTokenNetwork,
+  tokenAddressToToken,
+  getTokenId,
 };
