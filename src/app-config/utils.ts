@@ -1,8 +1,8 @@
 import type { RpcProvider, Token } from "./config";
 import { DexPlatformConfig } from "./config";
 
-const getTvSymbol = (token: Token) => {
-  return DexPlatformConfig.tvSymbols[token];
+const getTickerSymbol = (token: Token) => {
+  return DexPlatformConfig.tickerSymbols[token];
 };
 const getTokenLogo = (token: Token) => {
   return DexPlatformConfig.tokenLogos[token] || "/coins/fallback.svg";
@@ -35,7 +35,7 @@ const getTokenId = (token: Token) => {
 };
 
 export {
-  getTvSymbol,
+  getTickerSymbol,
   getTokenLogo,
   getTokenSymbol,
   getTokenPythFeedId_to_USD,

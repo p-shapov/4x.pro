@@ -1,5 +1,4 @@
 import type { WalletContextState } from "@solana/wallet-adapter-react";
-import type { Connection } from "@solana/web3.js";
 import { createMutation } from "react-query-kit";
 
 import { queryClient, useAppConfig } from "@4x.pro/app-config";
@@ -14,7 +13,6 @@ const useOpenPositionQuery = createMutation({
   mutationFn: async ({
     rpcEndpoint,
     walletContextState,
-    connection,
     pool,
     payToken,
     positionToken,
@@ -26,7 +24,6 @@ const useOpenPositionQuery = createMutation({
   }: {
     rpcEndpoint: string;
     walletContextState: WalletContextState;
-    connection: Connection;
     pool: PoolAccount;
     payToken: Token;
     positionToken: Token;
@@ -39,7 +36,6 @@ const useOpenPositionQuery = createMutation({
     const res = await openPosition(
       rpcEndpoint,
       walletContextState,
-      connection,
       pool,
       payToken,
       positionToken,
@@ -63,7 +59,6 @@ const useOpenPosition = () => {
     ...mutation,
     mutate: (params: {
       walletContextState: WalletContextState;
-      connection: Connection;
       pool: PoolAccount;
       payToken: Token;
       positionToken: Token;
@@ -75,7 +70,6 @@ const useOpenPosition = () => {
     }) => mutation.mutate({ ...params, rpcEndpoint }),
     mutateAsync: async (params: {
       walletContextState: WalletContextState;
-      connection: Connection;
       pool: PoolAccount;
       payToken: Token;
       positionToken: Token;

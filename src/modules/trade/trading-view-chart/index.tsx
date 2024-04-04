@@ -4,9 +4,14 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import type { IChartingLibraryWidget } from "@public/vendor/charting_library/charting_library";
 
 import type { Token } from "@4x.pro/app-config";
-import { getTvSymbol } from "@4x.pro/app-config";
+import { getTickerSymbol } from "@4x.pro/app-config";
+import { useToken24hrBenchmark } from "@4x.pro/shared/hooks/use-token-24hr-benchbark";
 import { useTvChartingLibraryWidget } from "@4x.pro/shared/hooks/use-tv-charting-library-widget";
 import type { PropsWithStyles } from "@4x.pro/shared/types";
+import {
+  formatCurrency_USD,
+  formatPercentage,
+} from "@4x.pro/shared/utils/number";
 import { TokenPrice } from "@4x.pro/ui-kit/token-price";
 
 import { mkTradingViewChartStyles } from "./styles";
@@ -30,12 +35,18 @@ const TradingViewChart = forwardRef<
   const tvWidget = useTvChartingLibraryWidget(selectedAsset, {
     container: TRADING_VIEW_ID,
   });
+  const { data: benchmark24hr } = useToken24hrBenchmark({
+    token: selectedAsset,
+  });
+  const change24hr = benchmark24hr
+    ? (benchmark24hr.change / benchmark24hr.close) * 100
+    : undefined;
   useImperativeHandle<
     IChartingLibraryWidget | null,
     IChartingLibraryWidget | null
   >(ref, () => tvWidget, [tvWidget]);
   const handleAssetChange = (asset: Token) => {
-    tvWidget?.chart().setSymbol(getTvSymbol(asset));
+    tvWidget?.chart().setSymbol(getTickerSymbol(asset));
     onChange?.(asset);
   };
   useEffect(() => {
@@ -64,19 +75,32 @@ const TradingViewChart = forwardRef<
         <div className={tradingViewChartStyles.headerSeparator} />
         <span>
           <span className={tradingViewChartStyles.label24h}>24h High: </span>
-          <span className={tradingViewChartStyles.price24h}>$0.00</span>
+          <span className={tradingViewChartStyles.price24h}>
+            {formatCurrency_USD(benchmark24hr?.high, 2)}
+          </span>
         </span>
         <div className={tradingViewChartStyles.headerSeparator} />
         <span>
           <span className={tradingViewChartStyles.label24h}>24h Low: </span>
-          <span className={tradingViewChartStyles.price24h}>$0.00</span>
+          <span className={tradingViewChartStyles.price24h}>
+            {formatCurrency_USD(benchmark24hr?.low, 2)}
+          </span>
         </span>
         <div className={tradingViewChartStyles.headerSeparator} />
         <span>
           <span className={tradingViewChartStyles.label24h}>24h Change: </span>
           <span className={tradingViewChartStyles.change24h}>
-            <span className={tradingViewChartStyles.change24hPositive}>
-              +0.00%
+            <span
+              className={cn({
+                [tradingViewChartStyles.change24hNegative]:
+                  (change24hr || 0) < 0,
+                [tradingViewChartStyles.change24hPositive]:
+                  (change24hr || 0) > 0,
+              })}
+            >
+              {(change24hr || 0) > 0 && "+"}
+              {(change24hr || 0) < 0 && "-"}
+              {formatPercentage(change24hr, 2)}
             </span>
           </span>
         </span>

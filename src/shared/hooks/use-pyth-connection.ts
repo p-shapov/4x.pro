@@ -42,7 +42,12 @@ const usePythConnection = () => {
         "confirmed",
         pythFeedIds_to_USD.map((feedId) => new PublicKey(feedId)),
       );
-      connectionsMap.set(rpcEndpoint, pythConnection);
+      connectionsMap.set(
+        process.env.NODE_ENV === "development"
+          ? getRpcEndpoint("helius")
+          : rpcEndpoint,
+        pythConnection,
+      );
     }
     return pythConnection;
   }, [rpcEndpoint]);

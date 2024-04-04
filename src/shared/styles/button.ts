@@ -47,7 +47,7 @@ const mkBaseStyles = (
     {
       [mkRootFilled(variant, disabled)]: !outlined,
       [mkRootOutlined(variant, disabled)]: outlined,
-      "cursor-pointer": !(disabled && loading),
+      "cursor-pointer": !(disabled || loading),
       "cursor-not-allowed": disabled,
       "cursor-wait": loading,
     },

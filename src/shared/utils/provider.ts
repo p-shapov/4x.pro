@@ -2,7 +2,7 @@ import type { Wallet } from "@project-serum/anchor";
 import { AnchorProvider } from "@project-serum/anchor";
 import { Connection } from "@solana/web3.js";
 
-const getProvider = async (rpcEndpoint: string, wallet: Wallet) => {
+const getProvider = (rpcEndpoint: string, wallet: Wallet) => {
   const connection = new Connection(rpcEndpoint, {
     commitment: "processed",
   });

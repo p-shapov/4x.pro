@@ -3,7 +3,7 @@ import { BN } from "@project-serum/anchor";
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { TOKEN_PROGRAM_ID, getAssociatedTokenAddress } from "@solana/spl-token";
 import type { WalletContextState } from "@solana/wallet-adapter-react";
-import type { Connection, TransactionInstruction } from "@solana/web3.js";
+import type { TransactionInstruction } from "@solana/web3.js";
 import { SystemProgram } from "@solana/web3.js";
 
 import type { Token } from "@4x.pro/app-config";
@@ -28,7 +28,6 @@ import { ViewHelper } from "../utils/view-helpers";
 const openPositionBuilder = async (
   rpcEndpoint: string,
   walletContextState: WalletContextState,
-  connection: Connection,
   pool: PoolAccount,
   payCustody: CustodyAccount,
   positionCustody: CustodyAccount,
@@ -65,7 +64,7 @@ const openPositionBuilder = async (
   const preInstructions: TransactionInstruction[] = [];
   const finalPayAmount = positionAmount / leverage;
   if (payCustody.getToken() != positionCustody.getToken()) {
-    const View = new ViewHelper(connection, provider);
+    const View = new ViewHelper(provider.connection, provider);
     const swapInfo = await View.getSwapAmountAndFees(
       payAmount,
       pool!,
@@ -103,7 +102,7 @@ const openPositionBuilder = async (
       await swapTransactionBuilder(
         rpcEndpoint,
         walletContextState,
-        connection,
+        provider.connection,
         pool,
         payCustody.getToken(),
         positionCustody.getToken(),
@@ -119,12 +118,12 @@ const openPositionBuilder = async (
       publicKey,
       publicKey,
       positionCustody.mint,
-      connection,
+      provider.connection,
     );
     if (ataIx) preInstructions.push(ataIx);
     const wrapInstructions = await wrapSolIfNeeded(
       publicKey,
-      connection,
+      provider.connection,
       payAmount,
     );
     if (wrapInstructions) {
@@ -165,7 +164,7 @@ const openPositionBuilder = async (
     await manualSendTransaction(
       tx,
       publicKey,
-      connection,
+      provider.connection,
       walletContextState.signTransaction,
     );
   } catch (err) {
@@ -176,7 +175,6 @@ const openPositionBuilder = async (
 const openPosition = async (
   rpcEndpoint: string,
   walletContextState: WalletContextState,
-  connection: Connection,
   pool: PoolAccount,
   payToken: Token,
   positionToken: Token,
@@ -191,7 +189,6 @@ const openPosition = async (
   await openPositionBuilder(
     rpcEndpoint,
     walletContextState,
-    connection,
     pool,
     payCustody,
     positionCustody,

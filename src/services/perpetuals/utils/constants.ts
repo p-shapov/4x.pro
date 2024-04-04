@@ -36,7 +36,7 @@ class DefaultWallet implements Wallet {
   }
 }
 
-const getPerpetualProgramAndProvider = async (
+const getPerpetualProgramAndProvider = (
   rpcEndpoint: string,
   walletContextState?: WalletContextState,
 ) => {
@@ -55,12 +55,9 @@ const getPerpetualProgramAndProvider = async (
       publicKey: walletContextState.publicKey,
     };
 
-    provider = await getProvider(rpcEndpoint, wallet);
+    provider = getProvider(rpcEndpoint, wallet);
   } else {
-    provider = await getProvider(
-      rpcEndpoint,
-      new DefaultWallet(DEFAULT_PERPS_USER),
-    );
+    provider = getProvider(rpcEndpoint, new DefaultWallet(DEFAULT_PERPS_USER));
   }
 
   const perpetual_program = new Program(

@@ -1,6 +1,6 @@
 "use client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useForm, useWatch } from "react-hook-form";
@@ -53,7 +53,6 @@ const useTradeForm = () => {
 const TradeForm: FC<Props> = ({ side, form, collateralTokens }) => {
   const tradeFormStyles = mkTradeFormStyles();
   const walletContextState = useWallet();
-  const { connection } = useConnection();
   const openPosition = useOpenPosition();
   const { data: poolData } = usePools();
   const pool = Object.values(poolData || {})[0];
@@ -61,7 +60,6 @@ const TradeForm: FC<Props> = ({ side, form, collateralTokens }) => {
     if (priceData?.price && pool) {
       openPosition.mutate({
         walletContextState,
-        connection,
         pool,
         payAmount: data.position.base.size,
         payToken: data.position.base.token,

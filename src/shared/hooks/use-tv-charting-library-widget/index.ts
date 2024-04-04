@@ -8,7 +8,7 @@ import type {
 } from "@public/vendor/charting_library/charting_library";
 
 import type { Token } from "@4x.pro/app-config";
-import { getTvSymbol } from "@4x.pro/app-config";
+import { getTickerSymbol } from "@4x.pro/app-config";
 
 import { useDataFeed } from "./datafeed";
 
@@ -45,7 +45,7 @@ const useTvChartingLibraryWidget = (
         locale: "en",
         interval: "1" as ResolutionString,
         datafeed: datafeed,
-        symbol: getTvSymbol(token),
+        symbol: getTickerSymbol(token),
         overrides: {
           "paneProperties.background": "#151719",
           "paneProperties.backgroundType": "solid",

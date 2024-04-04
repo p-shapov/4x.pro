@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import type { IChartingLibraryWidget } from "@public/vendor/charting_library/charting_library";
 
 import type { Token } from "@4x.pro/app-config";
-import { getTvSymbol } from "@4x.pro/app-config";
+import { getTickerSymbol } from "@4x.pro/app-config";
 import { useTradeForm } from "@4x.pro/components/trade-form";
 import { useResizableLayout } from "@4x.pro/shared/hooks/use-resizable-layout";
 
@@ -40,13 +40,13 @@ const TradeModule = () => {
       const asset = state.position?.quote?.token;
       if (asset && asset !== selectedAsset) {
         selectAsset(asset);
-        tvWidgetRef.current?.chart().setSymbol(getTvSymbol(asset));
+        tvWidgetRef.current?.chart().setSymbol(getTickerSymbol(asset));
       }
     });
     return unsubscribe;
   }, [selectAsset, selectedAsset, tradeForm]);
   const handleAssetChange = (asset: Token) => {
-    tvWidgetRef.current?.chart().setSymbol(getTvSymbol(asset));
+    tvWidgetRef.current?.chart().setSymbol(getTickerSymbol(asset));
     const quoteSize = tradeForm.getValues("position.quote.size");
     tradeForm.setValue("position.quote", {
       token: asset,

@@ -23,7 +23,6 @@ const getPoolData = async (
   try {
     fetchedPools = await perpetual_program.account.pool.all();
   } catch (error) {
-    console.warn("error", error);
     fetchedPools = [];
   }
   const poolObjs: Record<string, PoolAccount> = {};

@@ -23,11 +23,7 @@ const TokenBadge: FC<
   Omit<PropsWithStyles<Props, typeof mkTokenStyles>, "dir">
 > = ({ token, showNetwork, priceChange, bold = true, gap = 4 }) => {
   const dir =
-    typeof priceChange === "number"
-      ? priceChange > 0
-        ? "up"
-        : "down"
-      : undefined;
+    (priceChange || 0) > 0 ? "up" : (priceChange || 0) < 0 ? "down" : undefined;
   const tokenStyles = mkTokenStyles({ dir, bold, gap });
   return (
     <span className={tokenStyles.root}>
@@ -45,7 +41,7 @@ const TokenBadge: FC<
             src={dir === "up" ? "/icons/arrow-up.svg" : "/icons/arrow-down.svg"}
           />
           <span className={cn(tokenStyles.percentage)}>
-            {formatPercentage(priceChange, 1)}
+            {formatPercentage(priceChange, 2)}
           </span>
         </span>
       )}

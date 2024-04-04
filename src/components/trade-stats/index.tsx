@@ -2,8 +2,11 @@ import { useCallback } from "react";
 import type { FC } from "react";
 
 import type { Token } from "@4x.pro/app-config";
+import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
+import { usePriceStats } from "@4x.pro/services/perpetuals/hooks/use-price-stats";
 import {
   calculateLiquidationPrice,
+  formatCurrency_USD,
   formatRate,
 } from "@4x.pro/shared/utils/number";
 import { Definition } from "@4x.pro/ui-kit/definition";
@@ -19,6 +22,9 @@ type Props = {
 };
 
 const TradeStats: FC<Props> = ({ side, collateralToken, leverage }) => {
+  const { data: poolsData } = usePools();
+  const { data: priceStats } = usePriceStats();
+  const pool = poolsData && Object.values(poolsData)[0];
   const tradeStatsStyles = mkTradeStatsStyles();
   return (
     <dl className={tradeStatsStyles.root}>
@@ -54,7 +60,15 @@ const TradeStats: FC<Props> = ({ side, collateralToken, leverage }) => {
       <Definition term="Exit Price" content="-" />
       <Definition term="Fees" content="-" />
       <Definition term="Margin Fees" content="-" />
-      <Definition term="Available Liquidity" content="-" />
+      <Definition
+        term="Available Liquidity"
+        content={formatCurrency_USD(
+          priceStats &&
+            pool
+              ?.getCustodyAccount(collateralToken)
+              ?.getCustodyLiquidity(priceStats),
+        )}
+      />
     </dl>
   );
 };
