@@ -36,18 +36,22 @@ const usePositions = () => {
 const useUserPositions = () => {
   const { rpcEndpoint } = useAppConfig();
   const { data: custodyInfos } = useCustodies();
-  const { publicKey } = useWallet();
+  const walletContextState = useWallet();
   return usePositionsQuery({
     variables: { rpcEndpoint, custodyInfos },
     enabled: !!custodyInfos,
     select: (positions): Record<string, PositionAccount> => {
       if (!positions) return {};
       return Object.entries(positions).reduce(
-        (positions, [address, data]) =>
-          data.owner.toBase58() === publicKey?.toBase58()
-            ? { [address]: data }
-            : positions,
-        {},
+        (positions, [address, data]) => {
+          const ownerIsUser =
+            data.owner.toBase58() === walletContextState.publicKey?.toBase58();
+          if (ownerIsUser) {
+            positions[address] = data;
+          }
+          return positions;
+        },
+        {} as Record<string, PositionAccount>,
       );
     },
   });

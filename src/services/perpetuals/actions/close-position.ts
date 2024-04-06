@@ -3,11 +3,11 @@ import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import type { WalletContextState } from "@solana/wallet-adapter-react";
 import type { Connection, TransactionInstruction } from "@solana/web3.js";
 
-import { manualSendTransaction } from "@4x.pro/shared/utils/transaction-handlers";
+import { manualSendTransaction } from "@4x.pro/services/transaction-flow/handlers";
 import {
   createAtaIfNeeded,
   unwrapSolIfNeeded,
-} from "@4x.pro/shared/utils/transaction-helpers";
+} from "@4x.pro/services/transaction-flow/utils";
 
 import type { CustodyAccount } from "../lib/custody-account";
 import type { PoolAccount } from "../lib/pool-account";
@@ -80,6 +80,7 @@ export async function closePosition(
       publicKey,
       connection,
       walletContextState.signTransaction,
+      "Close position",
     );
   } catch (err) {
     throw err;

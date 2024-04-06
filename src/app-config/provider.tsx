@@ -11,6 +11,7 @@ import {
 } from "@solana/wallet-adapter-wallets";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { FC, PropsWithChildren } from "react";
+import { ToastContainer } from "react-toastify";
 
 import { useAppConfig } from "./store";
 
@@ -48,7 +49,10 @@ const AppConfigProvider: FC<PropsWithChildren> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <ConnectionProvider endpoint={rpcEndpoint}>
-        <WalletProvider wallets={wallets}>{children}</WalletProvider>
+        <WalletProvider wallets={wallets}>
+          {children}
+          <ToastContainer />
+        </WalletProvider>
       </ConnectionProvider>
     </QueryClientProvider>
   );

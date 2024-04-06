@@ -1,20 +1,5 @@
 @tailwind base;
 @layer base {
-  :root.dark {
-    --rgb-white: 255 255 255;
-    --rgb-body: 20 21 23;
-    --rgb-card: 29 31 35;
-    --rgb-strong: 49 51 58;
-    --rgb-content-1: 243 245 250;
-    --rgb-content-2: 134 140 155;
-    --rgb-content-3: 90 95 109;
-    --rgb-primary: 81 249 189;
-    --rgb-accent: 81 141 249;
-    --rgb-green: 81 249 189;
-    --rgb-red: 249 81 145;
-    color-scheme: dark;
-  }
-
   #__next {
     isolation: isolate;
   }

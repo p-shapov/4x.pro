@@ -24,8 +24,9 @@ const useToken24hrBenchmarkQuery = createQuery({
         change: (data.c[data.c.length - 1] - data.o[0]) as number,
       }));
   },
-  staleTime: 60 * 60 * 1000,
-  gcTime: 60 * 60 * 1000,
+  staleTime: 60 * 1000,
+  gcTime: 60 * 1000,
+  refetchInterval: 60 * 1000,
 });
 
 const useToken24hrBenchmark = ({ token }: { token: Token }) => {

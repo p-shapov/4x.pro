@@ -13,7 +13,13 @@ import type {
 } from "@solana/web3.js";
 import { LAMPORTS_PER_SOL, SystemProgram } from "@solana/web3.js";
 
-import { checkIfAccountExists } from "./retrieve-data";
+import { checkIfAccountExists } from "@4x.pro/shared/utils/retrieve-data";
+
+const TRX_URL = (txid: string) =>
+  `https://explorer.solana.com/tx/${txid}?cluster=devnet`;
+
+const ACCOUNT_URL = (address: string) =>
+  `https://explorer.solana.com/address/${address}?cluster=devnet`;
 
 const createAtaIfNeeded = async (
   publicKey: PublicKey,
@@ -82,4 +88,10 @@ const unwrapSolIfNeeded = async (publicKey: PublicKey) => {
   return preInstructions.length > 0 ? preInstructions : null;
 };
 
-export { createAtaIfNeeded, wrapSolIfNeeded, unwrapSolIfNeeded };
+export {
+  createAtaIfNeeded,
+  wrapSolIfNeeded,
+  unwrapSolIfNeeded,
+  TRX_URL,
+  ACCOUNT_URL,
+};

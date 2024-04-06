@@ -1,8 +1,10 @@
 "use client";
 import { Dialog } from "@headlessui/react";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/app-config";
+import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
+import { Side } from "@4x.pro/services/perpetuals/lib/types";
 import { Icon } from "@4x.pro/ui-kit/icon";
 import { Tabs } from "@4x.pro/ui-kit/tabs";
 
@@ -17,31 +19,22 @@ import { mkManagePositionStyles } from "./styles";
 import { TakeProfitForm, useTakeProfitForm } from "./take-profit-form";
 
 type Props = {
+  position: PositionAccount;
   open: boolean;
-  collateral: number;
-  collateralToken: Token;
-  entryPrice: number;
-  triggerPrice?: number;
-  leverage: number;
-  side: "long" | "short";
   onClose: () => void;
 };
 
-const ManagePosition: FC<Props> = ({
-  collateral,
-  collateralToken,
-  leverage,
-  open,
-  onClose,
-  entryPrice,
-  triggerPrice,
-  side,
-}) => {
+const ManagePosition: FC<Props> = ({ position, open, onClose }) => {
+  const collateral = position.collateralAmount.toNumber() / LAMPORTS_PER_SOL;
+  const entryPrice = position.getPrice();
+  const collateralToken = position.token;
+  const leverage = position.getLeverage();
+  const side = position.side === Side.Long ? "long" : "short";
   const managePositionStyles = mkManagePositionStyles();
   const addCollateralForm = useAddCollateralForm();
   const removeCollateralForm = useRemoveCollateralForm(collateralToken);
-  const stopLossForm = useStopLossForm(triggerPrice);
-  const takeProfitForm = useTakeProfitForm(triggerPrice);
+  const stopLossForm = useStopLossForm(undefined);
+  const takeProfitForm = useTakeProfitForm(undefined);
   return (
     <Dialog className={managePositionStyles.root} open={open} onClose={onClose}>
       <div className={managePositionStyles.layout}>
@@ -80,46 +73,18 @@ const ManagePosition: FC<Props> = ({
             panels={{
               add: (
                 <AddCollateralForm
-                  entryPrice={entryPrice}
-                  side={side}
+                  position={position}
                   form={addCollateralForm}
-                  collateral={collateral}
-                  collateralToken={collateralToken}
-                  leverage={leverage}
                 />
               ),
               remove: (
                 <RemoveCollateralForm
+                  position={position}
                   form={removeCollateralForm}
-                  side={side}
-                  collateral={collateral}
-                  collateralToken={collateralToken}
-                  leverage={leverage}
-                  entryPrice={entryPrice}
                 />
               ),
-              sl: (
-                <StopLossForm
-                  form={stopLossForm}
-                  side={side}
-                  triggerPrice={triggerPrice}
-                  collateral={collateral}
-                  collateralToken={collateralToken}
-                  leverage={leverage}
-                  entryPrice={entryPrice}
-                />
-              ),
-              tp: (
-                <TakeProfitForm
-                  form={takeProfitForm}
-                  side={side}
-                  triggerPrice={triggerPrice}
-                  collateral={collateral}
-                  collateralToken={collateralToken}
-                  leverage={leverage}
-                  entryPrice={entryPrice}
-                />
-              ),
+              sl: <StopLossForm position={position} form={stopLossForm} />,
+              tp: <TakeProfitForm position={position} form={takeProfitForm} />,
             }}
           />
         </Dialog.Panel>

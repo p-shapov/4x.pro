@@ -1,3 +1,4 @@
+import "@public/css/color-scheme.css";
 import cn from "classnames";
 import { Unbounded } from "next/font/google";
 import type { FC, PropsWithChildren } from "react";

@@ -1,3 +1,6 @@
+import "react-toastify/dist/ReactToastify.css";
+import "@public/css/trading-view.css";
+import "@public/css/react-toastify.css";
 import { Wix_Madefor_Text } from "next/font/google";
 import type { FC, PropsWithChildren } from "react";
 

@@ -4,12 +4,12 @@ import type { WalletContextState } from "@solana/wallet-adapter-react";
 import type { Connection, TransactionInstruction } from "@solana/web3.js";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 
-import { manualSendTransaction } from "@4x.pro/shared/utils/transaction-handlers";
+import { manualSendTransaction } from "@4x.pro/services/transaction-flow/handlers";
 import {
   createAtaIfNeeded,
   unwrapSolIfNeeded,
   wrapSolIfNeeded,
-} from "@4x.pro/shared/utils/transaction-helpers";
+} from "@4x.pro/services/transaction-flow/utils";
 
 import type { CustodyAccount } from "../lib/custody-account";
 import type { PoolAccount } from "../lib/pool-account";
@@ -138,6 +138,7 @@ const changeLiquidity = async (
       publicKey,
       connection,
       walletContextState.signTransaction,
+      "Change liquidity",
     );
   } catch (err) {
     throw err;

@@ -1,10 +1,12 @@
-import type { ComponentProps, FC } from "react";
+import type { FC } from "react";
+
+import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 
 import { PositionRow } from "./position-row";
 import { mkPositionsTableStyles } from "./styles";
 
 type Props = {
-  items: ComponentProps<typeof PositionRow>[];
+  items: PositionAccount[];
 };
 
 const PositionsTable: FC<Props> = ({ items }) => {
@@ -31,8 +33,8 @@ const PositionsTable: FC<Props> = ({ items }) => {
         </tr>
       </thead>
       <tbody className={positionStyles.body}>
-        {items.map(({ id, ...rest }) => (
-          <PositionRow key={id} id={id} {...rest} />
+        {items.map((position) => (
+          <PositionRow key={position.address.toBase58()} position={position} />
         ))}
       </tbody>
     </table>

@@ -1,12 +1,16 @@
 "use client";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
 import { getTokenSymbol } from "@4x.pro/app-config";
-import type { Token } from "@4x.pro/app-config";
+import { useChangeCollateral } from "@4x.pro/services/perpetuals/hooks/use-change-collateral";
+import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
+import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
+import { Side, Tab } from "@4x.pro/services/perpetuals/lib/types";
 import { useTokenBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import {
   calculateLiquidationPrice,
@@ -35,23 +39,18 @@ const useAddCollateralForm = () => {
 };
 
 type Props = {
-  entryPrice: number;
-  collateral: number;
-  collateralToken: Token;
-  leverage: number;
-  side: "long" | "short";
+  position: PositionAccount;
   form: UseFormReturn<SubmitData>;
 };
 
-const AddCollateralForm: FC<Props> = ({
-  entryPrice,
-  collateral,
-  leverage,
-  side,
-  collateralToken,
-  form,
-}) => {
-  const { publicKey } = useWallet();
+const AddCollateralForm: FC<Props> = ({ position, form }) => {
+  const walletContextState = useWallet();
+  const collateral = position.collateralAmount.toNumber() / LAMPORTS_PER_SOL;
+  const entryPrice = position.getPrice();
+  const collateralToken = position.token;
+  const leverage = position.getLeverage();
+  const side = position.side === Side.Long ? "long" : "short";
+  const changeCollateral = useChangeCollateral();
   const addCollateralFormStyles = mkAddCollateralFormStyles();
   const depositAmount = useWatch({
     control: form.control,
@@ -59,9 +58,10 @@ const AddCollateralForm: FC<Props> = ({
   });
   const { data: collateralBalance } = useTokenBalance({
     token: collateralToken,
-    account: publicKey?.toBase58(),
+    account: walletContextState.publicKey?.toBase58(),
   });
-  const { connected } = useWallet();
+  const { data: poolsData } = usePools();
+  const pool = Object.values(poolsData || {})[0];
   const errors = form.formState.errors;
   const size = collateral * leverage;
   const collateralAfterDeposit = collateral + depositAmount;
@@ -80,8 +80,20 @@ const AddCollateralForm: FC<Props> = ({
     0.1,
     side === "long",
   );
-  const handleSubmit = form.handleSubmit((data) => {
-    alert(JSON.stringify(data));
+  const handleSubmit = form.handleSubmit(async (data) => {
+    if (pool) {
+      try {
+        await changeCollateral.mutateAsync({
+          collatNum: data.depositAmount,
+          tab: Tab.Add,
+          walletContextState,
+          pool,
+          position,
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
   });
   const mkHandleFieldChange =
     (onChange: (depositAmount: number) => void) =>
@@ -96,7 +108,11 @@ const AddCollateralForm: FC<Props> = ({
     };
   const isInsufficientBalance = depositAmount > (collateralBalance || 0);
   return (
-    <form onSubmit={handleSubmit} className={addCollateralFormStyles.root}>
+    <form
+      onSubmit={handleSubmit}
+      className={addCollateralFormStyles.root}
+      noValidate
+    >
       <fieldset className={addCollateralFormStyles.fieldset}>
         <Controller<SubmitData, "depositAmount">
           name="depositAmount"
@@ -164,7 +180,7 @@ const AddCollateralForm: FC<Props> = ({
           }
         />
       </dl>
-      {!connected ? (
+      {!walletContextState.connected ? (
         <Wallet.Connect variant="accent" size="lg" />
       ) : (
         <Button
@@ -172,6 +188,7 @@ const AddCollateralForm: FC<Props> = ({
           variant="accent"
           disabled={isInsufficientBalance}
           size="lg"
+          loading={changeCollateral.isPending}
         >
           {depositAmount > 0 ? "Add collateral" : "Enter amount"}
         </Button>

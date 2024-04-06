@@ -2,7 +2,7 @@ import cn from "classnames";
 
 import { mkLayoutStyles } from "@4x.pro/shared/styles/layout";
 
-const mkTradeFormStyles = () => {
+const mkOpenPositionFormStyles = () => {
   return {
     root: cn("grid", "gap-[2rem]"),
   };
@@ -49,7 +49,7 @@ const mkTriggerPriceStyles = () => {
 };
 
 export {
-  mkTradeFormStyles,
+  mkOpenPositionFormStyles,
   mkLeverageStyles,
   mkPositionStyles,
   mkSlippageStyles,

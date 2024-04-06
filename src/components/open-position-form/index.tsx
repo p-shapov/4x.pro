@@ -15,11 +15,11 @@ import { Button } from "@4x.pro/ui-kit/button";
 
 import { Leverage } from "./leverage";
 import { Position } from "./position";
-import { TradeFormProvider } from "./provider";
+import { OpenPositionFormProvider } from "./provider";
 import type { SubmitData } from "./schema";
 import { submitDataSchema } from "./schema";
 import { Slippage } from "./slippage";
-import { mkTradeFormStyles } from "./styles";
+import { mkOpenPositionFormStyles } from "./styles";
 import { TriggerPrice } from "./trigger-price";
 import { Wallet } from "../wallet";
 
@@ -29,7 +29,7 @@ type Props = {
   collateralTokens: readonly Token[];
 };
 
-const useTradeForm = () => {
+const useOpenPositionForm = () => {
   const form = useForm<SubmitData>({
     defaultValues: {
       leverage: 1.1,
@@ -50,25 +50,29 @@ const useTradeForm = () => {
   return form;
 };
 
-const TradeForm: FC<Props> = ({ side, form, collateralTokens }) => {
-  const tradeFormStyles = mkTradeFormStyles();
+const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
+  const openPositionFormStyles = mkOpenPositionFormStyles();
   const walletContextState = useWallet();
   const openPosition = useOpenPosition();
   const { data: poolData } = usePools();
   const pool = Object.values(poolData || {})[0];
-  const handleSubmit = form.handleSubmit((data) => {
+  const handleSubmit = form.handleSubmit(async (data) => {
     if (priceData?.price && pool) {
-      openPosition.mutate({
-        walletContextState,
-        pool,
-        payAmount: data.position.base.size,
-        payToken: data.position.base.token,
-        positionAmount: data.position.quote.size,
-        positionToken: data.position.quote.token,
-        leverage: data.leverage,
-        price: priceData.price,
-        side: side === "long" ? Side.Long : Side.Short,
-      });
+      try {
+        await openPosition.mutateAsync({
+          walletContextState,
+          pool,
+          payAmount: data.position.base.size,
+          payToken: data.position.base.token,
+          positionAmount: data.position.quote.size,
+          positionToken: data.position.quote.token,
+          leverage: data.leverage,
+          price: priceData.price,
+          side: side === "long" ? Side.Long : Side.Short,
+        });
+      } catch (e) {
+        console.error(e);
+      }
     }
   });
   const positionBase = useWatch({
@@ -102,7 +106,11 @@ const TradeForm: FC<Props> = ({ side, form, collateralTokens }) => {
     }
   };
   return (
-    <form className={tradeFormStyles.root} onSubmit={handleSubmit} noValidate>
+    <form
+      className={openPositionFormStyles.root}
+      onSubmit={handleSubmit}
+      noValidate
+    >
       <Position form={form} collateralTokens={collateralTokens} />
       <Leverage form={form} />
       <Slippage form={form} />
@@ -123,4 +131,4 @@ const TradeForm: FC<Props> = ({ side, form, collateralTokens }) => {
   );
 };
 
-export { TradeForm, useTradeForm, TradeFormProvider };
+export { OpenPositionForm, useOpenPositionForm, OpenPositionFormProvider };

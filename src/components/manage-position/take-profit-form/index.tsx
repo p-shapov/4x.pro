@@ -1,12 +1,14 @@
 "use client";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
-import type { Token } from "@4x.pro/app-config";
 import { getTokenSymbol } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
+import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
+import { Side } from "@4x.pro/services/perpetuals/lib/types";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import {
   calculateLiquidationPrice,
@@ -23,13 +25,8 @@ import type { SubmitData } from "./schema";
 import { mkTakeProfitFormStyles } from "./styles";
 
 type Props = {
+  position: PositionAccount;
   form: UseFormReturn<SubmitData>;
-  side: "long" | "short";
-  entryPrice: number;
-  triggerPrice?: number;
-  collateral: number;
-  collateralToken: Token;
-  leverage: number;
 };
 
 const useTakeProfitForm = (triggerPrice: number = 0) => {
@@ -40,15 +37,14 @@ const useTakeProfitForm = (triggerPrice: number = 0) => {
   });
 };
 
-const TakeProfitForm: FC<Props> = ({
-  form,
-  side,
-  entryPrice,
-  triggerPrice = 0,
-  collateral,
-  collateralToken,
-  leverage,
-}) => {
+const TakeProfitForm: FC<Props> = ({ position, form }) => {
+  const collateral = position.collateralAmount.toNumber() / LAMPORTS_PER_SOL;
+  const entryPrice = position.getPrice();
+  const collateralToken = position.token;
+  const leverage = position.getLeverage();
+  const side = position.side === Side.Long ? "long" : "short";
+  // TODO - get trigger price from position
+  const triggerPrice = undefined;
   const takeProfitFormStyles = mkTakeProfitFormStyles();
   const newTriggerPrice = useWatch({
     control: form.control,
@@ -56,7 +52,7 @@ const TakeProfitForm: FC<Props> = ({
   });
   const { price: marketPrice } =
     useWatchPythPriceFeed(collateralToken).priceData || {};
-  const { connected } = useWallet();
+  const walletContextState = useWallet();
   const size = collateral * leverage;
   const liquidationPrice = calculateLiquidationPrice(
     entryPrice,
@@ -73,7 +69,7 @@ const TakeProfitForm: FC<Props> = ({
     ? calculatePnL(entryPrice, newTriggerPrice, size, side === "long")
     : undefined;
   return (
-    <form className={takeProfitFormStyles.root}>
+    <form className={takeProfitFormStyles.root} noValidate>
       <Controller<SubmitData, "triggerPrice">
         name="triggerPrice"
         control={form.control}
@@ -121,7 +117,7 @@ const TakeProfitForm: FC<Props> = ({
           content={formatCurrency_USD(liquidationPrice)}
         />
       </dl>
-      {!connected ? (
+      {!walletContextState.connected ? (
         <Wallet.Connect variant="accent" size="lg" />
       ) : (
         <Button type="submit" variant="accent" size="lg">

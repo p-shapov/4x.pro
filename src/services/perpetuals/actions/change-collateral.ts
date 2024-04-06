@@ -7,12 +7,12 @@ import {
 import type { WalletContextState } from "@solana/wallet-adapter-react";
 import type { Connection, TransactionInstruction } from "@solana/web3.js";
 
-import { manualSendTransaction } from "@4x.pro/shared/utils/transaction-handlers";
+import { manualSendTransaction } from "@4x.pro/services/transaction-flow/handlers";
 import {
   createAtaIfNeeded,
   unwrapSolIfNeeded,
   wrapSolIfNeeded,
-} from "@4x.pro/shared/utils/transaction-helpers";
+} from "@4x.pro/services/transaction-flow/utils";
 
 import type { PoolAccount } from "../lib/pool-account";
 import type { PositionAccount } from "../lib/position-account";
@@ -25,8 +25,8 @@ import {
 
 const changeCollateral = async (
   rpcEndpoint: string,
-  walletContextState: WalletContextState,
   connection: Connection,
+  walletContextState: WalletContextState,
   pool: PoolAccount,
   position: PositionAccount,
   collatNum: number,
@@ -121,6 +121,7 @@ const changeCollateral = async (
       publicKey,
       connection,
       walletContextState.signTransaction,
+      "Change collateral",
     );
   } catch (err) {
     throw err;

@@ -2,8 +2,11 @@ import type { FC } from "react";
 import { useState } from "react";
 import { useWatch } from "react-hook-form";
 
-import type { useTradeForm } from "@4x.pro/components/trade-form";
-import { TradeForm, TradeFormProvider } from "@4x.pro/components/trade-form";
+import type { useOpenPositionForm } from "@4x.pro/components/open-position-form";
+import {
+  OpenPositionForm,
+  OpenPositionFormProvider,
+} from "@4x.pro/components/open-position-form";
 import { TradeStats } from "@4x.pro/components/trade-stats";
 import { Tabs } from "@4x.pro/ui-kit/tabs";
 
@@ -11,16 +14,19 @@ import { mkSidebarStyles } from "./styles";
 import { useTradeModule } from "../store";
 
 type Props = {
-  tradeForm: ReturnType<typeof useTradeForm>;
+  openPositionForm: ReturnType<typeof useOpenPositionForm>;
 };
 
-const Sidebar: FC<Props> = ({ tradeForm }) => {
+const Sidebar: FC<Props> = ({ openPositionForm }) => {
   const sidebarStyles = mkSidebarStyles();
   const { selectedAsset, favorites } = useTradeModule((state) => ({
     selectedAsset: state.selectedAsset,
     favorites: state.favorites,
   }));
-  const leverage = useWatch({ control: tradeForm.control, name: "leverage" });
+  const leverage = useWatch({
+    control: openPositionForm.control,
+    name: "leverage",
+  });
   const [side, setSide] = useState<"long" | "short">("long");
   const collateralTokens = favorites.includes(selectedAsset)
     ? favorites
@@ -28,7 +34,7 @@ const Sidebar: FC<Props> = ({ tradeForm }) => {
   return (
     <div className={sidebarStyles.root}>
       <div className={sidebarStyles.tabs}>
-        <TradeFormProvider>
+        <OpenPositionFormProvider>
           <Tabs
             stretchTabs
             value={side}
@@ -50,22 +56,22 @@ const Sidebar: FC<Props> = ({ tradeForm }) => {
             ]}
             panels={{
               long: (
-                <TradeForm
+                <OpenPositionForm
                   side="long"
-                  form={tradeForm}
+                  form={openPositionForm}
                   collateralTokens={collateralTokens}
                 />
               ),
               short: (
-                <TradeForm
+                <OpenPositionForm
                   side="short"
-                  form={tradeForm}
+                  form={openPositionForm}
                   collateralTokens={collateralTokens}
                 />
               ),
             }}
           />
-        </TradeFormProvider>
+        </OpenPositionFormProvider>
       </div>
       <div className={sidebarStyles.stats}>
         <TradeStats

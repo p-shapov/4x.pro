@@ -1,9 +1,11 @@
 "use client";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import cn from "classnames";
 import { useState } from "react";
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/app-config";
+import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
+import { Side } from "@4x.pro/services/perpetuals/lib/types";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import {
   calculateLiquidationPrice,
@@ -21,21 +23,15 @@ import { mkPositionRowStyles } from "./styles";
 import { ManagePosition } from "../manage-position";
 
 type Props = {
-  id: string;
-  collateralToken: Token;
-  side: "short" | "long";
-  leverage: number;
-  collateral: number;
-  entryPrice: number;
+  position: PositionAccount;
 };
 
-const PositionRow: FC<Props> = ({
-  collateralToken,
-  side,
-  leverage,
-  collateral,
-  entryPrice,
-}) => {
+const PositionRow: FC<Props> = ({ position }) => {
+  const collateral = position.collateralAmount.toNumber() / LAMPORTS_PER_SOL;
+  const entryPrice = position.getPrice();
+  const collateralToken = position.token;
+  const leverage = position.getLeverage();
+  const side = position.side === Side.Long ? "long" : "short";
   const [openManagePosition, setOpenManagePosition] = useState(false);
   const size = collateral * leverage;
   const { price: marketPrice } =
@@ -109,11 +105,7 @@ const PositionRow: FC<Props> = ({
             <ManagePosition
               open={openManagePosition}
               onClose={handleCloseManagePosition}
-              collateral={collateral}
-              collateralToken={collateralToken}
-              entryPrice={entryPrice}
-              leverage={leverage}
-              side={side}
+              position={position}
             />
             <Link
               variant="accent"

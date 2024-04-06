@@ -1,26 +1,26 @@
 import type { FC, PropsWithChildren } from "react";
 import { createContext, useContext, useState } from "react";
 
-const TradeFormContext = createContext<{
+const OpenPositionFormContext = createContext<{
   lastTouchedPosition: "base" | "quote";
   setLastTouchedPosition: (field: "base" | "quote") => void;
 } | null>(null);
 
-const TradeFormProvider: FC<PropsWithChildren> = ({ children }) => {
+const OpenPositionFormProvider: FC<PropsWithChildren> = ({ children }) => {
   const [lastTouchedPosition, setLastTouchedPosition] = useState<
     "base" | "quote"
   >("base");
   return (
-    <TradeFormContext.Provider
+    <OpenPositionFormContext.Provider
       value={{ lastTouchedPosition, setLastTouchedPosition }}
     >
       {children}
-    </TradeFormContext.Provider>
+    </OpenPositionFormContext.Provider>
   );
 };
 
 const useLastTouchedPosition = () => {
-  const context = useContext(TradeFormContext);
+  const context = useContext(OpenPositionFormContext);
   if (!context) {
     throw new Error(
       "useLastTouchedPosition must be used within a PositionProvider",
@@ -29,4 +29,4 @@ const useLastTouchedPosition = () => {
   return context;
 };
 
-export { TradeFormProvider, useLastTouchedPosition };
+export { OpenPositionFormProvider, useLastTouchedPosition };

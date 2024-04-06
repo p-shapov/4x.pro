@@ -1,0 +1,28 @@
+:root {
+  --toastify-color-light: var(--color-dialog);
+  --toastify-color-dark: var(--color-dialog);
+  --toastify-color-info: var(--color-accent);
+  --toastify-color-success: var(--color-green);
+  --toastify-color-warning: var(--color-red);
+  --toastify-color-error: var(--color-red);
+  --toastify-color-transparent: var(--rgb-card, 0.62);
+  --toastify-icon-color-info: var(--color-accent);
+  --toastify-icon-color-success: var(--color-green);
+  --toastify-icon-color-warning: var(--color-red);
+  --toastify-icon-color-error: var(--color-red);
+  --toastify-toast-width: 320px;
+  --toastify-toast-background: var(--color-dialog);
+  --toastify-toast-min-height: 64px;
+  --toastify-toast-max-height: 800px;
+  --toastify-font-family: var(--wix-madefor-text-font);
+  --toastify-z-index: 9999;
+  --toastify-text-color-light: var(--color-content-1);
+  --toastify-text-color-dark: var(--color-content-1);
+  --toastify-color-progress-light: var(--color-accent);
+  --toastify-color-progress-dark: var(--color-accent);
+  --toastify-color-progress-info: var(--color-accent);
+  --toastify-color-progress-success: var(--color-green);
+  --toastify-color-progress-warning: var(--color-red);
+  --toastify-color-progress-error: var(--color-red);
+  --toastify-color-progress-bgo: 0.5;
+}

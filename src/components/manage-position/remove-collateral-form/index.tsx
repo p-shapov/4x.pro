@@ -1,6 +1,7 @@
 "use client";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm, useWatch } from "react-hook-form";
@@ -8,6 +9,10 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { getTokenSymbol } from "@4x.pro/app-config";
 import type { Token } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
+import { useChangeCollateral } from "@4x.pro/services/perpetuals/hooks/use-change-collateral";
+import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
+import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
+import { Side, Tab } from "@4x.pro/services/perpetuals/lib/types";
 import {
   calculateLiquidationPrice,
   formatCurrency_USD,
@@ -37,24 +42,19 @@ const useRemoveCollateralForm = (receiveToken: Token) => {
 };
 
 type Props = {
+  position: PositionAccount;
   form: UseFormReturn<SubmitData>;
-  collateral: number;
-  collateralToken: Token;
-  leverage: number;
-  entryPrice: number;
-  side: "long" | "short";
 };
 
 const receiveTokens: readonly Token[] = ["SOL", "USDC", "BTC", "ETH"];
 
-const RemoveCollateralForm: FC<Props> = ({
-  form,
-  collateral,
-  leverage,
-  entryPrice,
-  collateralToken,
-  side,
-}) => {
+const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
+  const walletContextState = useWallet();
+  const collateral = position.collateralAmount.toNumber() / LAMPORTS_PER_SOL;
+  const entryPrice = position.getPrice();
+  const collateralToken = position.token;
+  const leverage = position.getLeverage();
+  const side = position.side === Side.Long ? "long" : "short";
   const errors = form.formState.errors;
   const removeCollateralFormStyles = mkRemoveCollateralFormStyles();
   const withdrawalAmount = useWatch({
@@ -72,7 +72,6 @@ const RemoveCollateralForm: FC<Props> = ({
     0.1,
     side === "long",
   );
-  const { connected } = useWallet();
   const liquidationPriceAfterWithdraw = leverageAfterWithdraw
     ? calculateLiquidationPrice(
         entryPrice,
@@ -81,8 +80,23 @@ const RemoveCollateralForm: FC<Props> = ({
         side === "long",
       )
     : undefined;
-  const handleSubmit = form.handleSubmit((data) => {
-    alert(JSON.stringify(data));
+  const { data: poolsData } = usePools();
+  const pool = Object.values(poolsData || {})[0];
+  const changeCollateral = useChangeCollateral();
+  const handleSubmit = form.handleSubmit(async (data) => {
+    if (pool) {
+      try {
+        await changeCollateral.mutateAsync({
+          collatNum: data.withdrawalAmount * entryPrice,
+          tab: Tab.Remove,
+          walletContextState,
+          position,
+          pool,
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
   });
   const mkHandleFieldChange =
     (onChange: (withdrawalAmount: number) => void) =>
@@ -99,7 +113,11 @@ const RemoveCollateralForm: FC<Props> = ({
     };
   const isInsufficientBalance = withdrawalAmount > collateral;
   return (
-    <form onSubmit={handleSubmit} className={removeCollateralFormStyles.root}>
+    <form
+      onSubmit={handleSubmit}
+      className={removeCollateralFormStyles.root}
+      noValidate
+    >
       <fieldset className={removeCollateralFormStyles.fieldset}>
         <Controller<SubmitData, "withdrawalAmount">
           name="withdrawalAmount"
@@ -206,7 +224,7 @@ const RemoveCollateralForm: FC<Props> = ({
           }
         />
       </dl>
-      {!connected ? (
+      {!walletContextState.connected ? (
         <Wallet.Connect variant="accent" size="lg" />
       ) : (
         <Button
@@ -214,6 +232,7 @@ const RemoveCollateralForm: FC<Props> = ({
           variant="accent"
           disabled={isInsufficientBalance}
           size="lg"
+          loading={changeCollateral.isPending}
         >
           {withdrawalAmount > 0 ? "Remove collateral" : "Enter amount"}
         </Button>

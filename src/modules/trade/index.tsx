@@ -5,7 +5,7 @@ import type { IChartingLibraryWidget } from "@public/vendor/charting_library/cha
 
 import type { Token } from "@4x.pro/app-config";
 import { getTickerSymbol } from "@4x.pro/app-config";
-import { useTradeForm } from "@4x.pro/components/trade-form";
+import { useOpenPositionForm } from "@4x.pro/components/open-position-form";
 import { useResizableLayout } from "@4x.pro/shared/hooks/use-resizable-layout";
 
 import { AssetsToolbar } from "./assets-toolbar";
@@ -34,9 +34,9 @@ const TradeModule = () => {
   );
   const tvWidgetRef = useRef<IChartingLibraryWidget | null>(null);
   const tradeModuleStyles = mkTradeModuleStyles();
-  const tradeForm = useTradeForm();
+  const openPositionForm = useOpenPositionForm();
   useEffect(() => {
-    const { unsubscribe } = tradeForm.watch((state) => {
+    const { unsubscribe } = openPositionForm.watch((state) => {
       const asset = state.position?.quote?.token;
       if (asset && asset !== selectedAsset) {
         selectAsset(asset);
@@ -44,25 +44,25 @@ const TradeModule = () => {
       }
     });
     return unsubscribe;
-  }, [selectAsset, selectedAsset, tradeForm]);
+  }, [selectAsset, selectedAsset, openPositionForm]);
   const handleAssetChange = (asset: Token) => {
     tvWidgetRef.current?.chart().setSymbol(getTickerSymbol(asset));
-    const quoteSize = tradeForm.getValues("position.quote.size");
-    tradeForm.setValue("position.quote", {
+    const quoteSize = openPositionForm.getValues("position.quote.size");
+    openPositionForm.setValue("position.quote", {
       token: asset,
       size: quoteSize,
     });
   };
   useEffect(() => {
-    const asset = tradeForm.getValues("position.quote.token");
+    const asset = openPositionForm.getValues("position.quote.token");
     if (hydrated && asset !== selectedAsset) {
-      const quoteSize = tradeForm.getValues("position.quote.size");
-      tradeForm.setValue("position.quote", {
+      const quoteSize = openPositionForm.getValues("position.quote.size");
+      openPositionForm.setValue("position.quote", {
         token: selectedAsset,
         size: quoteSize,
       });
     }
-  }, [hydrated, selectedAsset, tradeForm]);
+  }, [hydrated, selectedAsset, openPositionForm]);
   return (
     <div className={tradeModuleStyles.root}>
       {hydrated && (
@@ -81,7 +81,7 @@ const TradeModule = () => {
             ></div>
             <Tables />
           </div>
-          <Sidebar tradeForm={tradeForm} />
+          <Sidebar openPositionForm={openPositionForm} />
         </>
       )}
     </div>

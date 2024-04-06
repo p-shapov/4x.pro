@@ -4,16 +4,12 @@ import type { Idl } from "@project-serum/anchor";
 import type { MethodsBuilder } from "@project-serum/anchor/dist/cjs/program/namespace/methods";
 import type { AllInstructions } from "@project-serum/anchor/dist/cjs/program/namespace/types";
 import type { Connection, PublicKey, Transaction } from "@solana/web3.js";
-import { toast } from "react-toastify";
+import type { ReactNode } from "react";
 
-import { sleep } from "./promise";
-import { getNowUnix } from "./time";
+import { sleep } from "@4x.pro/shared/utils/promise";
+import { getNowUnix } from "@4x.pro/shared/utils/time";
 
-const TRX_URL = (txid: string) =>
-  `https://explorer.solana.com/tx/${txid}?cluster=devnet`;
-
-const ACCOUNT_URL = (address: string) =>
-  `https://explorer.solana.com/address/${address}?cluster=devnet`;
+import { mkTxToast } from "./tx-toast";
 
 const automaticSendTransaction = async <
   IDL extends Idl,
@@ -21,14 +17,14 @@ const automaticSendTransaction = async <
 >(
   methodBuilder: MethodsBuilder<IDL, I>,
   connection: Connection,
+  methodName: string,
+  txInfo: Record<string, ReactNode>,
 ) => {
-  const successMessage = "Transaction success!";
-  const failMessage = "Transaction failed";
   await sendAnchorTransactionAndNotify({
     methodBuilder,
     connection,
-    successMessage,
-    failMessage,
+    methodName,
+    txInfo,
   });
 };
 
@@ -36,49 +32,29 @@ const sendAnchorTransactionAndNotify = async <
   IDL extends Idl,
   I extends AllInstructions<IDL>,
 >({
+  methodName,
   methodBuilder,
   connection,
-  successMessage,
-  failMessage,
+  txInfo,
 }: {
+  methodName: string;
+  txInfo: Record<string, ReactNode>;
   methodBuilder: MethodsBuilder<IDL, I>;
   connection: Connection;
-  successMessage: string;
-  failMessage: string;
 }) => {
   const txid = "temptx";
+  const txToast = mkTxToast(methodName, txid, txInfo);
   await new Promise(function (resolve, reject) {
-    toast.promise(
-      (async () => {
-        try {
-          const txid = await methodBuilder.rpc();
-          await connection.confirmTransaction(txid, "confirmed");
-          resolve(true);
-        } catch (error) {
-          reject(error);
-          throw error;
-        }
-      })(),
-      {
-        pending: {
-          render() {
-            return "Processing transaction";
-          },
-        },
-        success: {
-          render() {
-            return successMessage;
-          },
-          icon: false,
-        },
-        error: {
-          render() {
-            return failMessage;
-          },
-          icon: false,
-        },
-      },
-    );
+    txToast(async () => {
+      try {
+        const txid = await methodBuilder.rpc();
+        await connection.confirmTransaction(txid, "confirmed");
+        resolve(true);
+      } catch (error) {
+        reject(error);
+        throw error;
+      }
+    });
   });
   return txid;
 };
@@ -88,8 +64,8 @@ const manualSendTransaction = async (
   publicKey: PublicKey,
   connection: Connection,
   signTransaction: any,
-  successMessage?: string,
-  failMessage?: string,
+  methodName: string,
+  txInfo?: Record<string, ReactNode>,
 ) => {
   // try {
   transaction.feePayer = publicKey;
@@ -100,8 +76,8 @@ const manualSendTransaction = async (
   await sendSignedTransactionAndNotify({
     connection,
     transaction,
-    successMessage: successMessage ?? "",
-    failMessage: failMessage ?? "",
+    methodName: methodName,
+    txInfo,
     signTransaction,
     enableSigning: true,
   });
@@ -110,15 +86,15 @@ const manualSendTransaction = async (
 const sendSignedTransactionAndNotify = async ({
   connection,
   transaction,
-  successMessage,
-  failMessage,
+  methodName,
+  txInfo,
   signTransaction,
   enableSigning = true,
 }: {
   connection: Connection;
   transaction: Transaction;
-  successMessage: string;
-  failMessage: string;
+  methodName: string;
+  txInfo?: Record<string, ReactNode>;
   signTransaction: any;
   enableSigning: boolean;
 }) => {
@@ -131,42 +107,17 @@ const sendSignedTransactionAndNotify = async ({
     wallet: { signTransaction },
     enableSigning,
   });
+  const txToast = mkTxToast(methodName, txid, txInfo);
   await new Promise(function (resolve, reject) {
-    toast.promise(
-      (async () => {
-        try {
-          await sendRawTransaction({ connection, txid, rawTransaction });
-          resolve(true);
-        } catch (error) {
-          reject(error);
-          throw error;
-        }
-      })(),
-      {
-        pending: {
-          render() {
-            return "processing";
-          },
-        },
-        success: {
-          render() {
-            return successMessage;
-          },
-          icon: false,
-        },
-        error: {
-          render() {
-            return failMessage;
-          },
-          icon: false,
-        },
-      },
-      {
-        position: "bottom-left",
-        autoClose: 4000,
-        className: "processing-transaction",
-      },
-    );
+    txToast(async () => {
+      try {
+        await sendRawTransaction({ connection, txid, rawTransaction });
+        resolve(true);
+      } catch (error) {
+        reject(error);
+        throw error;
+      }
+    });
   });
   return txid;
 };
@@ -311,6 +262,4 @@ export {
   awaitTransactionSignatureConfirmation,
   sendTransaction,
   sendRawTransaction,
-  TRX_URL,
-  ACCOUNT_URL,
 };

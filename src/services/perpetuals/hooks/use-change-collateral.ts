@@ -1,3 +1,4 @@
+import { useConnection } from "@solana/wallet-adapter-react";
 import type { WalletContextState } from "@solana/wallet-adapter-react";
 import type { Connection } from "@solana/web3.js";
 import { createMutation } from "react-query-kit";
@@ -14,16 +15,16 @@ const useChangeCollateralMutation = createMutation({
   mutationKey: ["change-collateral"],
   mutationFn: async ({
     rpcEndpoint,
-    walletContextState,
     connection,
+    walletContextState,
     pool,
     position,
     collatNum,
     tab,
   }: {
     rpcEndpoint: string;
-    walletContextState: WalletContextState;
     connection: Connection;
+    walletContextState: WalletContextState;
     pool: PoolAccount;
     position: PositionAccount;
     collatNum: number;
@@ -31,8 +32,8 @@ const useChangeCollateralMutation = createMutation({
   }) => {
     const res = await changeCollateral(
       rpcEndpoint,
-      walletContextState,
       connection,
+      walletContextState,
       pool,
       position,
       collatNum,
@@ -47,25 +48,24 @@ const useChangeCollateralMutation = createMutation({
 
 const useChangeCollateral = () => {
   const { rpcEndpoint } = useAppConfig();
+  const { connection } = useConnection();
   const mutation = useChangeCollateralMutation({});
   return {
     ...mutation,
     mutate: (params: {
       walletContextState: WalletContextState;
-      connection: Connection;
       pool: PoolAccount;
       position: PositionAccount;
       collatNum: number;
       tab: Tab;
-    }) => mutation.mutate({ ...params, rpcEndpoint }),
+    }) => mutation.mutate({ ...params, connection, rpcEndpoint }),
     mutateAsync: async (params: {
       walletContextState: WalletContextState;
-      connection: Connection;
       pool: PoolAccount;
       position: PositionAccount;
       collatNum: number;
       tab: Tab;
-    }) => mutation.mutateAsync({ ...params, rpcEndpoint }),
+    }) => mutation.mutateAsync({ ...params, connection, rpcEndpoint }),
   };
 };
 

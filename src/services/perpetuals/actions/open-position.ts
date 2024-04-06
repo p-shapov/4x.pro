@@ -3,16 +3,20 @@ import { BN } from "@project-serum/anchor";
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { TOKEN_PROGRAM_ID, getAssociatedTokenAddress } from "@solana/spl-token";
 import type { WalletContextState } from "@solana/wallet-adapter-react";
-import type { TransactionInstruction } from "@solana/web3.js";
+import type { Connection, TransactionInstruction } from "@solana/web3.js";
 import { SystemProgram } from "@solana/web3.js";
 
 import type { Token } from "@4x.pro/app-config";
-import { manualSendTransaction } from "@4x.pro/shared/utils/transaction-handlers";
+import { manualSendTransaction } from "@4x.pro/services/transaction-flow/handlers";
 import {
   createAtaIfNeeded,
   unwrapSolIfNeeded,
   wrapSolIfNeeded,
-} from "@4x.pro/shared/utils/transaction-helpers";
+} from "@4x.pro/services/transaction-flow/utils";
+import {
+  formatCurrency,
+  formatCurrency_USD,
+} from "@4x.pro/shared/utils/number";
 
 import { swapTransactionBuilder } from "./swap";
 import type { CustodyAccount } from "../lib/custody-account";
@@ -27,6 +31,7 @@ import { ViewHelper } from "../utils/view-helpers";
 
 const openPositionBuilder = async (
   rpcEndpoint: string,
+  connection: Connection,
   walletContextState: WalletContextState,
   pool: PoolAccount,
   payCustody: CustodyAccount,
@@ -64,7 +69,7 @@ const openPositionBuilder = async (
   const preInstructions: TransactionInstruction[] = [];
   const finalPayAmount = positionAmount / leverage;
   if (payCustody.getToken() != positionCustody.getToken()) {
-    const View = new ViewHelper(provider.connection, provider);
+    const View = new ViewHelper(connection, provider);
     const swapInfo = await View.getSwapAmountAndFees(
       payAmount,
       pool!,
@@ -102,7 +107,7 @@ const openPositionBuilder = async (
       await swapTransactionBuilder(
         rpcEndpoint,
         walletContextState,
-        provider.connection,
+        connection,
         pool,
         payCustody.getToken(),
         positionCustody.getToken(),
@@ -118,12 +123,12 @@ const openPositionBuilder = async (
       publicKey,
       publicKey,
       positionCustody.mint,
-      provider.connection,
+      connection,
     );
     if (ataIx) preInstructions.push(ataIx);
     const wrapInstructions = await wrapSolIfNeeded(
       publicKey,
-      provider.connection,
+      connection,
       payAmount,
     );
     if (wrapInstructions) {
@@ -164,8 +169,13 @@ const openPositionBuilder = async (
     await manualSendTransaction(
       tx,
       publicKey,
-      provider.connection,
+      connection,
       walletContextState.signTransaction,
+      "Open position",
+      {
+        price: formatCurrency_USD(price),
+        size: formatCurrency(positionCustody.getToken())(positionAmount, 4),
+      },
     );
   } catch (err) {
     throw err;
@@ -174,6 +184,7 @@ const openPositionBuilder = async (
 
 const openPosition = async (
   rpcEndpoint: string,
+  connection: Connection,
   walletContextState: WalletContextState,
   pool: PoolAccount,
   payToken: Token,
@@ -188,6 +199,7 @@ const openPosition = async (
   const positionCustody = pool.getCustodyAccount(positionToken)!;
   await openPositionBuilder(
     rpcEndpoint,
+    connection,
     walletContextState,
     pool,
     payCustody,

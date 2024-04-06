@@ -71,7 +71,7 @@ const useTvChartingLibraryWidget = (
         client_id: "tradingview.com",
         user_id: "public_user_id",
         library_path: "/vendor/charting_library/",
-        custom_css_url: "/css/color-scheme.css",
+        custom_css_url: "/css/trading-view.css",
         theme: "dark",
         ...config,
       });

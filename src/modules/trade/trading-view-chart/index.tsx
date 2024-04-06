@@ -99,7 +99,6 @@ const TradingViewChart = forwardRef<
               })}
             >
               {(change24hr || 0) > 0 && "+"}
-              {(change24hr || 0) < 0 && "-"}
               {formatPercentage(change24hr, 2)}
             </span>
           </span>

@@ -4,12 +4,12 @@ import type { WalletContextState } from "@solana/wallet-adapter-react";
 import type { Connection, TransactionInstruction } from "@solana/web3.js";
 
 import type { Token } from "@4x.pro/app-config";
-import { manualSendTransaction } from "@4x.pro/shared/utils/transaction-handlers";
+import { manualSendTransaction } from "@4x.pro/services/transaction-flow/handlers";
 import {
   createAtaIfNeeded,
   unwrapSolIfNeeded,
   wrapSolIfNeeded,
-} from "@4x.pro/shared/utils/transaction-helpers";
+} from "@4x.pro/services/transaction-flow/utils";
 
 import type { PoolAccount } from "../lib/pool-account";
 import {
@@ -145,6 +145,7 @@ const swap = async (
       publicKey,
       connection,
       walletContextState.signTransaction,
+      "Swap",
     );
   } catch (err) {
     throw err;
