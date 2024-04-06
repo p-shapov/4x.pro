@@ -114,18 +114,14 @@ const changeCollateral = async (
     methodBuilder = methodBuilder.preInstructions(preInstructions);
   if (position.token == "SOL")
     methodBuilder = methodBuilder.postInstructions(postInstructions);
-  try {
-    const tx = await methodBuilder.transaction();
-    await manualSendTransaction(
-      tx,
-      publicKey,
-      connection,
-      walletContextState.signTransaction,
-      "Change collateral",
-    );
-  } catch (err) {
-    throw err;
-  }
+  const tx = await methodBuilder.transaction();
+  await manualSendTransaction(
+    tx,
+    publicKey,
+    connection,
+    walletContextState.signTransaction,
+    "Change collateral",
+  );
 };
 
 export { changeCollateral };

@@ -7,7 +7,6 @@ import type { FC, PropsWithChildren } from "react";
 import { Wallet } from "@4x.pro/components/wallet";
 import { useIsMounted } from "@4x.pro/shared/hooks/use-is-mounted";
 import type { PropsWithClassName } from "@4x.pro/shared/types";
-import { IconButton } from "@4x.pro/ui-kit/icon-button";
 import { Link } from "@4x.pro/ui-kit/link";
 
 import { mkPerpetualsLayoutStyles } from "./styles";
@@ -45,7 +44,6 @@ const PerpetualsLayout: FC<PropsWithClassName<PropsWithChildren>> = ({
             height={20}
           />
           <div className={perpetualsLayoutStyles.controls}>
-            <IconButton src="/icons/more.svg" variant="accent" outlined />
             {connected ? (
               <Wallet.Account />
             ) : (

@@ -24,6 +24,7 @@ const useOpenPositionQuery = createMutation({
     price,
     side,
     leverage,
+    slippage,
   }: {
     rpcEndpoint: string;
     connection: Connection;
@@ -36,6 +37,7 @@ const useOpenPositionQuery = createMutation({
     price: number;
     side: Side;
     leverage: number;
+    slippage: number;
   }) => {
     const res = await openPosition(
       rpcEndpoint,
@@ -49,6 +51,7 @@ const useOpenPositionQuery = createMutation({
       price,
       side,
       leverage,
+      slippage,
     );
     await queryClient.invalidateQueries({
       queryKey: usePositionsQuery.getKey(),
@@ -73,6 +76,7 @@ const useOpenPosition = () => {
       price: number;
       side: Side;
       leverage: number;
+      slippage: number;
     }) => mutation.mutate({ ...params, connection, rpcEndpoint }),
     mutateAsync: async (params: {
       walletContextState: WalletContextState;
@@ -84,6 +88,7 @@ const useOpenPosition = () => {
       price: number;
       side: Side;
       leverage: number;
+      slippage: number;
     }) => mutation.mutateAsync({ ...params, connection, rpcEndpoint }),
   };
 };

@@ -25,19 +25,18 @@ export async function closePosition(
   pool: PoolAccount,
   position: PositionAccount,
   custody: CustodyAccount,
-  price: BN,
+  price: number,
+  slippage: number,
 ) {
   const { perpetual_program } = await getPerpetualProgramAndProvider(
     rpcEndpoint,
     walletContextState,
   );
   const publicKey = walletContextState.publicKey!;
-
-  // TODO: need to take slippage as param , this is now for testing
   const adjustedPrice =
     position.side.toString() == "Long"
-      ? price.mul(new BN(50)).div(new BN(100))
-      : price.mul(new BN(150)).div(new BN(100));
+      ? new BN(price * 10 ** 6 * (1 - slippage))
+      : new BN(price * 10 ** 6 * (1 + slippage));
   const userCustodyTokenAccount = await getAssociatedTokenAddress(
     custody.mint,
     publicKey,
@@ -70,19 +69,14 @@ export async function closePosition(
       tokenProgram: TOKEN_PROGRAM_ID,
     })
     .preInstructions(preInstructions);
-
   if (position.token == "SOL")
     methodBuilder = methodBuilder.postInstructions(postInstructions);
-  try {
-    const tx = await methodBuilder.transaction();
-    await manualSendTransaction(
-      tx,
-      publicKey,
-      connection,
-      walletContextState.signTransaction,
-      "Close position",
-    );
-  } catch (err) {
-    throw err;
-  }
+  const tx = await methodBuilder.transaction();
+  await manualSendTransaction(
+    tx,
+    publicKey,
+    connection,
+    walletContextState.signTransaction,
+    "Close position",
+  );
 }

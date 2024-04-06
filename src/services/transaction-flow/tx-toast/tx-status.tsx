@@ -33,7 +33,10 @@ const TxStatus: FC<Props> = ({ status, methodName, txid, txInfo }) => {
       case "error":
         return (
           <span className={txStatusStyles.iconWrap}>
-            <Icon className={txStatusStyles.icon} src="/icons/close.svg" />
+            <Icon
+              className={txStatusStyles.icon}
+              src="/icons/close-circle.svg"
+            />
           </span>
         );
     }

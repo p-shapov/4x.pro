@@ -41,6 +41,7 @@ const openPositionBuilder = async (
   price: number,
   side: Side,
   leverage: number,
+  slippage: number,
 ) => {
   const { perpetual_program, provider } = await getPerpetualProgramAndProvider(
     rpcEndpoint,
@@ -49,8 +50,8 @@ const openPositionBuilder = async (
   const publicKey = walletContextState.publicKey!;
   const newPrice =
     side.toString() == "Long"
-      ? new BN((price * 10 ** 6 * 115) / 100)
-      : new BN((price * 10 ** 6 * 90) / 100);
+      ? new BN(price * 10 ** 6 * (1 + slippage))
+      : new BN(price * 10 ** 6 * (1 - slippage));
   const userCustodyTokenAccount = await getAssociatedTokenAddress(
     positionCustody.mint,
     publicKey,
@@ -114,7 +115,6 @@ const openPositionBuilder = async (
         payAmount + entryFee + swapFee + extraSwap,
         recAmt,
       );
-
     const ix = await swapBuilder.instruction();
     preInstructions.push(...swapPreInstructions, ix);
   }
@@ -135,7 +135,6 @@ const openPositionBuilder = async (
       preInstructions.push(...wrapInstructions);
     }
   }
-
   const postInstructions: TransactionInstruction[] = [];
   const unwrapTx = await unwrapSolIfNeeded(publicKey);
   if (unwrapTx) postInstructions.push(...unwrapTx);
@@ -164,22 +163,18 @@ const openPositionBuilder = async (
   if (payCustody.getToken() == "SOL" || positionCustody.getToken() == "SOL") {
     methodBuilder = methodBuilder.postInstructions(postInstructions);
   }
-  try {
-    const tx = await methodBuilder.transaction();
-    await manualSendTransaction(
-      tx,
-      publicKey,
-      connection,
-      walletContextState.signTransaction,
-      "Open position",
-      {
-        price: formatCurrency_USD(price),
-        size: formatCurrency(positionCustody.getToken())(positionAmount, 4),
-      },
-    );
-  } catch (err) {
-    throw err;
-  }
+  const tx = await methodBuilder.transaction();
+  await manualSendTransaction(
+    tx,
+    publicKey,
+    connection,
+    walletContextState.signTransaction,
+    "Open position",
+    {
+      price: formatCurrency_USD(price),
+      size: formatCurrency(positionCustody.getToken())(positionAmount, 4),
+    },
+  );
 };
 
 const openPosition = async (
@@ -194,6 +189,7 @@ const openPosition = async (
   price: number,
   side: Side,
   leverage: number,
+  slippage: number,
 ) => {
   const payCustody = pool.getCustodyAccount(payToken)!;
   const positionCustody = pool.getCustodyAccount(positionToken)!;
@@ -209,6 +205,7 @@ const openPosition = async (
     price,
     side,
     leverage,
+    slippage,
   );
 };
 

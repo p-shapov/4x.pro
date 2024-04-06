@@ -138,18 +138,14 @@ const swap = async (
     minAmtOutNumber,
   );
   const publicKey = walletContextState.publicKey!;
-  try {
-    const tx = await methodBuilder.transaction();
-    await manualSendTransaction(
-      tx,
-      publicKey,
-      connection,
-      walletContextState.signTransaction,
-      "Swap",
-    );
-  } catch (err) {
-    throw err;
-  }
+  const tx = await methodBuilder.transaction();
+  await manualSendTransaction(
+    tx,
+    publicKey,
+    connection,
+    walletContextState.signTransaction,
+    "Swap",
+  );
 };
 
 export { swap, swapTransactionBuilder };

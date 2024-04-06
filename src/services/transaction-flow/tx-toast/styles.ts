@@ -6,11 +6,26 @@ type Props = {
 
 const mkTxToastStyles = () => {
   return {
-    root: cn(),
-    body: cn("!p-[0]"),
+    root: cn(
+      "relative",
+      "!border-white",
+      "!border-opacity-[0.03]",
+      "!rounded-[12px]",
+      "!bg-dialog",
+      "!p-[10px]",
+    ),
+    body: cn("!p-[0]", "!w-[320px]"),
     progress: cn(),
-    closeButton: cn("inline-flex"),
-    closeIcon: cn("size-[1.6rem]", "text-content-1"),
+    closeButton: cn(
+      "absolute",
+      "top-[10px]",
+      "right-[10px]",
+      "inline-flex",
+      "transition-colors",
+      "text-content-1",
+      "hover:text-content-2",
+    ),
+    closeIcon: cn("size-[1.6rem]"),
   };
 };
 

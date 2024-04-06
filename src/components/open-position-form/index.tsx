@@ -8,10 +8,12 @@ import { useForm, useWatch } from "react-hook-form";
 import type { Token } from "@4x.pro/app-config";
 import { useOpenPosition } from "@4x.pro/services/perpetuals/hooks/use-open-position";
 import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
+import { useUserPositions } from "@4x.pro/services/perpetuals/hooks/use-positions";
 import { Side } from "@4x.pro/services/perpetuals/lib/types";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import { useIsInsufficientBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import { Button } from "@4x.pro/ui-kit/button";
+import { messageToast } from "@4x.pro/ui-kit/message-toast";
 
 import { Leverage } from "./leverage";
 import { Position } from "./position";
@@ -54,11 +56,26 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
   const openPositionFormStyles = mkOpenPositionFormStyles();
   const walletContextState = useWallet();
   const openPosition = useOpenPosition();
-  const { data: poolData } = usePools();
-  const pool = Object.values(poolData || {})[0];
+  const pools = usePools();
+  const pool = Object.values(pools.data || {})[0];
+  const quoteToken = useWatch({
+    control: form.control,
+    name: "position.quote.token",
+  });
+  const positions = useUserPositions();
+  const hasPosition = Object.values(positions.data || {}).some(
+    (position) =>
+      position.token === quoteToken &&
+      position.side.toString().toLowerCase() === side,
+  );
   const handleSubmit = form.handleSubmit(async (data) => {
-    if (priceData?.price && pool) {
+    if (hasPosition) {
+      messageToast("You already have an open position", "error");
+    } else if (!(priceData?.price && pool)) {
+      messageToast("Price data is not available", "error");
+    } else {
       try {
+        messageToast("Transaction submitted", "success");
         await openPosition.mutateAsync({
           walletContextState,
           pool,
@@ -69,6 +86,7 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
           leverage: data.leverage,
           price: priceData.price,
           side: side === "long" ? Side.Long : Side.Short,
+          slippage: data.slippage,
         });
       } catch (e) {
         console.error(e);

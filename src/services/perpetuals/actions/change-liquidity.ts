@@ -128,21 +128,17 @@ const changeLiquidity = async (
   if (custody.getToken() == "SOL") {
     methodBuilder = methodBuilder?.postInstructions(postInstructions);
   }
-  try {
-    const tx = await methodBuilder?.transaction();
-    if (!tx) {
-      throw new Error("Failed to build transaction");
-    }
-    await manualSendTransaction(
-      tx,
-      publicKey,
-      connection,
-      walletContextState.signTransaction,
-      "Change liquidity",
-    );
-  } catch (err) {
-    throw err;
+  const tx = await methodBuilder?.transaction();
+  if (!tx) {
+    throw new Error("Failed to build transaction");
   }
+  await manualSendTransaction(
+    tx,
+    publicKey,
+    connection,
+    walletContextState.signTransaction,
+    "Change liquidity",
+  );
 };
 
 export { changeLiquidity };
