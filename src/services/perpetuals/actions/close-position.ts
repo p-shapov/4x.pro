@@ -72,7 +72,7 @@ export async function closePosition(
   if (position.token == "SOL")
     methodBuilder = methodBuilder.postInstructions(postInstructions);
   const tx = await methodBuilder.transaction();
-  await manualSendTransaction(
+  return await manualSendTransaction(
     tx,
     publicKey,
     connection,

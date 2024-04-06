@@ -132,7 +132,7 @@ const changeLiquidity = async (
   if (!tx) {
     throw new Error("Failed to build transaction");
   }
-  await manualSendTransaction(
+  return await manualSendTransaction(
     tx,
     publicKey,
     connection,

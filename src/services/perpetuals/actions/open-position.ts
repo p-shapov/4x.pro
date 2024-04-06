@@ -164,7 +164,7 @@ const openPositionBuilder = async (
     methodBuilder = methodBuilder.postInstructions(postInstructions);
   }
   const tx = await methodBuilder.transaction();
-  await manualSendTransaction(
+  return await manualSendTransaction(
     tx,
     publicKey,
     connection,
@@ -193,7 +193,7 @@ const openPosition = async (
 ) => {
   const payCustody = pool.getCustodyAccount(payToken)!;
   const positionCustody = pool.getCustodyAccount(positionToken)!;
-  await openPositionBuilder(
+  return await openPositionBuilder(
     rpcEndpoint,
     connection,
     walletContextState,

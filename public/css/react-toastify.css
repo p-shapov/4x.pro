@@ -10,9 +10,9 @@
   --toastify-icon-color-success: var(--color-green);
   --toastify-icon-color-warning: var(--color-red);
   --toastify-icon-color-error: var(--color-red);
-  --toastify-toast-width: 320px;
+  --toastify-toast-width: max-content;
   --toastify-toast-background: var(--color-dialog);
-  --toastify-toast-min-height: 64px;
+  --toastify-toast-min-height: max-content;
   --toastify-toast-max-height: 800px;
   --toastify-font-family: var(--wix-madefor-text-font);
   --toastify-z-index: 9999;

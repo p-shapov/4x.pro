@@ -20,7 +20,7 @@ const automaticSendTransaction = async <
   methodName: string,
   txInfo: Record<string, ReactNode>,
 ) => {
-  await sendAnchorTransactionAndNotify({
+  return await sendAnchorTransactionAndNotify({
     methodBuilder,
     connection,
     methodName,
@@ -67,13 +67,11 @@ const manualSendTransaction = async (
   methodName: string,
   txInfo?: Record<string, ReactNode>,
 ) => {
-  // try {
   transaction.feePayer = publicKey;
   transaction.recentBlockhash = (
     await connection.getRecentBlockhash("finalized")
   ).blockhash;
-
-  await sendSignedTransactionAndNotify({
+  return await sendSignedTransactionAndNotify({
     connection,
     transaction,
     methodName: methodName,

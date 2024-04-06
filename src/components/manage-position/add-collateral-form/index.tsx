@@ -2,6 +2,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import dayjs from "dayjs";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm, useWatch } from "react-hook-form";
@@ -11,6 +12,7 @@ import { useChangeCollateral } from "@4x.pro/services/perpetuals/hooks/use-chang
 import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import { Side, Tab } from "@4x.pro/services/perpetuals/lib/types";
+import { useUpdateTradingHistory } from "@4x.pro/services/trading-history/hooks/use-update-trading-history";
 import { useTokenBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import {
   calculateLiquidationPrice,
@@ -21,6 +23,7 @@ import {
 import { Button } from "@4x.pro/ui-kit/button";
 import { Comparison } from "@4x.pro/ui-kit/comparison";
 import { Definition } from "@4x.pro/ui-kit/definition";
+import { messageToast } from "@4x.pro/ui-kit/message-toast";
 import { RangeSlider } from "@4x.pro/ui-kit/range-slider";
 import { TokenField } from "@4x.pro/ui-kit/token-field";
 
@@ -51,6 +54,7 @@ const AddCollateralForm: FC<Props> = ({ position, form }) => {
   const leverage = position.getLeverage();
   const side = position.side === Side.Long ? "long" : "short";
   const changeCollateral = useChangeCollateral();
+  const tradingHistory = useUpdateTradingHistory();
   const addCollateralFormStyles = mkAddCollateralFormStyles();
   const depositAmount = useWatch({
     control: form.control,
@@ -81,14 +85,28 @@ const AddCollateralForm: FC<Props> = ({ position, form }) => {
     side === "long",
   );
   const handleSubmit = form.handleSubmit(async (data) => {
-    if (pool) {
+    if (leverageAfterDeposit && leverageAfterDeposit < 1) {
+      messageToast("Position leverage cannot be less than 1", "error");
+    } else if (!pool) {
+      messageToast("No pool found", "error");
+    } else {
       try {
-        await changeCollateral.mutateAsync({
+        messageToast("Transaction submitted", "success");
+        const txid = await changeCollateral.mutateAsync({
           collatNum: data.depositAmount,
           tab: Tab.Add,
-          walletContextState,
           pool,
           position,
+        });
+        await tradingHistory.mutateAsync({
+          txid,
+          type: "add-collateral",
+          time: dayjs().utc(false).unix(),
+          token: collateralToken,
+          txData: {
+            side,
+            price: entryPrice,
+          },
         });
       } catch (e) {
         console.error(e);

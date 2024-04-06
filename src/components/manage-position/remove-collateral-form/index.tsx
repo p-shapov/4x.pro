@@ -2,6 +2,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import dayjs from "dayjs";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm, useWatch } from "react-hook-form";
@@ -13,6 +14,7 @@ import { useChangeCollateral } from "@4x.pro/services/perpetuals/hooks/use-chang
 import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import { Side, Tab } from "@4x.pro/services/perpetuals/lib/types";
+import { useUpdateTradingHistory } from "@4x.pro/services/trading-history/hooks/use-update-trading-history";
 import {
   calculateLiquidationPrice,
   formatCurrency_USD,
@@ -22,6 +24,7 @@ import {
 import { Button } from "@4x.pro/ui-kit/button";
 import { Comparison } from "@4x.pro/ui-kit/comparison";
 import { Definition } from "@4x.pro/ui-kit/definition";
+import { messageToast } from "@4x.pro/ui-kit/message-toast";
 import { RangeSlider } from "@4x.pro/ui-kit/range-slider";
 import { Select } from "@4x.pro/ui-kit/select";
 import { TokenField } from "@4x.pro/ui-kit/token-field";
@@ -57,6 +60,7 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
   const side = position.side === Side.Long ? "long" : "short";
   const errors = form.formState.errors;
   const removeCollateralFormStyles = mkRemoveCollateralFormStyles();
+  const tradingHistory = useUpdateTradingHistory();
   const withdrawalAmount = useWatch({
     control: form.control,
     name: "withdrawalAmount",
@@ -84,14 +88,28 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
   const pool = Object.values(poolsData || {})[0];
   const changeCollateral = useChangeCollateral();
   const handleSubmit = form.handleSubmit(async (data) => {
-    if (pool) {
+    if (leverageAfterWithdraw && leverageAfterWithdraw < 1) {
+      messageToast("Position leverage cannot be less than 1", "error");
+    } else if (!pool) {
+      messageToast("No pool found", "error");
+    } else {
       try {
-        await changeCollateral.mutateAsync({
+        messageToast("Transaction submitted", "success");
+        const txid = await changeCollateral.mutateAsync({
           collatNum: data.withdrawalAmount * entryPrice,
           tab: Tab.Remove,
-          walletContextState,
           position,
           pool,
+        });
+        await tradingHistory.mutateAsync({
+          token: collateralToken,
+          type: "remove-collateral",
+          time: dayjs().utc(false).unix(),
+          txid,
+          txData: {
+            side,
+            price: entryPrice,
+          },
         });
       } catch (e) {
         console.error(e);

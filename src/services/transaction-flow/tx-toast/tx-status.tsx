@@ -52,7 +52,12 @@ const TxStatus: FC<Props> = ({ status, methodName, txid, txInfo }) => {
           term="Transaction"
           content={
             txid ? (
-              <a href={TRX_URL(txid)} target="_blank" rel="noreferrer">
+              <a
+                href={TRX_URL(txid)}
+                className="link"
+                target="_blank"
+                rel="noreferrer"
+              >
                 {trim(txid, 6)}
               </a>
             ) : (

@@ -42,4 +42,8 @@
   .text-h6 {
     @apply text-sm font-bold leading-tight;
   }
+
+  .link {
+    @apply text-sm font-normal leading-tight text-content-2 underline decoration-dashed;
+  }
 }

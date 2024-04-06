@@ -1,4 +1,4 @@
-import { useConnection } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import type { WalletContextState } from "@solana/wallet-adapter-react";
 import type { Connection } from "@solana/web3.js";
 import { createMutation } from "react-query-kit";
@@ -47,25 +47,36 @@ const useChangeCollateralMutation = createMutation({
 });
 
 const useChangeCollateral = () => {
+  const walletContextState = useWallet();
   const { rpcEndpoint } = useAppConfig();
   const { connection } = useConnection();
   const mutation = useChangeCollateralMutation({});
   return {
     ...mutation,
     mutate: (params: {
-      walletContextState: WalletContextState;
       pool: PoolAccount;
       position: PositionAccount;
       collatNum: number;
       tab: Tab;
-    }) => mutation.mutate({ ...params, connection, rpcEndpoint }),
+    }) =>
+      mutation.mutate({
+        ...params,
+        walletContextState,
+        connection,
+        rpcEndpoint,
+      }),
     mutateAsync: async (params: {
-      walletContextState: WalletContextState;
       pool: PoolAccount;
       position: PositionAccount;
       collatNum: number;
       tab: Tab;
-    }) => mutation.mutateAsync({ ...params, connection, rpcEndpoint }),
+    }) =>
+      mutation.mutateAsync({
+        ...params,
+        walletContextState,
+        connection,
+        rpcEndpoint,
+      }),
   };
 };
 

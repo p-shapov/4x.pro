@@ -139,7 +139,7 @@ const swap = async (
   );
   const publicKey = walletContextState.publicKey!;
   const tx = await methodBuilder.transaction();
-  await manualSendTransaction(
+  return await manualSendTransaction(
     tx,
     publicKey,
     connection,
