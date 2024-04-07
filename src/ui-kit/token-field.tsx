@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client";
 import { useWallet } from "@solana/wallet-adapter-react";
 import cn from "classnames";
@@ -75,7 +76,9 @@ const TokenField: FC<Props> = ({
       setAmount(amount);
       onChange?.({ amount, token: currentToken });
     } else {
+      // @ts-ignore
       setAmount(e.target.value);
+      // @ts-ignore
       onChange?.({ amount: e.target.value, token: currentToken });
     }
   };

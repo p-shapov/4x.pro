@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client";
 import cn from "classnames";
 import { useId } from "react";
@@ -43,6 +44,9 @@ const NumberField: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!/^[0.]*$/.test(event.target.value)) {
       onChange?.(Number(event.target.value));
+    } else {
+      // @ts-ignore
+      onChange?.(event.target.value);
     }
   };
   const handlePresetsChange = (value: number) => {
