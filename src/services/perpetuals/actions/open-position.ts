@@ -42,6 +42,8 @@ const openPositionBuilder = async (
   side: Side,
   leverage: number,
   slippage: number,
+  stopLoss: number | null,
+  takeProfit: number | null,
 ) => {
   const { perpetual_program, provider } = await getPerpetualProgramAndProvider(
     rpcEndpoint,
@@ -143,6 +145,8 @@ const openPositionBuilder = async (
     collateral: new BN(finalPayAmount * 10 ** positionCustody.decimals),
     size: new BN(positionAmount * 10 ** positionCustody.decimals),
     side: side.toString() == "Long" ? TradeSide.Long : TradeSide.Short,
+    stopLoss: stopLoss ? new BN(stopLoss * 10 ** 6) : null,
+    takeProfit: takeProfit ? new BN(takeProfit * 10 ** 6) : null,
   };
   let methodBuilder = perpetual_program.methods.openPosition(params).accounts({
     owner: publicKey,
@@ -190,6 +194,8 @@ const openPosition = async (
   side: Side,
   leverage: number,
   slippage: number,
+  stopLoss: number | null,
+  takeProfit: number | null,
 ) => {
   const payCustody = pool.getCustodyAccount(payToken)!;
   const positionCustody = pool.getCustodyAccount(positionToken)!;
@@ -206,6 +212,8 @@ const openPosition = async (
     side,
     leverage,
     slippage,
+    stopLoss,
+    takeProfit,
   );
 };
 

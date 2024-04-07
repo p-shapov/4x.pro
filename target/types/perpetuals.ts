@@ -1986,6 +1986,18 @@ export type Perpetuals = {
             "type": "u64"
           },
           {
+            "name": "stopLoss",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "takeProfit",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
             "name": "bump",
             "type": "u8"
           }
@@ -2283,6 +2295,18 @@ export type Perpetuals = {
             "type": {
               "defined": "Side"
             }
+          },
+          {
+            "name": "stopLoss",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "takeProfit",
+            "type": {
+              "option": "u64"
+            }
           }
         ]
       }
@@ -2532,6 +2556,18 @@ export type Perpetuals = {
           {
             "name": "allowSizeChange",
             "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TriggerPositionParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "price",
+            "type": "u64"
           }
         ]
       }
@@ -5361,6 +5397,18 @@ export const IDL: Perpetuals = {
             "type": "u64"
           },
           {
+            "name": "stopLoss",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "takeProfit",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
             "name": "bump",
             "type": "u8"
           }
@@ -5658,6 +5706,18 @@ export const IDL: Perpetuals = {
             "type": {
               "defined": "Side"
             }
+          },
+          {
+            "name": "stopLoss",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "takeProfit",
+            "type": {
+              "option": "u64"
+            }
           }
         ]
       }
@@ -5907,6 +5967,18 @@ export const IDL: Perpetuals = {
           {
             "name": "allowSizeChange",
             "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TriggerPositionParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "price",
+            "type": "u64"
           }
         ]
       }

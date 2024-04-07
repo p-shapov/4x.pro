@@ -2,17 +2,18 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useWallet } from "@solana/wallet-adapter-react";
 import dayjs from "dayjs";
+import { useDeferredValue } from "react";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useForm, useWatch } from "react-hook-form";
 
 import type { Token } from "@4x.pro/app-config";
+import { useEntryPriceStats } from "@4x.pro/services/perpetuals/hooks/use-entry-price-stats";
 import { useOpenPosition } from "@4x.pro/services/perpetuals/hooks/use-open-position";
 import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
 import { useUserPositions } from "@4x.pro/services/perpetuals/hooks/use-positions";
 import { Side } from "@4x.pro/services/perpetuals/lib/types";
 import { useUpdateTradingHistory } from "@4x.pro/services/trading-history/hooks/use-update-trading-history";
-import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import { useIsInsufficientBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import { Button } from "@4x.pro/ui-kit/button";
 import { messageToast } from "@4x.pro/ui-kit/message-toast";
@@ -72,16 +73,17 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
       position.side.toString().toLowerCase() === side,
   );
   const handleSubmit = form.handleSubmit(async (data) => {
+    const price = priceStats?.entryPrice;
+    console.log("price", price);
     if (hasPosition) {
       messageToast("You already have an open position", "error");
-    } else if (!priceData?.price) {
+    } else if (!price) {
       messageToast("Price data is not available", "error");
     } else if (!pool) {
       messageToast("No pool found", "error");
     } else {
       try {
         messageToast("Transaction submitted", "success");
-        const price = priceData.price;
         const txid = await openPosition.mutateAsync({
           pool,
           price,
@@ -92,6 +94,8 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
           leverage: data.leverage,
           side: side === "long" ? Side.Long : Side.Short,
           slippage: data.slippage,
+          stopLoss: data.stopLoss || null,
+          takeProfit: data.takeProfit || null,
         });
         await tradingHistory.mutateAsync({
           txid,
@@ -101,6 +105,10 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
           txData: {
             side,
             price,
+            fee: priceStats?.fee,
+            leverage: data.leverage,
+            collateral: data.position.quote.size,
+            size: data.position.quote.size * data.leverage,
           },
         });
       } catch (e) {
@@ -116,10 +124,20 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
     control: form.control,
     name: "position.quote",
   });
-  const { priceData } = useWatchPythPriceFeed(positionQuote.token);
   const isInsufficientBalance = useIsInsufficientBalance({
     token: positionBase.token,
     amount: positionBase.size,
+  });
+  const leverage = useWatch({
+    control: form.control,
+    name: "leverage",
+  });
+  const size = positionQuote.size * leverage;
+  const { data: priceStats } = useEntryPriceStats({
+    collateralToken: positionQuote.token,
+    size: useDeferredValue(size),
+    collateral: useDeferredValue(positionQuote.size),
+    side: side === "long" ? Side.Long : Side.Short,
   });
   const getTitle = () => {
     switch (side) {
@@ -151,6 +169,7 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
         <Wallet.Connect variant={getButtonVariant()} />
       ) : (
         <Button
+          type="submit"
           variant={getButtonVariant()}
           disabled={isInsufficientBalance.data}
           loading={openPosition.isPending}

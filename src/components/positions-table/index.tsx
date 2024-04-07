@@ -34,7 +34,7 @@ const PositionsTable: FC<Props> = ({ items }) => {
       </thead>
       <tbody className={positionStyles.body}>
         {items.map((position) => (
-          <PositionRow key={position.address.toBase58()} position={position} />
+          <PositionRow key={position.address.toString()} position={position} />
         ))}
       </tbody>
     </table>

@@ -20,7 +20,7 @@ const getPositionData = async (
 
   // @ts-ignore
   const fetchedPositions: FetchPosition[] =
-    await perpetual_program.account.position.all();
+    await perpetual_program.account.position.all([{ dataSize: 232 }]);
 
   const positionInfos: Record<string, PositionAccount> =
     fetchedPositions.reduce(

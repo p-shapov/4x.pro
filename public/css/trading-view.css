@@ -1,3 +1,5 @@
+@import url("./color-scheme.css");
+
 :root {
   --tv-color-platform-background: transparent;
   --tv-color-pane-background: transparent;

@@ -21,6 +21,7 @@ type Props = {
   readonly?: boolean;
   presets?: number[];
   formatValue?: Formatter;
+  mapPreset?: (value: number) => number;
   onFocus?: () => void;
   onChange?: (value: number | "") => void;
 };
@@ -34,12 +35,18 @@ const NumberField: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
   presets,
   value,
   defaultValue,
+  mapPreset = (value) => value,
   ...rest
 }) => {
   const id = useId();
   const fieldStyles = mkFieldStyles({ error });
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange?.(Number(event.target.value) || "");
+    if (!/^[0.]*$/.test(event.target.value)) {
+      onChange?.(Number(event.target.value));
+    }
+  };
+  const handlePresetsChange = (value: number) => {
+    onChange?.(mapPreset(value));
   };
   return (
     <div className={fieldStyles.root}>
@@ -69,9 +76,7 @@ const NumberField: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
         {presets && (
           <Presets
             options={presets}
-            onChange={onChange}
-            value={value}
-            defaultValue={defaultValue}
+            onChange={handlePresetsChange}
             formatValue={formatValue}
           />
         )}

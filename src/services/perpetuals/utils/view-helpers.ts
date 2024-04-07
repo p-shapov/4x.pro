@@ -134,7 +134,7 @@ class ViewHelper {
     const index = PERPETUALS_IDL.instructions.findIndex(
       (f) => f.name === "getEntryPriceAndFee",
     );
-    const res: any = this.decodeLogs<{
+    const res = this.decodeLogs<{
       liquidationPrice: BN;
       entryPrice: BN;
       fee: BN;
@@ -168,7 +168,7 @@ class ViewHelper {
     const index = PERPETUALS_IDL.instructions.findIndex(
       (f) => f.name === "getExitPriceAndFee",
     );
-    const res: any = this.decodeLogs<{
+    const res = this.decodeLogs<{
       price: BN;
       fee: BN;
     }>(result, index);
@@ -196,8 +196,8 @@ class ViewHelper {
         ? new BN(addCollat * 10 ** custody.decimals)
         : new BN(0);
     const removeCollateral =
-      typeof removeCollat !== "undefined"
-        ? new BN(removeCollat * 10 ** 6)
+      typeof removeCollat !== "undefined" && typeof custody !== "undefined"
+        ? new BN(removeCollat * 10 ** custody.decimals)
         : new BN(0);
     let params = {};
 

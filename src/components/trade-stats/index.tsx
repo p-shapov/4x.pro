@@ -1,31 +1,41 @@
-import { useCallback } from "react";
+import { useDeferredValue } from "react";
 import type { FC } from "react";
 
 import type { Token } from "@4x.pro/app-config";
+import { useEntryPriceStats } from "@4x.pro/services/perpetuals/hooks/use-entry-price-stats";
 import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
 import { usePriceStats } from "@4x.pro/services/perpetuals/hooks/use-price-stats";
-import {
-  calculateLiquidationPrice,
-  formatCurrency_USD,
-  formatRate,
-} from "@4x.pro/shared/utils/number";
+import { Side } from "@4x.pro/services/perpetuals/lib/types";
+import { formatCurrency_USD, formatRate } from "@4x.pro/shared/utils/number";
 import { Definition } from "@4x.pro/ui-kit/definition";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
-import { TokenPrice } from "@4x.pro/ui-kit/token-price";
 
 import { mkTradeStatsStyles } from "./styles";
 
 type Props = {
   side: "long" | "short";
   collateralToken: Token;
+  collateral: number;
   leverage: number;
 };
 
-const TradeStats: FC<Props> = ({ side, collateralToken, leverage }) => {
+const TradeStats: FC<Props> = ({
+  side,
+  collateral,
+  collateralToken,
+  leverage,
+}) => {
   const { data: poolsData } = usePools();
-  const { data: priceStats } = usePriceStats();
   const pool = poolsData && Object.values(poolsData)[0];
+  const { data: priceStats } = usePriceStats();
   const tradeStatsStyles = mkTradeStatsStyles();
+  const size = collateral * leverage;
+  const { data: statsData } = useEntryPriceStats({
+    collateralToken,
+    collateral: useDeferredValue(collateral),
+    size: useDeferredValue(size),
+    side: side === "long" ? Side.Long : Side.Short,
+  });
   return (
     <dl className={tradeStatsStyles.root}>
       <Definition
@@ -35,31 +45,13 @@ const TradeStats: FC<Props> = ({ side, collateralToken, leverage }) => {
       <Definition term="Leverage" content={formatRate(leverage, 1)} />
       <Definition
         term="Entry Price"
-        content={
-          <TokenPrice token={collateralToken} fractionalDigits={2} watch />
-        }
+        content={formatCurrency_USD(statsData?.entryPrice)}
       />
       <Definition
         term="Liq. Price"
-        content={
-          <TokenPrice token={collateralToken} fractionalDigits={2} watch>
-            {useCallback(
-              (price?: number) =>
-                price &&
-                calculateLiquidationPrice(
-                  price,
-                  leverage,
-                  0.1,
-                  side === "long",
-                ),
-              [leverage, side],
-            )}
-          </TokenPrice>
-        }
+        content={formatCurrency_USD(statsData?.liquidationPrice)}
       />
-      <Definition term="Exit Price" content="-" />
-      <Definition term="Fees" content="-" />
-      <Definition term="Margin Fees" content="-" />
+      <Definition term="Fees" content={formatCurrency_USD(statsData?.fee)} />
       <Definition
         term="Available Liquidity"
         content={formatCurrency_USD(

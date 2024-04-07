@@ -1986,6 +1986,18 @@
             "type": "u64"
           },
           {
+            "name": "stopLoss",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "takeProfit",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
             "name": "bump",
             "type": "u8"
           }
@@ -2283,6 +2295,18 @@
             "type": {
               "defined": "Side"
             }
+          },
+          {
+            "name": "stopLoss",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "takeProfit",
+            "type": {
+              "option": "u64"
+            }
           }
         ]
       }
@@ -2532,6 +2556,18 @@
           {
             "name": "allowSizeChange",
             "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TriggerPositionParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "price",
+            "type": "u64"
           }
         ]
       }

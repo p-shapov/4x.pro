@@ -1,4 +1,6 @@
 import { useWallet } from "@solana/wallet-adapter-react";
+import type { InitialDataFunction } from "@tanstack/react-query";
+import { keepPreviousData } from "@tanstack/react-query";
 import { createQuery } from "react-query-kit";
 
 import { useAppConfig } from "@4x.pro/app-config";
@@ -20,6 +22,10 @@ const usePositionsQuery = createQuery({
     if (!custodyInfos) return null;
     return getPositionData(rpcEndpoint, custodyInfos);
   },
+  initialData: keepPreviousData as InitialDataFunction<Record<
+    string,
+    PositionAccount
+  > | null>,
   staleTime: 0,
   gcTime: 0,
 });
@@ -57,4 +63,34 @@ const useUserPositions = () => {
   });
 };
 
-export { usePositionsQuery, usePositions, useUserPositions };
+const useUserPositionOrders = () => {
+  const { rpcEndpoint } = useAppConfig();
+  const { data: custodyInfos } = useCustodies();
+  const walletContextState = useWallet();
+  return usePositionsQuery({
+    variables: { rpcEndpoint, custodyInfos },
+    enabled: !!custodyInfos,
+    select: (positions): Record<string, PositionAccount> => {
+      if (!positions) return {};
+      return Object.entries(positions).reduce(
+        (positions, [address, data]) => {
+          const ownerIsUser =
+            data.owner.toBase58() === walletContextState.publicKey?.toBase58();
+          const isOrder = data.stopLoss || data.takeProfit;
+          if (ownerIsUser && isOrder) {
+            positions[address] = data;
+          }
+          return positions;
+        },
+        {} as Record<string, PositionAccount>,
+      );
+    },
+  });
+};
+
+export {
+  usePositionsQuery,
+  usePositions,
+  useUserPositions,
+  useUserPositionOrders,
+};

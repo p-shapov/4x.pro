@@ -1,10 +1,8 @@
 "use client";
 import { Dialog } from "@headlessui/react";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import type { FC } from "react";
 
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
-import { Side } from "@4x.pro/services/perpetuals/lib/types";
 import { Icon } from "@4x.pro/ui-kit/icon";
 import { Tabs } from "@4x.pro/ui-kit/tabs";
 
@@ -25,11 +23,7 @@ type Props = {
 };
 
 const ManagePosition: FC<Props> = ({ position, open, onClose }) => {
-  const collateral = position.collateralAmount.toNumber() / LAMPORTS_PER_SOL;
-  const entryPrice = position.getPrice();
   const collateralToken = position.token;
-  const leverage = position.getLeverage();
-  const side = position.side === Side.Long ? "long" : "short";
   const managePositionStyles = mkManagePositionStyles();
   const addCollateralForm = useAddCollateralForm();
   const removeCollateralForm = useRemoveCollateralForm(collateralToken);
@@ -44,12 +38,7 @@ const ManagePosition: FC<Props> = ({ position, open, onClose }) => {
               Manage Position
             </Dialog.Title>
             <div className={managePositionStyles.pnl}>
-              <ProfNLoss
-                side={side}
-                size={collateral * leverage}
-                collateralToken={collateralToken}
-                entryPrice={entryPrice}
-              />
+              <ProfNLoss position={position} />
             </div>
             <button type="button" onClick={onClose}>
               <Icon
@@ -67,8 +56,8 @@ const ManagePosition: FC<Props> = ({ position, open, onClose }) => {
             items={[
               { id: "add", content: "Add collateral" },
               { id: "remove", content: "Remove collateral" },
-              { id: "sl", content: "Stop loss" },
-              { id: "tp", content: "Take profit" },
+              { id: "sl", content: "Stop loss", disabled: true },
+              { id: "tp", content: "Take profit", disabled: true },
             ]}
             panels={{
               add: (

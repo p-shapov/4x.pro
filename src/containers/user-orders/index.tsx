@@ -1,12 +1,12 @@
 import type { FC } from "react";
 
 import { OrdersTable } from "@4x.pro/components/orders-table";
-
-import { ORDERS } from "./mocks";
+import { useUserPositionOrders } from "@4x.pro/services/perpetuals/hooks/use-positions";
 
 const UserOrders: FC = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return <OrdersTable items={ORDERS as any} />;
+  const { data } = useUserPositionOrders();
+  if (!data) return null;
+  return <OrdersTable items={Object.values(data)} />;
 };
 
 export { UserOrders };

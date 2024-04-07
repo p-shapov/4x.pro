@@ -1,16 +1,15 @@
 "use client";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import cn from "classnames";
 import { useState } from "react";
 import type { FC } from "react";
 
+import { useCustodies } from "@4x.pro/services/perpetuals/hooks/use-custodies";
+import { useLiquidationPriceStats } from "@4x.pro/services/perpetuals/hooks/use-liquidation-price-stats";
+import { usePnLStats } from "@4x.pro/services/perpetuals/hooks/use-pnl-stats";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import { Side } from "@4x.pro/services/perpetuals/lib/types";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import {
-  calculateLiquidationPrice,
-  calculatePnL,
-  calculatePnLPercentage,
   formatCurrency_USD,
   formatCurrency,
   formatPercentage,
@@ -20,6 +19,7 @@ import { Link } from "@4x.pro/ui-kit/link";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
 
 import { mkPositionRowStyles } from "./styles";
+import { ClosePosition } from "../close-position";
 import { ManagePosition } from "../manage-position";
 
 type Props = {
@@ -27,26 +27,23 @@ type Props = {
 };
 
 const PositionRow: FC<Props> = ({ position }) => {
-  const collateral = position.collateralAmount.toNumber() / LAMPORTS_PER_SOL;
+  const { data: custodies } = useCustodies();
+  const custody = custodies?.[position.custody.toString()];
+  const collateral =
+    custody && position.collateralAmount.toNumber() / 10 ** custody.decimals;
   const entryPrice = position.getPrice();
   const collateralToken = position.token;
   const leverage = position.getLeverage();
   const side = position.side === Side.Long ? "long" : "short";
   const [openManagePosition, setOpenManagePosition] = useState(false);
-  const size = collateral * leverage;
+  const [openClosePosition, setOpenClosePosition] = useState(false);
+  const size = collateral && collateral * leverage;
   const { price: marketPrice } =
     useWatchPythPriceFeed(collateralToken).priceData || {};
-  const pnl =
-    marketPrice && calculatePnL(entryPrice, marketPrice, size, side === "long");
+  const pnl = usePnLStats({ position });
   const pnlPercentage =
-    marketPrice &&
-    calculatePnLPercentage(entryPrice, marketPrice, size, side === "long");
-  const liquidationPrice = calculateLiquidationPrice(
-    entryPrice,
-    leverage,
-    0.1,
-    side === "long",
-  );
+    pnl.data && collateral && pnl.data / (collateral * entryPrice);
+  const liquidationPrice = useLiquidationPriceStats({ position });
   const isPositive = typeof pnlPercentage === "number" && pnlPercentage > 0;
   const positionRowStyles = mkPositionRowStyles({ isPositive });
   const handleOpenManagePosition = () => {
@@ -54,6 +51,12 @@ const PositionRow: FC<Props> = ({ position }) => {
   };
   const handleCloseManagePosition = () => {
     setOpenManagePosition(false);
+  };
+  const handleOpenClosePosition = () => {
+    setOpenClosePosition(true);
+  };
+  const handleCloseClosePosition = () => {
+    setOpenClosePosition(false);
   };
   return (
     <>
@@ -70,13 +73,13 @@ const PositionRow: FC<Props> = ({ position }) => {
           </span>
         </td>
         <td className={positionRowStyles.cell}>
-          {formatCurrency_USD(size * entryPrice)}
+          {formatCurrency_USD(size && size * entryPrice)}
           <span className={positionRowStyles.secondaryText}>
             ({formatCurrency(collateralToken)(size)})
           </span>
         </td>
         <td className={positionRowStyles.cell}>
-          {formatCurrency_USD(collateral * entryPrice)}
+          {formatCurrency_USD(collateral && collateral * entryPrice)}
           <span className={positionRowStyles.secondaryText}>
             ({formatCurrency(collateralToken)(collateral)})
           </span>
@@ -84,7 +87,7 @@ const PositionRow: FC<Props> = ({ position }) => {
         <td className={cn(positionRowStyles.cell, positionRowStyles.pnl)}>
           <span>
             {isPositive ? "+" : "-"}
-            {formatCurrency_USD(pnl && Math.abs(pnl))}
+            {formatCurrency_USD(pnl.data && Math.abs(pnl.data))}
           </span>
           <span>
             ({isPositive ? "+" : "-"}
@@ -97,8 +100,8 @@ const PositionRow: FC<Props> = ({ position }) => {
         <td className={positionRowStyles.cell}>
           {formatCurrency_USD(marketPrice)}
         </td>
-        <td className={positionRowStyles.cell}>
-          {formatCurrency_USD(liquidationPrice)}
+        <td className={cn(positionRowStyles.cell)}>
+          {formatCurrency_USD(liquidationPrice.data)}
         </td>
         <td className={positionRowStyles.cell}>
           <span className={cn("flex", "gap-[2rem]")}>
@@ -112,7 +115,16 @@ const PositionRow: FC<Props> = ({ position }) => {
               iconSrc="/icons/setting-2.svg"
               onClick={handleOpenManagePosition}
             ></Link>
-            <Link variant="red" iconSrc="/icons/close-circle.svg"></Link>
+            <ClosePosition
+              open={openClosePosition}
+              onClose={handleCloseClosePosition}
+              position={position}
+            />
+            <Link
+              variant="red"
+              iconSrc="/icons/close-circle.svg"
+              onClick={handleOpenClosePosition}
+            ></Link>
           </span>
         </td>
       </tr>

@@ -8,7 +8,8 @@ import { getTokenSymbol } from "@4x.pro/app-config";
 import type { Token } from "@4x.pro/app-config";
 import { useTokenBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import { mkFieldStyles } from "@4x.pro/shared/styles/field";
-import { formatCurrency, formatPercentage } from "@4x.pro/shared/utils/number";
+import type { Formatter } from "@4x.pro/shared/utils/number";
+import { formatCurrency } from "@4x.pro/shared/utils/number";
 
 import { Presets } from "./presets";
 import { Select } from "./select";
@@ -22,10 +23,12 @@ type Props = {
   token?: Token;
   defaultToken?: Token;
   placeholder?: string;
+  presets?: number[];
+  mapPreset?: (value: number) => number;
+  formatPresets?: Formatter;
   readonly?: boolean;
   labelVariant?: "balance" | "max";
   showPostfix?: boolean;
-  showPresets?: boolean;
   max?: number;
   error?: boolean;
   onFocus?: () => void;
@@ -43,7 +46,9 @@ const TokenField: FC<Props> = ({
   label,
   placeholder,
   showPostfix,
-  showPresets,
+  presets,
+  formatPresets,
+  mapPreset = (value) => value,
   max,
   error,
   ...rest
@@ -65,19 +70,24 @@ const TokenField: FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenListKey, token]);
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const amount = Number(e.currentTarget.value);
-    setAmount(amount);
-    onChange?.({ amount, token: currentToken });
+    if (!/^[0.]*$/.test(e.target.value)) {
+      const amount = Number(e.currentTarget.value);
+      setAmount(amount);
+      onChange?.({ amount, token: currentToken });
+    } else {
+      setAmount(e.target.value);
+      onChange?.({ amount: e.target.value, token: currentToken });
+    }
   };
   const handleSelect = (token: string) => {
     // TODO :: make Select component generic
     setCurrentToken(token as Token);
     onChange?.({ amount, token: token as Token });
   };
-  const handleSetPresets = (percentage: number) => {
-    setAmount((tokenBalance.data || max || 1) * (percentage / 100));
+  const handleSetPresets = (preset: number) => {
+    setAmount(mapPreset(preset));
     onChange?.({
-      amount: (tokenBalance.data || max || 1) * (percentage / 100),
+      amount: mapPreset(preset),
       token: currentToken,
     });
   };
@@ -140,12 +150,11 @@ const TokenField: FC<Props> = ({
             {getTokenSymbol(currentToken)}
           </span>
         )}
-        {showPresets && (tokenBalance.data || max) && (
+        {presets && (
           <Presets
-            value={amount / (tokenBalance.data || max || 1)}
-            options={[20, 40, 60, 80]}
+            options={presets}
             onChange={handleSetPresets}
-            formatValue={(value) => formatPercentage(value, 0)}
+            formatValue={formatPresets}
           />
         )}
         {tokenList && (

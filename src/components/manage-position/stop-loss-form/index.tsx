@@ -57,7 +57,6 @@ const StopLossForm: FC<Props> = ({ position, form }) => {
   const liquidationPrice = calculateLiquidationPrice(
     entryPrice,
     leverage,
-    0.1,
     side === "long",
   );
   const estimatedPnL = newTriggerPrice

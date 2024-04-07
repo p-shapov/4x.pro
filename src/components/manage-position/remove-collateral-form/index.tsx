@@ -1,22 +1,23 @@
 "use client";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import dayjs from "dayjs";
+import { useDeferredValue } from "react";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
-import { getTokenSymbol } from "@4x.pro/app-config";
 import type { Token } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
 import { useChangeCollateral } from "@4x.pro/services/perpetuals/hooks/use-change-collateral";
+import { useCustodies } from "@4x.pro/services/perpetuals/hooks/use-custodies";
+import { useLiquidationPriceStats } from "@4x.pro/services/perpetuals/hooks/use-liquidation-price-stats";
 import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import { Side, Tab } from "@4x.pro/services/perpetuals/lib/types";
 import { useUpdateTradingHistory } from "@4x.pro/services/trading-history/hooks/use-update-trading-history";
 import {
-  calculateLiquidationPrice,
+  formatCurrency,
   formatCurrency_USD,
   formatPercentage,
   formatRate,
@@ -26,9 +27,9 @@ import { Comparison } from "@4x.pro/ui-kit/comparison";
 import { Definition } from "@4x.pro/ui-kit/definition";
 import { messageToast } from "@4x.pro/ui-kit/message-toast";
 import { RangeSlider } from "@4x.pro/ui-kit/range-slider";
-import { Select } from "@4x.pro/ui-kit/select";
+// import { Select } from "@4x.pro/ui-kit/select";
 import { TokenField } from "@4x.pro/ui-kit/token-field";
-import { TokenPrice } from "@4x.pro/ui-kit/token-price";
+// import { TokenPrice } from "@4x.pro/ui-kit/token-price";
 
 import type { SubmitData } from "./schema";
 import { submitDataSchema } from "./schema";
@@ -49,11 +50,14 @@ type Props = {
   form: UseFormReturn<SubmitData>;
 };
 
-const receiveTokens: readonly Token[] = ["SOL", "USDC", "BTC", "ETH"];
+// const receiveTokens: readonly Token[] = ["SOL", "USDC", "BTC", "ETH"];
 
 const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
   const walletContextState = useWallet();
-  const collateral = position.collateralAmount.toNumber() / LAMPORTS_PER_SOL;
+  const { data: custodies } = useCustodies();
+  const custody = custodies?.[position.custody.toBase58()];
+  const collateral =
+    custody && position.collateralAmount.toNumber() / 10 ** custody.decimals;
   const entryPrice = position.getPrice();
   const collateralToken = position.token;
   const leverage = position.getLeverage();
@@ -65,25 +69,17 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
     control: form.control,
     name: "withdrawalAmount",
   });
-  const size = collateral * leverage;
-  const collateralAfterWithdraw = collateral - withdrawalAmount || undefined;
-  const leverageAfterWithdraw = collateralAfterWithdraw
-    ? size / collateralAfterWithdraw
-    : undefined;
-  const liquidationPrice = calculateLiquidationPrice(
-    entryPrice,
-    leverage,
-    0.1,
-    side === "long",
-  );
-  const liquidationPriceAfterWithdraw = leverageAfterWithdraw
-    ? calculateLiquidationPrice(
-        entryPrice,
-        leverageAfterWithdraw,
-        0.1,
-        side === "long",
-      )
-    : undefined;
+  const size = collateral && collateral * leverage;
+  const collateralAfterWithdraw = collateral && collateral - withdrawalAmount;
+  const leverageAfterWithdraw =
+    size && collateralAfterWithdraw && size / collateralAfterWithdraw;
+  const { data: liqPrice } = useLiquidationPriceStats({
+    position,
+  });
+  const { data: liqPriceAfterWithdraw } = useLiquidationPriceStats({
+    position,
+    withdrawalAmount: useDeferredValue(withdrawalAmount),
+  });
   const { data: poolsData } = usePools();
   const pool = Object.values(poolsData || {})[0];
   const changeCollateral = useChangeCollateral();
@@ -109,6 +105,9 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
           txData: {
             side,
             price: entryPrice,
+            size,
+            collateral: collateralAfterWithdraw,
+            leverage: leverageAfterWithdraw,
           },
         });
       } catch (e) {
@@ -123,13 +122,14 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
     };
   const mkHandleRangeChange =
     (onChange: (withdrawalAmount: number) => void) => (percentage: number) => {
+      if (!collateral) return;
       onChange((collateral / 100) * percentage);
     };
-  const mkHandleSelectChange =
-    (onChange: (receiveToken: Token) => void) => (token: string) => {
-      onChange(token as Token);
-    };
-  const isInsufficientBalance = withdrawalAmount > collateral;
+  // const mkHandleSelectChange =
+  //   (onChange: (receiveToken: Token) => void) => (token: string) => {
+  //     onChange(token as Token);
+  //   };
+  const isInsufficientBalance = collateral && withdrawalAmount > collateral;
   return (
     <form
       onSubmit={handleSubmit}
@@ -151,7 +151,9 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
               onChange={mkHandleFieldChange(onChange)}
               error={!!errors.withdrawalAmount}
               showPostfix
-              showPresets
+              presets={[20, 40, 60, 80]}
+              mapPreset={(value) => (collateral || 0) * (value / 100)}
+              formatPresets={(value) => formatPercentage(value, 0)}
             />
           )}
         />
@@ -160,7 +162,7 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
           control={form.control}
           render={({ field: { value, onChange } }) => (
             <RangeSlider
-              value={(value / collateral) * 100}
+              value={collateral ? (value / collateral) * 100 : 0}
               min={0}
               max={100}
               step={1}
@@ -171,7 +173,7 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
         />
       </fieldset>
       <dl className={removeCollateralFormStyles.statsList}>
-        <Definition
+        {/* <Definition
           term="Receive"
           content={
             <Controller<SubmitData, "receiveToken">
@@ -206,15 +208,19 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
               )}
             />
           }
+        /> */}
+        <Definition
+          term="Size"
+          content={formatCurrency(collateralToken)(size)}
         />
         <Definition
-          term={`Size (${getTokenSymbol(collateralToken)})`}
-          content={size}
-        />
-        <Definition
-          term={`Collateral (${getTokenSymbol(collateralToken)})`}
+          term="Collateral"
           content={
-            <Comparison initial={collateral} final={collateralAfterWithdraw} />
+            <Comparison
+              initial={collateral}
+              final={collateralAfterWithdraw}
+              formatValue={formatCurrency(collateralToken)}
+            />
           }
         />
         <Definition
@@ -235,8 +241,8 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
           term="Liquidation Price"
           content={
             <Comparison
-              initial={liquidationPrice}
-              final={liquidationPriceAfterWithdraw}
+              initial={liqPrice}
+              final={liqPriceAfterWithdraw}
               formatValue={formatCurrency_USD}
             />
           }
@@ -248,7 +254,7 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
         <Button
           type="submit"
           variant="accent"
-          disabled={isInsufficientBalance}
+          disabled={!!isInsufficientBalance}
           size="lg"
           loading={changeCollateral.isPending}
         >

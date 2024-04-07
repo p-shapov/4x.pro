@@ -5,7 +5,12 @@ import type { FC } from "react";
 import type { Token } from "@4x.pro/app-config";
 import { TRX_URL } from "@4x.pro/services/transaction-flow/utils";
 import { mkTableStyles } from "@4x.pro/shared/styles/table";
-import { formatCurrency_USD } from "@4x.pro/shared/utils/number";
+import {
+  formatCurrency,
+  formatCurrency_USD,
+  formatPercentage,
+  formatRate,
+} from "@4x.pro/shared/utils/number";
 import { trim } from "@4x.pro/shared/utils/string";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
 
@@ -24,8 +29,11 @@ type Props = {
     time: number;
     side?: "short" | "long";
     pnl?: number;
+    leverage?: number;
     price?: number;
     fee?: number;
+    collateral?: number;
+    size?: number;
   }[];
 };
 
@@ -56,7 +64,7 @@ const HistoryTable: FC<Props> = ({ items }) => {
       className={tableStyles.root}
       style={{
         // @ts-expect-error - CSS variable
-        "--tw-table-cols": 8,
+        "--tw-table-cols": 10,
       }}
     >
       <thead className={cn(tableStyles.head, "pl-[2.4rem]")}>
@@ -64,6 +72,8 @@ const HistoryTable: FC<Props> = ({ items }) => {
           <th className={tableStyles.headingCell}>Market</th>
           <th className={tableStyles.headingCell}>Type</th>
           <th className={tableStyles.headingCell}>Side</th>
+          <th className={tableStyles.headingCell}>Collateral</th>
+          <th className={tableStyles.headingCell}>Size</th>
           <th className={tableStyles.headingCell}>PnL</th>
           <th className={tableStyles.headingCell}>Price</th>
           <th className={tableStyles.headingCell}>Fee</th>
@@ -82,9 +92,77 @@ const HistoryTable: FC<Props> = ({ items }) => {
             </td>
             <td className={tableStyles.cell}>{getType(item.type)}</td>
             <td className={tableStyles.cell}>
-              <span className="capitalize">{item.side}</span>
+              {item.side ? (
+                <>
+                  <span className="capitalize">{item.side}</span>
+                  <span className="text-content-2">
+                    {formatRate(item.leverage)}
+                  </span>
+                </>
+              ) : (
+                "-"
+              )}
             </td>
-            <td className={tableStyles.cell}>{formatCurrency_USD(item.pnl)}</td>
+            <td className={tableStyles.cell}>
+              {item.collateral ? (
+                <>
+                  <span>
+                    {formatCurrency_USD(
+                      item.price &&
+                        item.collateral &&
+                        item.price * item.collateral,
+                    )}
+                  </span>
+                  <span className="text-content-2">
+                    ({formatCurrency(item.token)(item.collateral)})
+                  </span>
+                </>
+              ) : (
+                "-"
+              )}
+            </td>
+            <td className={tableStyles.cell}>
+              {item.size ? (
+                <>
+                  <span>
+                    {formatCurrency_USD(
+                      item.price && item.size && item.price * item.size,
+                    )}
+                  </span>
+                  <span className="text-content-2">
+                    ({formatCurrency(item.token)(item.size)})
+                  </span>
+                </>
+              ) : (
+                "-"
+              )}
+            </td>
+            <td
+              className={cn(tableStyles.cell, {
+                "text-green": item.pnl && item.pnl > 0,
+                "text-red": item.pnl && item.pnl < 0,
+              })}
+            >
+              {item.pnl ? (
+                <>
+                  <span>
+                    {item.pnl > 0 ? "+" : "-"}
+                    {formatCurrency_USD(item.pnl && Math.abs(item.pnl))}
+                  </span>
+                  {item.collateral && item.price && (
+                    <span>
+                      {item.pnl > 0 ? "+" : "-"}
+                      {formatPercentage(
+                        Math.abs(item.pnl) / (item.collateral * item.price),
+                        2,
+                      )}
+                    </span>
+                  )}
+                </>
+              ) : (
+                "-"
+              )}
+            </td>
             <td className={tableStyles.cell}>
               {formatCurrency_USD(item.price)}
             </td>

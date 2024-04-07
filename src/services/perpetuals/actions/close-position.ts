@@ -8,6 +8,10 @@ import {
   createAtaIfNeeded,
   unwrapSolIfNeeded,
 } from "@4x.pro/services/transaction-flow/utils";
+import {
+  formatCurrency,
+  formatCurrency_USD,
+} from "@4x.pro/shared/utils/number";
 
 import type { CustodyAccount } from "../lib/custody-account";
 import type { PoolAccount } from "../lib/pool-account";
@@ -78,5 +82,13 @@ export async function closePosition(
     connection,
     walletContextState.signTransaction,
     "Close position",
+    {
+      price: formatCurrency_USD(position.getPrice()),
+      size: `${formatCurrency(position.token)(
+        (position.getLeverage() * Number(position.collateralAmount)) /
+          10 ** custody.decimals,
+        4,
+      )} (${formatCurrency_USD(position.getSizeUsd(), 2)})`,
+    },
   );
 }

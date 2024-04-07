@@ -27,6 +27,10 @@ const Sidebar: FC<Props> = ({ openPositionForm }) => {
     control: openPositionForm.control,
     name: "leverage",
   });
+  const collateral = useWatch({
+    control: openPositionForm.control,
+    name: "position.quote.size",
+  });
   const [side, setSide] = useState<"long" | "short">("long");
   const collateralTokens = favorites.includes(selectedAsset)
     ? favorites
@@ -75,6 +79,7 @@ const Sidebar: FC<Props> = ({ openPositionForm }) => {
       </div>
       <div className={sidebarStyles.stats}>
         <TradeStats
+          collateral={collateral}
           collateralToken={selectedAsset}
           side={side}
           leverage={leverage}

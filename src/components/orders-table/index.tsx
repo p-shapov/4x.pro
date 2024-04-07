@@ -1,71 +1,49 @@
 import cn from "classnames";
+import { Fragment } from "react";
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/app-config";
-import { mkTableStyles } from "@4x.pro/shared/styles/table";
-import { formatRate } from "@4x.pro/shared/utils/number";
-import { Link } from "@4x.pro/ui-kit/link";
-import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
+import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
+
+import { OrderRow } from "./order-row";
+import { mkOrdersTableStyles } from "./styles";
 
 type Props = {
-  items: {
-    id: string;
-    asset: Token;
-    leverage: number;
-    side: "short" | "long";
-    size: number;
-    type: "tp" | "sl";
-    markPrice: number;
-    triggerPrice: number;
-  }[];
+  items: PositionAccount[];
 };
 
 const OrdersTable: FC<Props> = ({ items }) => {
-  const tableStyles = mkTableStyles();
+  const orderTableStyles = mkOrdersTableStyles();
   return (
     <table
-      className={tableStyles.root}
+      className={orderTableStyles.root}
       style={{
         // @ts-expect-error - CSS variable
-        "--tw-table-cols": 7,
+        "--tw-table-cols": 6,
       }}
     >
-      <thead className={cn(tableStyles.head, "pl-[2.4rem]")}>
-        <tr className={tableStyles.row}>
-          <th className={tableStyles.headingCell}>Market</th>
-          <th className={tableStyles.headingCell}>Side</th>
-          <th className={tableStyles.headingCell}>Size</th>
-          <th className={tableStyles.headingCell}>Type</th>
-          <th className={tableStyles.headingCell}>Mark Price</th>
-          <th className={tableStyles.headingCell}>Trigger Price</th>
-          <th className={tableStyles.headingCell}>Action</th>
+      <thead className={cn(orderTableStyles.head, "pl-[2.4rem]")}>
+        <tr className={orderTableStyles.row}>
+          <th className={orderTableStyles.headingCell}>Market</th>
+          <th className={orderTableStyles.headingCell}>Side</th>
+          <th className={orderTableStyles.headingCell}>Size</th>
+          <th className={orderTableStyles.headingCell}>Type</th>
+          <th className={orderTableStyles.headingCell}>Mark Price</th>
+          <th className={orderTableStyles.headingCell}>Trigger Price</th>
+          {/* <th className={orderTableStyles.headingCell}>Action</th> */}
         </tr>
       </thead>
-      <tbody className={tableStyles.body}>
+      <tbody className={orderTableStyles.body}>
         {items.map((item) => (
-          <tr
-            key={item.id}
-            className={cn(tableStyles.row, tableStyles.rowDelimiter)}
-          >
-            <td className={tableStyles.cell}>
-              <TokenBadge token={item.asset} showNetwork gap={8} />
-            </td>
-            <td className={tableStyles.cell}>
-              <span className="capitalize">{item.side}</span>{" "}
-              <span className="text-content-2">
-                ({formatRate(item.leverage)})
-              </span>
-            </td>
-            <td className={tableStyles.cell}>{item.size}</td>
-            <td className={tableStyles.cell}>{item.type}</td>
-            <td className={tableStyles.cell}>{item.markPrice}</td>
-            <td className={tableStyles.cell}>{item.triggerPrice}</td>
-            <td className={tableStyles.cell}>
-              <div className={cn("flex", "gap-[2rem]")}>
-                <Link variant="red" iconSrc="/icons/close-circle.svg"></Link>
-              </div>
-            </td>
-          </tr>
+          <Fragment key={item.address.toString()}>
+            {item.stopLoss && item.takeProfit ? (
+              <>
+                <OrderRow position={item} type="sl" />
+                <OrderRow position={item} type="tp" />
+              </>
+            ) : (
+              <OrderRow position={item} type={item.stopLoss ? "sl" : "tp"} />
+            )}
+          </Fragment>
         ))}
       </tbody>
     </table>

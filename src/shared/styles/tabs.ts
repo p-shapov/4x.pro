@@ -37,6 +37,11 @@ const mkTabsStyles = ({ stretchTabs }: Props) => {
     panel: cn("pt-[4px]"),
     activeTab: cn("after:border-accent", "text-accent"),
     inactiveTab: cn("after:border-transparent", "hover:text-content-2"),
+    disabledTab: cn(
+      "after:border-transparent",
+      "text-content-3",
+      "cursor-not-allowed",
+    ),
   };
 };
 

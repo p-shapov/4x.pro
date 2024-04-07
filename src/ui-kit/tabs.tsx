@@ -10,6 +10,7 @@ type Props<T extends string> = {
   items: {
     id: T;
     content: ReactNode;
+    disabled?: boolean;
   }[];
   panels: Record<T, ReactNode>;
   value?: T;
@@ -53,9 +54,13 @@ const Tabs = <T extends string>({
                 <Tab
                   key={item.id}
                   className={cn(tabsStyles.tab, classNames?.tab, {
-                    [tabsStyles.activeTab]: selectedIndex === idx,
-                    [tabsStyles.inactiveTab]: selectedIndex !== idx,
+                    [tabsStyles.activeTab]:
+                      selectedIndex === idx && !item.disabled,
+                    [tabsStyles.inactiveTab]:
+                      selectedIndex !== idx && !item.disabled,
+                    [tabsStyles.disabledTab]: item.disabled,
                   })}
+                  disabled={item.disabled}
                 >
                   {item.content}
                 </Tab>

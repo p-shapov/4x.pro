@@ -11,7 +11,7 @@ import { openPosition } from "../actions/open-position";
 import type { PoolAccount } from "../lib/pool-account";
 import type { Side } from "../lib/types";
 
-const useOpenPositionQuery = createMutation({
+const useOpenPositionMutation = createMutation({
   mutationFn: async ({
     rpcEndpoint,
     connection,
@@ -25,6 +25,8 @@ const useOpenPositionQuery = createMutation({
     side,
     leverage,
     slippage,
+    stopLoss,
+    takeProfit,
   }: {
     rpcEndpoint: string;
     connection: Connection;
@@ -38,6 +40,8 @@ const useOpenPositionQuery = createMutation({
     side: Side;
     leverage: number;
     slippage: number;
+    stopLoss: number | null;
+    takeProfit: number | null;
   }) => {
     const res = await openPosition(
       rpcEndpoint,
@@ -52,6 +56,8 @@ const useOpenPositionQuery = createMutation({
       side,
       leverage,
       slippage,
+      stopLoss,
+      takeProfit,
     );
     await queryClient.invalidateQueries({
       queryKey: usePositionsQuery.getKey(),
@@ -64,7 +70,7 @@ const useOpenPosition = () => {
   const walletContextState = useWallet();
   const { rpcEndpoint } = useAppConfig();
   const { connection } = useConnection();
-  const mutation = useOpenPositionQuery();
+  const mutation = useOpenPositionMutation();
   return {
     ...mutation,
     mutate: (params: {
@@ -77,6 +83,8 @@ const useOpenPosition = () => {
       side: Side;
       leverage: number;
       slippage: number;
+      stopLoss: number | null;
+      takeProfit: number | null;
     }) =>
       mutation.mutate({
         ...params,
@@ -94,6 +102,8 @@ const useOpenPosition = () => {
       side: Side;
       leverage: number;
       slippage: number;
+      stopLoss: number | null;
+      takeProfit: number | null;
     }) =>
       mutation.mutateAsync({
         ...params,
@@ -104,4 +114,4 @@ const useOpenPosition = () => {
   };
 };
 
-export { useOpenPositionQuery, useOpenPosition };
+export { useOpenPositionMutation, useOpenPosition };

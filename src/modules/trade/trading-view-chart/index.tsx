@@ -103,11 +103,11 @@ const TradingViewChart = forwardRef<
             </span>
           </span>
         </span>
-        <div className={tradingViewChartStyles.headerSeparator} />
+        {/* <div className={tradingViewChartStyles.headerSeparator} />
         <span>
           <span className={tradingViewChartStyles.label24h}>24h Volume: </span>
           <span className={tradingViewChartStyles.price24h}>$0.00</span>
-        </span>
+        </span> */}
       </div>
       <div
         id={TRADING_VIEW_ID}
