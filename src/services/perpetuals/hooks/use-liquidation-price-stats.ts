@@ -34,9 +34,8 @@ const useLiquidationPriceStatsQuery = createQuery({
       withdrawalAmount,
     );
   },
+  refetchInterval: 30 * 1000,
   placeholderData: keepPreviousData,
-  staleTime: 0,
-  gcTime: 0,
   queryKeyHashFn: (queryKey) => {
     const key = queryKey[0] as string;
     const variables = queryKey[1] as {

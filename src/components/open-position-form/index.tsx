@@ -74,7 +74,6 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
   );
   const handleSubmit = form.handleSubmit(async (data) => {
     const price = priceStats?.entryPrice;
-    console.log("price", price);
     if (hasPosition) {
       messageToast("You already have an open position", "error");
     } else if (!price) {

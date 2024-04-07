@@ -7,8 +7,6 @@ import { fetchAllStats } from "../fetchers/fetch-prices";
 const usePriceStatsQuery = createQuery({
   queryKey: ["price-stats"],
   fetcher: () => fetchAllStats(),
-  staleTime: 0,
-  gcTime: 0,
 });
 
 function usePriceStats() {

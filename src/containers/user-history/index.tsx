@@ -1,3 +1,4 @@
+"use client";
 import type { FC } from "react";
 
 import { HistoryTable } from "@4x.pro/components/history-table";

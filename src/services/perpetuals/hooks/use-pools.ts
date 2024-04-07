@@ -1,3 +1,5 @@
+import type { InitialDataFunction } from "@tanstack/react-query";
+import { keepPreviousData } from "@tanstack/react-query";
 import { createQuery } from "react-query-kit";
 
 import { useAppConfig } from "@4x.pro/app-config";
@@ -5,21 +7,32 @@ import { useAppConfig } from "@4x.pro/app-config";
 import { useCustodies } from "./use-custodies";
 import { getPoolData } from "../fetchers/fetch-pools";
 import type { CustodyAccount } from "../lib/custody-account";
+import type { PoolAccount } from "../lib/pool-account";
 
 const usePoolsQuery = createQuery({
   queryKey: ["pools"],
-  fetcher: ({
+  fetcher: async ({
     rpcEndpoint,
     custodyInfos,
   }: {
     rpcEndpoint: string;
-    custodyInfos?: Record<string, CustodyAccount>;
+    custodyInfos?: Record<string, CustodyAccount> | null;
   }) => {
     if (!custodyInfos) return null;
     return getPoolData(rpcEndpoint, custodyInfos);
   },
-  staleTime: 0,
-  gcTime: 0,
+  initialData: keepPreviousData as InitialDataFunction<Record<
+    string,
+    PoolAccount
+  > | null>,
+  queryKeyHashFn: (queryKey) => {
+    const key = queryKey[0];
+    const { rpcEndpoint, custodyInfos } = queryKey[1] as {
+      rpcEndpoint: string;
+      custodyInfos?: Record<string, CustodyAccount> | null;
+    };
+    return `${key}-${rpcEndpoint}-${Object.keys(custodyInfos || {}).join(",")}`;
+  },
 });
 
 const usePools = () => {
@@ -27,7 +40,6 @@ const usePools = () => {
   const { data: custodyInfos } = useCustodies();
   return usePoolsQuery({
     variables: { rpcEndpoint, custodyInfos },
-    enabled: !!custodyInfos,
   });
 };
 

@@ -1,3 +1,4 @@
+"use client";
 import type { FC } from "react";
 
 import { OrdersTable } from "@4x.pro/components/orders-table";

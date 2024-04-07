@@ -21,8 +21,7 @@ const usePnLStatsQuery = createQuery({
     return viewHelper.getPnl(position);
   },
   placeholderData: keepPreviousData,
-  staleTime: 0,
-  gcTime: 0,
+  refetchInterval: 30 * 1000,
   queryKeyHashFn: (queryKey) => {
     const key = queryKey[0] as string;
     const variables = queryKey[1] as {

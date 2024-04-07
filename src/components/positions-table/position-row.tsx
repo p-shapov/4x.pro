@@ -59,76 +59,80 @@ const PositionRow: FC<Props> = ({ position }) => {
     setOpenClosePosition(false);
   };
   return (
-    <>
-      <tr className={positionRowStyles.root}>
-        <td className={positionRowStyles.cell}>
-          <TokenBadge token={collateralToken} showNetwork gap={8} />
-        </td>
-        <td className={positionRowStyles.cell}>
-          <span>
-            <span className="capitalize">{side}</span>{" "}
-            <span className={positionRowStyles.secondaryText}>
-              ({formatRate(leverage)})
+    <tr className={positionRowStyles.root}>
+      <td className={positionRowStyles.cell}>
+        <TokenBadge token={collateralToken} showNetwork gap={8} />
+      </td>
+      <td className={positionRowStyles.cell}>
+        <span>
+          <span className="capitalize">{side}</span>{" "}
+          <span className={positionRowStyles.secondaryText}>
+            ({formatRate(leverage)})
+          </span>
+        </span>
+      </td>
+      <td className={positionRowStyles.cell}>
+        {formatCurrency_USD(size && size * entryPrice)}
+        <span className={positionRowStyles.secondaryText}>
+          ({formatCurrency(collateralToken)(size)})
+        </span>
+      </td>
+      <td className={positionRowStyles.cell}>
+        {formatCurrency_USD(collateral && collateral * entryPrice)}
+        <span className={positionRowStyles.secondaryText}>
+          ({formatCurrency(collateralToken)(collateral)})
+        </span>
+      </td>
+      <td className={cn(positionRowStyles.cell, positionRowStyles.pnl)}>
+        {pnl.data ? (
+          <>
+            <span>
+              {isPositive ? "+" : "-"}
+              {formatCurrency_USD(pnl.data && Math.abs(pnl.data))}
             </span>
-          </span>
-        </td>
-        <td className={positionRowStyles.cell}>
-          {formatCurrency_USD(size && size * entryPrice)}
-          <span className={positionRowStyles.secondaryText}>
-            ({formatCurrency(collateralToken)(size)})
-          </span>
-        </td>
-        <td className={positionRowStyles.cell}>
-          {formatCurrency_USD(collateral && collateral * entryPrice)}
-          <span className={positionRowStyles.secondaryText}>
-            ({formatCurrency(collateralToken)(collateral)})
-          </span>
-        </td>
-        <td className={cn(positionRowStyles.cell, positionRowStyles.pnl)}>
-          <span>
-            {isPositive ? "+" : "-"}
-            {formatCurrency_USD(pnl.data && Math.abs(pnl.data))}
-          </span>
-          <span>
-            ({isPositive ? "+" : "-"}
-            {formatPercentage(pnlPercentage && Math.abs(pnlPercentage))})
-          </span>
-        </td>
-        <td className={positionRowStyles.cell}>
-          {formatCurrency_USD(entryPrice)}
-        </td>
-        <td className={positionRowStyles.cell}>
-          {formatCurrency_USD(marketPrice)}
-        </td>
-        <td className={cn(positionRowStyles.cell)}>
-          {formatCurrency_USD(liquidationPrice.data)}
-        </td>
-        <td className={positionRowStyles.cell}>
-          <span className={cn("flex", "gap-[2rem]")}>
-            <ManagePosition
-              open={openManagePosition}
-              onClose={handleCloseManagePosition}
-              position={position}
-            />
-            <Link
-              variant="accent"
-              iconSrc="/icons/setting-2.svg"
-              onClick={handleOpenManagePosition}
-            ></Link>
-            <ClosePosition
-              open={openClosePosition}
-              onClose={handleCloseClosePosition}
-              position={position}
-            />
-            <Link
-              variant="red"
-              iconSrc="/icons/close-circle.svg"
-              onClick={handleOpenClosePosition}
-            ></Link>
-          </span>
-        </td>
-      </tr>
-    </>
+            <span>
+              ({isPositive ? "+" : "-"}
+              {formatPercentage(pnlPercentage && Math.abs(pnlPercentage))})
+            </span>
+          </>
+        ) : (
+          "-"
+        )}
+      </td>
+      <td className={positionRowStyles.cell}>
+        {formatCurrency_USD(entryPrice)}
+      </td>
+      <td className={positionRowStyles.cell}>
+        {formatCurrency_USD(marketPrice)}
+      </td>
+      <td className={cn(positionRowStyles.cell)}>
+        {formatCurrency_USD(liquidationPrice.data)}
+      </td>
+      <td className={positionRowStyles.cell}>
+        <span className={cn("flex", "gap-[2rem]")}>
+          <ManagePosition
+            open={openManagePosition}
+            onClose={handleCloseManagePosition}
+            position={position}
+          />
+          <Link
+            variant="accent"
+            iconSrc="/icons/setting-2.svg"
+            onClick={handleOpenManagePosition}
+          ></Link>
+          <ClosePosition
+            open={openClosePosition}
+            onClose={handleCloseClosePosition}
+            position={position}
+          />
+          <Link
+            variant="red"
+            iconSrc="/icons/close-circle.svg"
+            onClick={handleOpenClosePosition}
+          ></Link>
+        </span>
+      </td>
+    </tr>
   );
 };
 

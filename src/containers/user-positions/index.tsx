@@ -1,3 +1,4 @@
+"use client";
 import { PositionsTable } from "@4x.pro/components/positions-table";
 import { useUserPositions } from "@4x.pro/services/perpetuals/hooks/use-positions";
 

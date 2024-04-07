@@ -12,12 +12,12 @@ import type { PositionAccount } from "../lib/position-account";
 
 const usePositionsQuery = createQuery({
   queryKey: ["positions"],
-  fetcher: ({
+  fetcher: async ({
     rpcEndpoint,
     custodyInfos,
   }: {
     rpcEndpoint: string;
-    custodyInfos?: Record<string, CustodyAccount>;
+    custodyInfos?: Record<string, CustodyAccount> | null;
   }) => {
     if (!custodyInfos) return null;
     return getPositionData(rpcEndpoint, custodyInfos);
@@ -26,8 +26,15 @@ const usePositionsQuery = createQuery({
     string,
     PositionAccount
   > | null>,
-  staleTime: 0,
-  gcTime: 0,
+  refetchInterval: 60 * 1 * 1000,
+  queryKeyHashFn: (queryKey) => {
+    const key = queryKey[0];
+    const { rpcEndpoint, custodyInfos } = queryKey[1] as {
+      rpcEndpoint: string;
+      custodyInfos?: Record<string, CustodyAccount> | null;
+    };
+    return `${key}-${rpcEndpoint}-${Object.keys(custodyInfos || {}).join(",")}`;
+  },
 });
 
 const usePositions = () => {
@@ -35,7 +42,6 @@ const usePositions = () => {
   const { data: custodyInfos } = useCustodies();
   return usePositionsQuery({
     variables: { rpcEndpoint, custodyInfos },
-    enabled: !!custodyInfos,
   });
 };
 
@@ -45,9 +51,8 @@ const useUserPositions = () => {
   const walletContextState = useWallet();
   return usePositionsQuery({
     variables: { rpcEndpoint, custodyInfos },
-    enabled: !!custodyInfos,
-    select: (positions): Record<string, PositionAccount> => {
-      if (!positions) return {};
+    select: (positions): Record<string, PositionAccount> | null => {
+      if (!positions) return null;
       return Object.entries(positions).reduce(
         (positions, [address, data]) => {
           const ownerIsUser =
@@ -69,9 +74,8 @@ const useUserPositionOrders = () => {
   const walletContextState = useWallet();
   return usePositionsQuery({
     variables: { rpcEndpoint, custodyInfos },
-    enabled: !!custodyInfos,
-    select: (positions): Record<string, PositionAccount> => {
-      if (!positions) return {};
+    select: (positions): Record<string, PositionAccount> | null => {
+      if (!positions) return null;
       return Object.entries(positions).reduce(
         (positions, [address, data]) => {
           const ownerIsUser =
