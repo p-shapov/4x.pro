@@ -2,7 +2,6 @@ import cn from "classnames";
 import type { FC } from "react";
 
 import type { Token } from "@4x.pro/app-config";
-import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import { useToken24hrBenchmark } from "@4x.pro/shared/hooks/use-token-24hr-benchbark";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
 
@@ -20,7 +19,6 @@ const AssetItem: FC<Props> = ({ onChange, coin }) => {
   const change24hr = benchmark24hr
     ? (benchmark24hr.change / benchmark24hr.close) * 100
     : undefined;
-  const { priceData } = useWatchPythPriceFeed(coin);
   const { selectedAsset, selectAsset } = useTradeModule((state) => ({
     selectedAsset: state.selectedAsset,
     selectAsset: state.selectAsset,
@@ -29,7 +27,6 @@ const AssetItem: FC<Props> = ({ onChange, coin }) => {
     selectAsset(coin);
     onChange?.(coin);
   };
-  if (!priceData || !priceData.price) return null;
   return (
     <button
       type="button"

@@ -45,10 +45,10 @@ const Leverage: FC<Props> = ({ form }) => {
         render={({ field: { value, onChange } }) => (
           <RangeSlider
             value={value}
-            min={1.1}
-            max={100}
+            min={1}
+            max={25}
             step={0.1}
-            tickStep={3.6}
+            tickStep={0.5}
             onChange={onChange}
             formatValue={(value) => formatRate(value, 1)}
           />

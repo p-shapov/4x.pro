@@ -160,7 +160,7 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
       onSubmit={handleSubmit}
       noValidate
     >
-      <Position form={form} collateralTokens={collateralTokens} />
+      <Position form={form} side={side} collateralTokens={collateralTokens} />
       <Leverage form={form} />
       <Slippage form={form} />
       <TriggerPrice form={form} />

@@ -148,6 +148,15 @@ const openPositionBuilder = async (
     stopLoss: stopLoss ? new BN(stopLoss * 10 ** 6) : null,
     takeProfit: takeProfit ? new BN(takeProfit * 10 ** 6) : null,
   };
+  console.log("params", {
+    leverage,
+    price: newPrice,
+    collateral: finalPayAmount,
+    size: positionAmount,
+    side: side.toString(),
+    stopLoss: stopLoss,
+    takeProfit: takeProfit,
+  });
   let methodBuilder = perpetual_program.methods.openPosition(params).accounts({
     owner: publicKey,
     fundingAccount: userCustodyTokenAccount,

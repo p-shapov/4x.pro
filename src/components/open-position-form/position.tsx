@@ -1,12 +1,13 @@
 "use client";
-import { useEffect } from "react";
+import { useDeferredValue, useEffect } from "react";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useWatch } from "react-hook-form";
 
 import { depositTokens } from "@4x.pro/app-config";
 import type { Token } from "@4x.pro/app-config";
-import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
+import { useEntryPriceStats } from "@4x.pro/services/perpetuals/hooks/use-entry-price-stats";
+import { Side } from "@4x.pro/services/perpetuals/lib/types";
 import { roundToFirstNonZeroDecimal } from "@4x.pro/shared/utils/number";
 import { TokenField } from "@4x.pro/ui-kit/token-field";
 import { TokenPrice } from "@4x.pro/ui-kit/token-price";
@@ -17,33 +18,49 @@ import { mkPositionStyles } from "./styles";
 
 type Props = {
   form: UseFormReturn<SubmitData>;
+  side: "short" | "long";
   collateralTokens: readonly Token[];
 };
 
-const Position: FC<Props> = ({ form, collateralTokens }) => {
+const Position: FC<Props> = ({ form, side, collateralTokens }) => {
   const errors = form.formState.errors;
   const { lastTouchedPosition, setLastTouchedPosition } =
     useLastTouchedPosition();
   const positionStyles = mkPositionStyles();
+  const baseSize = useWatch({
+    control: form.control,
+    name: "position.base.size",
+  });
   const baseToken = useWatch({
     control: form.control,
     name: "position.base.token",
+  });
+  const quoteSize = useWatch({
+    control: form.control,
+    name: "position.quote.size",
   });
   const quoteToken = useWatch({
     control: form.control,
     name: "position.quote.token",
   });
   const leverage = useWatch({ control: form.control, name: "leverage" });
-  const { priceData: baseTokenPriceData } =
-    useWatchPythPriceFeed(baseToken) || {};
-  const { priceData: quoteTokenPriceData } =
-    useWatchPythPriceFeed(quoteToken) || {};
+  const { data: basePriceStats } = useEntryPriceStats({
+    collateral: useDeferredValue(baseSize) || 0,
+    collateralToken: baseToken,
+    side: side === "long" ? Side.Long : Side.Short,
+    size: useDeferredValue(baseSize * leverage) || 0,
+  });
+  const { data: quotePriceStats } = useEntryPriceStats({
+    collateral: useDeferredValue(quoteSize) || 0,
+    collateralToken: quoteToken,
+    side: side === "long" ? Side.Long : Side.Short,
+    size: useDeferredValue(quoteSize * leverage) || 0,
+  });
   const rate =
-    baseTokenPriceData?.price && quoteTokenPriceData?.price
-      ? quoteTokenPriceData.price / baseTokenPriceData.price
-      : undefined;
+    basePriceStats?.entryPrice && quotePriceStats?.entryPrice
+      ? quotePriceStats.entryPrice / basePriceStats.entryPrice
+      : 1;
   useEffect(() => {
-    if (!rate) return;
     switch (lastTouchedPosition) {
       case "base":
         const baseSize = form.getValues("position.base.size");
@@ -61,11 +78,10 @@ const Position: FC<Props> = ({ form, collateralTokens }) => {
         break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [quoteToken, baseToken, leverage]);
+  }, [quoteToken, baseToken, leverage, rate]);
   const mkHandleChangeBase =
     (onChange: (data: { size: number; token: Token }) => void) =>
     (data: { amount: number; token: Token }) => {
-      if (!rate) return;
       const baseSize = form.getValues("position.base.size");
       if (baseSize !== data.amount) {
         const quoteToken = form.getValues("position.quote.token");
@@ -83,7 +99,6 @@ const Position: FC<Props> = ({ form, collateralTokens }) => {
   const mkHandleChangeQuote =
     (onChange: (data: { size: number; token: Token }) => void) =>
     (data: { amount: number; token: Token }) => {
-      if (!rate) return;
       const quoteSize = form.getValues("position.quote.size");
       if (quoteSize !== data.amount) {
         const baseToken = form.getValues("position.base.token");
@@ -113,7 +128,7 @@ const Position: FC<Props> = ({ form, collateralTokens }) => {
           <TokenField
             placeholder="0.00"
             tokenList={depositTokens}
-            value={data.size || ""}
+            value={rate === 1 ? "" : data.size || ""}
             token={data.token}
             error={
               !!(errors.position?.quote?.size && errors.position?.base?.size)
@@ -129,7 +144,7 @@ const Position: FC<Props> = ({ form, collateralTokens }) => {
           <TokenField
             placeholder="0.00"
             tokenList={collateralTokens}
-            value={data.size || ""}
+            value={rate === 1 ? "" : data.size || ""}
             error={
               !!(errors.position?.quote?.size && errors.position?.base?.size)
             }
