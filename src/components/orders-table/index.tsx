@@ -1,18 +1,24 @@
+import type { PublicKey } from "@solana/web3.js";
 import cn from "classnames";
 import { Fragment } from "react";
-import type { FC } from "react";
+import type { FC, ReactNode } from "react";
 
-import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
+import { usePositions } from "@4x.pro/services/perpetuals/hooks/use-positions";
 
 import { OrderRow } from "./order-row";
 import { mkOrdersTableStyles } from "./styles";
 
 type Props = {
-  items: PositionAccount[];
+  owner?: PublicKey | null;
+  fallback?: ReactNode;
 };
 
-const OrdersTable: FC<Props> = ({ items }) => {
+const OrdersTable: FC<Props> = ({ owner, fallback }) => {
   const orderTableStyles = mkOrdersTableStyles();
+  const { data: positions = {}, isFetched } = usePositions({ owner });
+  const orders = Object.values(positions).filter(
+    (position) => position.stopLoss || position.takeProfit,
+  );
   return (
     <table
       className={orderTableStyles.root}
@@ -33,18 +39,24 @@ const OrdersTable: FC<Props> = ({ items }) => {
         </tr>
       </thead>
       <tbody className={orderTableStyles.body}>
-        {items.map((item) => (
-          <Fragment key={item.address.toString()}>
-            {item.stopLoss && item.takeProfit ? (
-              <>
-                <OrderRow position={item} type="sl" />
-                <OrderRow position={item} type="tp" />
-              </>
-            ) : (
-              <OrderRow position={item} type={item.stopLoss ? "sl" : "tp"} />
-            )}
-          </Fragment>
-        ))}
+        {orders.length === 0 && isFetched && (
+          <tr className={orderTableStyles.fallbackRow}>
+            <td colSpan={6}>{fallback}</td>
+          </tr>
+        )}
+        {isFetched &&
+          orders.map((item) => (
+            <Fragment key={item.address.toString()}>
+              {item.stopLoss && item.takeProfit ? (
+                <>
+                  <OrderRow position={item} type="sl" />
+                  <OrderRow position={item} type="tp" />
+                </>
+              ) : (
+                <OrderRow position={item} type={item.stopLoss ? "sl" : "tp"} />
+              )}
+            </Fragment>
+          ))}
       </tbody>
     </table>
   );

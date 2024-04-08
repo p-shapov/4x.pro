@@ -36,6 +36,13 @@ const mkTableStyles = () => {
       "col-[1/calc(var(--tw-table-cols)+1)]",
       "h-max",
     ),
+    fallbackRow: cn(
+      "grid",
+      "justify-items-center",
+      "py-[80px]",
+      "items-center",
+      "col-[1/calc(var(--tw-table-cols)+1)]",
+    ),
     rowDelimiter: cn(
       "py-[1.2rem]",
       "border-b-[1px]",

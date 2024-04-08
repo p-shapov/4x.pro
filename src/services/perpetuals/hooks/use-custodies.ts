@@ -10,12 +10,11 @@ import type { CustodyAccount } from "../lib/custody-account";
 const useCustodiesQuery = createQuery({
   queryKey: ["custodies"],
   fetcher: async ({ rpcEndpoint }: { rpcEndpoint: string }) => {
-    return getCustodyData(rpcEndpoint);
+    return (await getCustodyData(rpcEndpoint)) || {};
   },
-  initialData: keepPreviousData as InitialDataFunction<Record<
-    string,
-    CustodyAccount
-  > | null>,
+  initialData: keepPreviousData as InitialDataFunction<
+    Record<string, CustodyAccount>
+  >,
 });
 
 const useCustodies = () => {

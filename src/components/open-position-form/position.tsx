@@ -128,7 +128,11 @@ const Position: FC<Props> = ({ form, side, collateralTokens }) => {
           <TokenField
             placeholder="0.00"
             tokenList={depositTokens}
-            value={rate === 1 ? "" : data.size || ""}
+            value={
+              rate === 1 && lastTouchedPosition === "quote"
+                ? ""
+                : data.size || ""
+            }
             token={data.token}
             error={
               !!(errors.position?.quote?.size && errors.position?.base?.size)
@@ -144,7 +148,11 @@ const Position: FC<Props> = ({ form, side, collateralTokens }) => {
           <TokenField
             placeholder="0.00"
             tokenList={collateralTokens}
-            value={rate === 1 ? "" : data.size || ""}
+            value={
+              rate === 1 && lastTouchedPosition === "base"
+                ? ""
+                : data.size || ""
+            }
             error={
               !!(errors.position?.quote?.size && errors.position?.base?.size)
             }

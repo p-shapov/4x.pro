@@ -27,6 +27,7 @@ const mkPositionsTableStyles = () => {
     row: cn(tableStyles.row),
     head: cn(tableStyles.head, "pl-[2.4rem]"),
     body: cn(tableStyles.body),
+    fallbackRow: cn(tableStyles.fallbackRow),
     headingCell: cn(tableStyles.headingCell),
   };
 };

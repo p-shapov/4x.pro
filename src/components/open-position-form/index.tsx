@@ -11,7 +11,7 @@ import type { Token } from "@4x.pro/app-config";
 import { useEntryPriceStats } from "@4x.pro/services/perpetuals/hooks/use-entry-price-stats";
 import { useOpenPosition } from "@4x.pro/services/perpetuals/hooks/use-open-position";
 import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
-import { useUserPositions } from "@4x.pro/services/perpetuals/hooks/use-positions";
+import { usePositions } from "@4x.pro/services/perpetuals/hooks/use-positions";
 import { Side } from "@4x.pro/services/perpetuals/lib/types";
 import { useUpdateTradingHistory } from "@4x.pro/services/trading-history/hooks/use-update-trading-history";
 import { useIsInsufficientBalance } from "@4x.pro/shared/hooks/use-token-balance";
@@ -66,7 +66,7 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
     control: form.control,
     name: "position.quote.token",
   });
-  const positions = useUserPositions();
+  const positions = usePositions({ owner: walletContextState.publicKey });
   const hasPosition = Object.values(positions.data || {}).some(
     (position) =>
       position.token === quoteToken &&

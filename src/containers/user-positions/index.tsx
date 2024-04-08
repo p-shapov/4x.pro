@@ -1,11 +1,23 @@
 "use client";
+import { useWallet } from "@solana/wallet-adapter-react";
+
+import { NoDataFallback } from "@4x.pro/components/no-data-fallback";
 import { PositionsTable } from "@4x.pro/components/positions-table";
-import { useUserPositions } from "@4x.pro/services/perpetuals/hooks/use-positions";
 
 const UserPositions = () => {
-  const { data: positions } = useUserPositions();
-  if (!positions) return null;
-  return <PositionsTable items={Object.values(positions)} />;
+  const walletContextState = useWallet();
+  return (
+    <PositionsTable
+      owner={walletContextState.publicKey}
+      fallback={
+        <NoDataFallback
+          iconSrc="/icons/wallet-remove.svg"
+          message="No transactions yet"
+          showConnect
+        />
+      }
+    />
+  );
 };
 
 export { UserPositions };

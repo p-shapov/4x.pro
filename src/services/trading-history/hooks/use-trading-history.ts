@@ -1,4 +1,4 @@
-import { useWallet } from "@solana/wallet-adapter-react";
+import type { PublicKey } from "@solana/web3.js";
 import type { InitialDataFunction } from "@tanstack/react-query";
 import { keepPreviousData } from "@tanstack/react-query";
 import { createQuery } from "react-query-kit";
@@ -9,18 +9,15 @@ import type { Transaction } from "../utils/types";
 const useTradingHistoryQuery = createQuery({
   queryKey: ["history"],
   fetcher: async ({ account }: { account?: string }) => {
-    if (!account) return null;
+    if (!account) return [];
     return getHistory(account);
   },
-  initialData: keepPreviousData as InitialDataFunction<Transaction[] | null>,
-  staleTime: 0,
-  gcTime: 0,
+  initialData: keepPreviousData as InitialDataFunction<Transaction[]>,
 });
 
-const useTradingHistory = () => {
-  const walletContextState = useWallet();
+const useTradingHistory = ({ owner }: { owner?: PublicKey | null }) => {
   return useTradingHistoryQuery({
-    variables: { account: walletContextState.publicKey?.toBase58() },
+    variables: { account: owner?.toBase58() },
   });
 };
 

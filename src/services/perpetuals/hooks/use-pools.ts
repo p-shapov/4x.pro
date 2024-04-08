@@ -16,20 +16,19 @@ const usePoolsQuery = createQuery({
     custodyInfos,
   }: {
     rpcEndpoint: string;
-    custodyInfos?: Record<string, CustodyAccount> | null;
+    custodyInfos?: Record<string, CustodyAccount>;
   }) => {
-    if (!custodyInfos) return null;
+    if (!custodyInfos) return {};
     return getPoolData(rpcEndpoint, custodyInfos);
   },
-  initialData: keepPreviousData as InitialDataFunction<Record<
-    string,
-    PoolAccount
-  > | null>,
+  initialData: keepPreviousData as InitialDataFunction<
+    Record<string, PoolAccount>
+  >,
   queryKeyHashFn: (queryKey) => {
     const key = queryKey[0];
     const { rpcEndpoint, custodyInfos } = queryKey[1] as {
       rpcEndpoint: string;
-      custodyInfos?: Record<string, CustodyAccount> | null;
+      custodyInfos?: Record<string, CustodyAccount>;
     };
     return `${key}-${rpcEndpoint}-${Object.keys(custodyInfos || {}).join(",")}`;
   },

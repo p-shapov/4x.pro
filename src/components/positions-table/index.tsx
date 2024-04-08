@@ -1,16 +1,19 @@
+import type { PublicKey } from "@solana/web3.js";
 import type { FC } from "react";
 
-import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
+import { usePositions } from "@4x.pro/services/perpetuals/hooks/use-positions";
 
 import { PositionRow } from "./position-row";
 import { mkPositionsTableStyles } from "./styles";
 
 type Props = {
-  items: PositionAccount[];
+  owner?: PublicKey | null;
+  fallback?: React.ReactNode;
 };
 
-const PositionsTable: FC<Props> = ({ items }) => {
+const PositionsTable: FC<Props> = ({ owner, fallback }) => {
   const positionStyles = mkPositionsTableStyles();
+  const { data: positions = {}, isFetched } = usePositions({ owner });
   return (
     <table
       className={positionStyles.root}
@@ -33,9 +36,18 @@ const PositionsTable: FC<Props> = ({ items }) => {
         </tr>
       </thead>
       <tbody className={positionStyles.body}>
-        {items.map((position) => (
-          <PositionRow key={position.address.toString()} position={position} />
-        ))}
+        {isFetched && Object.keys(positions).length === 0 && (
+          <tr className={positionStyles.fallbackRow}>
+            <td colSpan={9}>{fallback}</td>
+          </tr>
+        )}
+        {isFetched &&
+          Object.values(positions).map((position) => (
+            <PositionRow
+              key={position.address.toString()}
+              position={position}
+            />
+          ))}
       </tbody>
     </table>
   );

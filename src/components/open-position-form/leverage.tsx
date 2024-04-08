@@ -1,5 +1,4 @@
 "use client";
-
 import type { FC } from "react";
 import { Controller } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
@@ -26,7 +25,7 @@ const Leverage: FC<Props> = ({ form }) => {
         render={({ field: { value, onChange } }) => (
           <NumberField
             value={value || ""}
-            min={1.1}
+            min={1}
             max={100}
             step={0.1}
             label="Leverage"
@@ -48,7 +47,7 @@ const Leverage: FC<Props> = ({ form }) => {
             min={1}
             max={25}
             step={0.1}
-            tickStep={0.5}
+            tickStep={1}
             onChange={onChange}
             formatValue={(value) => formatRate(value, 1)}
           />

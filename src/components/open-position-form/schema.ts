@@ -31,7 +31,7 @@ const submitDataSchema = yup.object<SubmitData>().shape({
       size: yup.number().required().moreThan(0),
     }),
   }),
-  leverage: yup.number().min(1.1).max(100).required(),
+  leverage: yup.number().min(1).max(100).required(),
   slippage: yup.number().min(0.1).max(0.8).required(),
   takeProfit: yup.lazy((value) =>
     value === ""
