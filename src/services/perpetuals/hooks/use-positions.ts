@@ -15,12 +15,15 @@ const usePositionsQuery = createQuery({
   fetcher: async ({
     rpcEndpoint,
     custodyInfos,
+    owner,
   }: {
     rpcEndpoint: string;
     custodyInfos?: Record<string, CustodyAccount>;
+    owner?: PublicKey | null | false;
   }) => {
+    if (owner !== false && !owner) return {};
     if (!custodyInfos) return {};
-    return getPositionData(rpcEndpoint, custodyInfos);
+    return getPositionData(rpcEndpoint, custodyInfos, owner || undefined);
   },
   initialData: keepPreviousData as InitialDataFunction<
     Record<string, PositionAccount>
@@ -28,11 +31,14 @@ const usePositionsQuery = createQuery({
   refetchInterval: 60 * 1 * 1000,
   queryKeyHashFn: (queryKey) => {
     const key = queryKey[0];
-    const { rpcEndpoint, custodyInfos } = queryKey[1] as {
+    const { rpcEndpoint, custodyInfos, owner } = queryKey[1] as {
       rpcEndpoint: string;
       custodyInfos?: Record<string, CustodyAccount>;
+      owner?: PublicKey | null | false;
     };
-    return `${key}-${rpcEndpoint}-${Object.keys(custodyInfos || {}).join(",")}`;
+    return `${key}-${rpcEndpoint}-${Object.keys(custodyInfos || {}).join(
+      ",",
+    )}-${owner?.toString()}`;
   },
 });
 
@@ -44,21 +50,7 @@ const usePositions = ({
   const { rpcEndpoint } = useAppConfig();
   const { data: custodyInfos } = useCustodies();
   return usePositionsQuery({
-    variables: { rpcEndpoint, custodyInfos },
-    select: (positions): Record<string, PositionAccount> => {
-      if (owner === false) return positions;
-      if (!owner) return {};
-      return Object.entries(positions).reduce(
-        (positions, [address, data]) => {
-          if (owner) {
-            const ownerIsUser = data.owner.toBase58() === owner?.toBase58();
-            if (ownerIsUser) positions[address] = data;
-          }
-          return positions;
-        },
-        {} as Record<string, PositionAccount>,
-      );
-    },
+    variables: { rpcEndpoint, custodyInfos, owner },
   });
 };
 

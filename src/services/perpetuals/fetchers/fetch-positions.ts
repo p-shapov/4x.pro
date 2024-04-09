@@ -14,14 +14,16 @@ interface FetchPosition {
 const getPositionData = async (
   rpcEndpoint: string,
   custodyInfos: Record<string, CustodyAccount>,
+  userPubkey?: PublicKey,
 ) => {
   const { perpetual_program } =
     await getPerpetualProgramAndProvider(rpcEndpoint);
-
   // @ts-ignore
   const fetchedPositions: FetchPosition[] =
-    await perpetual_program.account.position.all([{ dataSize: 232 }]);
-
+    await perpetual_program.account.position.all([
+      { dataSize: 232 },
+      { memcmp: { offset: 8, bytes: userPubkey?.toString() || "" } },
+    ]);
   const positionInfos: Record<string, PositionAccount> =
     fetchedPositions.reduce(
       (acc: Record<string, PositionAccount>, position: FetchPosition) => (
