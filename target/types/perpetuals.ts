@@ -511,6 +511,45 @@ export type Perpetuals = {
       "returns": "u8"
     },
     {
+      "name": "upgradePosition",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "multisig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "position",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "UpgradePositionParams"
+          }
+        }
+      ],
+      "returns": "u8"
+    },
+    {
       "name": "testInit",
       "accounts": [
         {
@@ -1166,6 +1205,69 @@ export type Perpetuals = {
           "name": "params",
           "type": {
             "defined": "LiquidateParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "triggerPosition",
+      "accounts": [
+        {
+          "name": "signer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "receivingAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "transferAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "perpetuals",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "position",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "custody",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "custodyOracleAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "custodyTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TriggerPositionParams"
           }
         }
       ]
@@ -1923,6 +2025,76 @@ export type Perpetuals = {
       }
     },
     {
+      "name": "deprecatedPosition",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "pool",
+            "type": "publicKey"
+          },
+          {
+            "name": "custody",
+            "type": "publicKey"
+          },
+          {
+            "name": "openTime",
+            "type": "i64"
+          },
+          {
+            "name": "updateTime",
+            "type": "i64"
+          },
+          {
+            "name": "side",
+            "type": {
+              "defined": "Side"
+            }
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "sizeUsd",
+            "type": "u64"
+          },
+          {
+            "name": "collateralUsd",
+            "type": "u64"
+          },
+          {
+            "name": "unrealizedProfitUsd",
+            "type": "u64"
+          },
+          {
+            "name": "unrealizedLossUsd",
+            "type": "u64"
+          },
+          {
+            "name": "cumulativeInterestSnapshot",
+            "type": "u128"
+          },
+          {
+            "name": "lockedAmount",
+            "type": "u64"
+          },
+          {
+            "name": "collateralAmount",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
       "name": "position",
       "type": {
         "kind": "struct",
@@ -2580,6 +2752,13 @@ export type Perpetuals = {
       }
     },
     {
+      "name": "UpgradePositionParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
       "name": "WithdrawFeesParams",
       "type": {
         "kind": "struct",
@@ -3204,6 +3383,9 @@ export type Perpetuals = {
           },
           {
             "name": "UpgradeCustody"
+          },
+          {
+            "name": "UpgradePosition"
           }
         ]
       }
@@ -3405,6 +3587,11 @@ export type Perpetuals = {
       "code": 6024,
       "name": "MaxUtilization",
       "msg": "Token utilization limit exceeded"
+    },
+    {
+      "code": 6025,
+      "name": "LimitNotTriggered",
+      "msg": "Limit not triggered"
     }
   ]
 };
@@ -3922,6 +4109,45 @@ export const IDL: Perpetuals = {
       "returns": "u8"
     },
     {
+      "name": "upgradePosition",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "multisig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "position",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "UpgradePositionParams"
+          }
+        }
+      ],
+      "returns": "u8"
+    },
+    {
       "name": "testInit",
       "accounts": [
         {
@@ -4577,6 +4803,69 @@ export const IDL: Perpetuals = {
           "name": "params",
           "type": {
             "defined": "LiquidateParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "triggerPosition",
+      "accounts": [
+        {
+          "name": "signer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "receivingAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "transferAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "perpetuals",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "position",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "custody",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "custodyOracleAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "custodyTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TriggerPositionParams"
           }
         }
       ]
@@ -5334,6 +5623,76 @@ export const IDL: Perpetuals = {
       }
     },
     {
+      "name": "deprecatedPosition",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "pool",
+            "type": "publicKey"
+          },
+          {
+            "name": "custody",
+            "type": "publicKey"
+          },
+          {
+            "name": "openTime",
+            "type": "i64"
+          },
+          {
+            "name": "updateTime",
+            "type": "i64"
+          },
+          {
+            "name": "side",
+            "type": {
+              "defined": "Side"
+            }
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "sizeUsd",
+            "type": "u64"
+          },
+          {
+            "name": "collateralUsd",
+            "type": "u64"
+          },
+          {
+            "name": "unrealizedProfitUsd",
+            "type": "u64"
+          },
+          {
+            "name": "unrealizedLossUsd",
+            "type": "u64"
+          },
+          {
+            "name": "cumulativeInterestSnapshot",
+            "type": "u128"
+          },
+          {
+            "name": "lockedAmount",
+            "type": "u64"
+          },
+          {
+            "name": "collateralAmount",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
       "name": "position",
       "type": {
         "kind": "struct",
@@ -5991,6 +6350,13 @@ export const IDL: Perpetuals = {
       }
     },
     {
+      "name": "UpgradePositionParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
       "name": "WithdrawFeesParams",
       "type": {
         "kind": "struct",
@@ -6615,6 +6981,9 @@ export const IDL: Perpetuals = {
           },
           {
             "name": "UpgradeCustody"
+          },
+          {
+            "name": "UpgradePosition"
           }
         ]
       }
@@ -6816,6 +7185,11 @@ export const IDL: Perpetuals = {
       "code": 6024,
       "name": "MaxUtilization",
       "msg": "Token utilization limit exceeded"
+    },
+    {
+      "code": 6025,
+      "name": "LimitNotTriggered",
+      "msg": "Limit not triggered"
     }
   ]
 };
