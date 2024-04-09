@@ -30,6 +30,15 @@ const OrderRow: FC<Props> = ({ type, position }) => {
   const size = collateral && collateral * leverage;
   const { price: marketPrice } =
     useWatchPythPriceFeed(collateralToken).priceData || {};
+  const getType = () => {
+    if (type === "sl") {
+      return "Stop Loss";
+    }
+    if (type === "tp") {
+      return "Take Profit";
+    }
+    return "";
+  };
   return (
     <tr key={position.address.toString()} className={cn(orderRowStyles.root)}>
       <td className={orderRowStyles.cell}>
@@ -47,7 +56,7 @@ const OrderRow: FC<Props> = ({ type, position }) => {
           ({formatCurrency(collateralToken)(size)})
         </span>
       </td>
-      <td className={orderRowStyles.cell}>{type.toUpperCase()}</td>
+      <td className={orderRowStyles.cell}>{getType()}</td>
       <td className={orderRowStyles.cell}>
         {formatCurrency_USD(marketPrice, 2)}
       </td>

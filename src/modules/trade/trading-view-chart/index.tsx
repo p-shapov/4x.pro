@@ -1,12 +1,13 @@
 import cn from "classnames";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle } from "react";
 
 import type { IChartingLibraryWidget } from "@public/vendor/charting_library/charting_library";
 
 import type { Token } from "@4x.pro/app-config";
-import { getTickerSymbol } from "@4x.pro/app-config";
+// import { getTickerSymbol } from "@4x.pro/app-config";
 import { useToken24hrBenchmark } from "@4x.pro/shared/hooks/use-token-24hr-benchbark";
-import { useTvChartingLibraryWidget } from "@4x.pro/shared/hooks/use-tv-charting-library-widget";
+// import { useTvChartingLibraryWidget } from "@4x.pro/shared/hooks/use-tv-charting-library-widget";
+import { useTvEmbedWidget } from "@4x.pro/shared/hooks/use-tv-embed-widget";
 import type { PropsWithStyles } from "@4x.pro/shared/types";
 import {
   formatCurrency_USD,
@@ -29,11 +30,14 @@ const TradingViewChart = forwardRef<
   IChartingLibraryWidget | null,
   PropsWithStyles<Props, typeof mkTradingViewChartStyles>
 >(({ height, layoutIsDragging, onChange }, ref) => {
-  const [tvContentWindowLoaded, setTvContentWindowLoaded] = useState(false);
+  // const [tvContentWindowLoaded, setTvContentWindowLoaded] = useState(false);
   const tradingViewChartStyles = mkTradingViewChartStyles({ layoutIsDragging });
   const selectedAsset = useTradeModule((state) => state.selectedAsset);
-  const tvWidget = useTvChartingLibraryWidget(selectedAsset, {
-    container: TRADING_VIEW_ID,
+  // const tvWidget = useTvChartingLibraryWidget(selectedAsset, {
+  //   container: TRADING_VIEW_ID,
+  // });
+  useTvEmbedWidget(selectedAsset, {
+    container_id: TRADING_VIEW_ID,
   });
   const { data: benchmark24hr } = useToken24hrBenchmark({
     token: selectedAsset,
@@ -44,26 +48,28 @@ const TradingViewChart = forwardRef<
   useImperativeHandle<
     IChartingLibraryWidget | null,
     IChartingLibraryWidget | null
-  >(ref, () => tvWidget, [tvWidget]);
+  >(ref, () => null, []);
+  // () => tvWidget,
+  // [tvWidget]);
   const handleAssetChange = (asset: Token) => {
-    tvWidget?.chart().setSymbol(getTickerSymbol(asset));
+    // tvWidget?.chart().setSymbol(getTickerSymbol(asset));
     onChange?.(asset);
   };
-  useEffect(() => {
-    const iframe = document
-      .getElementById(TRADING_VIEW_ID)
-      ?.querySelector("iframe");
-    if (iframe) {
-      const handleLoad = () => {
-        setTvContentWindowLoaded(true);
-      };
-      iframe.contentWindow?.addEventListener("load", handleLoad);
+  // useEffect(() => {
+  //   const iframe = document
+  //     .getElementById(TRADING_VIEW_ID)
+  //     ?.querySelector("iframe");
+  //   if (iframe) {
+  //     const handleLoad = () => {
+  //       setTvContentWindowLoaded(true);
+  //     };
+  //     iframe.contentWindow?.addEventListener("load", handleLoad);
 
-      return () => {
-        iframe.contentWindow?.removeEventListener("load", handleLoad);
-      };
-    }
-  }, [tvWidget]);
+  //     return () => {
+  //       iframe.contentWindow?.removeEventListener("load", handleLoad);
+  //     };
+  //   }
+  // }, [tvWidget]);
   return (
     <div className={tradingViewChartStyles.root} style={{ height }}>
       <div className={tradingViewChartStyles.header}>
@@ -112,8 +118,8 @@ const TradingViewChart = forwardRef<
       <div
         id={TRADING_VIEW_ID}
         className={cn(tradingViewChartStyles.tradingView, {
-          [tradingViewChartStyles.tradingViewVisible]: tvContentWindowLoaded,
-          [tradingViewChartStyles.tradingViewHidden]: !tvContentWindowLoaded,
+          // [tradingViewChartStyles.tradingViewVisible]: tvContentWindowLoaded,
+          // [tradingViewChartStyles.tradingViewHidden]: !tvContentWindowLoaded,
         })}
       ></div>
     </div>

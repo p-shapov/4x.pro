@@ -12,6 +12,7 @@ const collateralTokens: readonly Token[] = ["SOL", "ETH", "BTC"];
 type Config = {
   rpcEndpoints: Record<RpcProvider, string>;
   tickerSymbols: Record<Token, string>;
+  pythTickerSymbols: Record<Token, string>;
   pythFeedIds_to_USD: Record<Token, string>;
   tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>>;
   tokenSymbols: Record<Token, string>;
@@ -25,6 +26,13 @@ const tickerSymbols: Record<Token, string> = {
   USDC: "Crypto.USDC/USD",
   BTC: "Crypto.BTC/USD",
   ETH: "Crypto.ETH/USD",
+};
+
+const pythTickerSymbols: Record<Token, string> = {
+  SOL: "PYTH:SOLUSD",
+  USDC: "PYTH:USDCUSD",
+  BTC: "PYTH:BTCUSD",
+  ETH: "PYTH:ETHUSD",
 };
 
 const tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>> = {
@@ -57,6 +65,7 @@ const tokenIds: Record<Token, string> = {
 
 const DexPlatformConfig: Config = {
   tickerSymbols,
+  pythTickerSymbols,
   tokenLogos,
   tokenSymbols,
   tokenNetworks,

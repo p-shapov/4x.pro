@@ -1,6 +1,9 @@
 import type { RpcProvider, Token } from "./config";
 import { DexPlatformConfig } from "./config";
 
+const getPythTickerSymbol = (token: Token) => {
+  return DexPlatformConfig.pythTickerSymbols[token];
+};
 const getTickerSymbol = (token: Token) => {
   return DexPlatformConfig.tickerSymbols[token];
 };
@@ -45,4 +48,5 @@ export {
   getTokenNetwork,
   tokenAddressToToken,
   getTokenId,
+  getPythTickerSymbol,
 };
