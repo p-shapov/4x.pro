@@ -1,25 +1,28 @@
+import type { AccountInfo, Context } from "@solana/web3.js";
 import { useEffect } from "react";
+
+import { useAppConfig } from "@4x.pro/app-config";
 
 import type { PositionAccount } from "../lib/position-account";
 import { getPerpetualProgramAndProvider } from "../utils/constants";
 
 const useWatchPosition = ({
-  rpcEndpoint,
   position,
   listener,
 }: {
-  rpcEndpoint: string;
   position: PositionAccount;
-  listener: (newPosition: PositionAccount) => void;
+  listener: (accountInfo: AccountInfo<Buffer>, ctx: Context) => void;
 }) => {
+  const { rpcEndpoint } = useAppConfig();
   useEffect(() => {
     const { perpetual_program } = getPerpetualProgramAndProvider(rpcEndpoint);
-    const emitter = perpetual_program.account.position.subscribe(
+    // Raw subscribe
+    const subId = perpetual_program.provider.connection.onAccountChange(
       position.address,
+      listener,
     );
-    emitter.on("change", listener);
     return () => {
-      emitter.off("change", listener);
+      perpetual_program.provider.connection.removeAccountChangeListener(subId);
     };
   }, [listener, position, rpcEndpoint]);
 };

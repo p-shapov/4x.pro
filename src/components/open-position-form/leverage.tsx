@@ -30,7 +30,7 @@ const Leverage: FC<Props> = ({ form }) => {
             error={!!errors.leverage}
             onChange={onChange}
             unit="x"
-            presets={[5, 10, 15, 25]}
+            presets={[5, 10, 15, 20]}
             formatValue={(value) => formatRate(value, 0)}
           />
         )}
@@ -42,7 +42,7 @@ const Leverage: FC<Props> = ({ form }) => {
           <RangeSlider
             value={value}
             min={1}
-            max={25}
+            max={20}
             step={0.1}
             tickStep={1}
             onChange={onChange}

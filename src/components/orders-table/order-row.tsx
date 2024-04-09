@@ -1,7 +1,10 @@
 import cn from "classnames";
 import type { FC } from "react";
 
+import { queryClient } from "@4x.pro/app-config";
 import { useCustodies } from "@4x.pro/services/perpetuals/hooks/use-custodies";
+import { usePositionsQuery } from "@4x.pro/services/perpetuals/hooks/use-positions";
+import { useWatchPosition } from "@4x.pro/services/perpetuals/hooks/use-watch-position";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import {
@@ -30,6 +33,13 @@ const OrderRow: FC<Props> = ({ type, position }) => {
   const size = collateral && collateral * leverage;
   const { price: marketPrice } =
     useWatchPythPriceFeed(collateralToken).priceData || {};
+  useWatchPosition({
+    position,
+    listener: () =>
+      queryClient.invalidateQueries({
+        queryKey: usePositionsQuery.getKey(),
+      }),
+  });
   const getType = () => {
     if (type === "sl") {
       return "Stop Loss";

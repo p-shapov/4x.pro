@@ -3,9 +3,12 @@ import cn from "classnames";
 import { useState } from "react";
 import type { FC } from "react";
 
+import { queryClient } from "@4x.pro/app-config";
 import { useCustodies } from "@4x.pro/services/perpetuals/hooks/use-custodies";
 import { useLiquidationPriceStats } from "@4x.pro/services/perpetuals/hooks/use-liquidation-price-stats";
 import { usePnLStats } from "@4x.pro/services/perpetuals/hooks/use-pnl-stats";
+import { usePositionsQuery } from "@4x.pro/services/perpetuals/hooks/use-positions";
+import { useWatchPosition } from "@4x.pro/services/perpetuals/hooks/use-watch-position";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import { Side } from "@4x.pro/services/perpetuals/lib/types";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
@@ -46,6 +49,13 @@ const PositionRow: FC<Props> = ({ position }) => {
   const liquidationPrice = useLiquidationPriceStats({ position });
   const isPositive = typeof pnlPercentage === "number" && pnlPercentage > 0;
   const positionRowStyles = mkPositionRowStyles({ isPositive });
+  useWatchPosition({
+    position,
+    listener: () =>
+      queryClient.invalidateQueries({
+        queryKey: usePositionsQuery.getKey(),
+      }),
+  });
   const handleOpenManagePosition = () => {
     setOpenManagePosition(true);
   };
