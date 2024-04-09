@@ -3,7 +3,7 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import cn from "classnames";
 import { useEffect, useId, useState } from "react";
-import type { ChangeEventHandler, FC } from "react";
+import type { ChangeEventHandler, FC, ReactNode } from "react";
 
 import { getTokenSymbol } from "@4x.pro/app-config";
 import type { Token } from "@4x.pro/app-config";
@@ -15,6 +15,7 @@ import { formatCurrency } from "@4x.pro/shared/utils/number";
 import { Presets } from "./presets";
 import { Select } from "./select";
 import { TokenBadge } from "./token-badge";
+import { Tooltip } from "./tooltip";
 
 type Props = {
   tokenList?: ReadonlyArray<Token>;
@@ -32,6 +33,11 @@ type Props = {
   showPostfix?: boolean;
   max?: number;
   error?: boolean;
+  labelTooltip?: {
+    message: ReactNode;
+    icon?: "question";
+    width?: number;
+  };
   onFocus?: () => void;
   onChange?: (data: { amount: number; token: Token }) => void;
 };
@@ -49,6 +55,7 @@ const TokenField: FC<Props> = ({
   showPostfix,
   presets,
   formatPresets,
+  labelTooltip,
   mapPreset = (value) => value,
   max,
   error,
@@ -101,7 +108,18 @@ const TokenField: FC<Props> = ({
           htmlFor={id}
           className={cn(fieldStyles.label, "flex", "justify-between")}
         >
-          <span>{label}</span>
+          <span className="inline-flex">
+            <span>{label}</span>
+            {labelTooltip && (
+              <span className={fieldStyles.labelTooltip}>
+                <Tooltip
+                  icon={labelTooltip.icon}
+                  message={labelTooltip.message}
+                  width={labelTooltip.width}
+                />
+              </span>
+            )}
+          </span>
           {labelVariant === "balance" &&
             typeof tokenBalance.data === "number" && (
               <span>

@@ -54,7 +54,7 @@ const TxStatus: FC<Props> = ({ status, methodName, txid, txInfo }) => {
             txid ? (
               <a
                 href={TRX_URL(txid)}
-                className="link"
+                className="link text-content-2"
                 target="_blank"
                 rel="noreferrer"
               >

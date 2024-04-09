@@ -1,9 +1,6 @@
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 
 import type { ResolutionString } from "@public/vendor/charting_library/charting_library";
-
-dayjs.extend(utc);
 
 function getNextBarTimeByResolution(
   resolution: ResolutionString,

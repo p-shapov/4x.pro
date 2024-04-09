@@ -44,6 +44,6 @@
   }
 
   .link {
-    @apply text-sm font-normal leading-tight text-content-2 underline decoration-dashed;
+    @apply text-sm font-normal leading-tight underline decoration-dashed;
   }
 }

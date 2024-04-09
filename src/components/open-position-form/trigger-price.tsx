@@ -27,6 +27,11 @@ const TriggerPrice: FC<Props> = ({ form }) => {
             value={value || ""}
             onChange={onChange}
             error={!!errors.takeProfit}
+            labelTooltip={{
+              message:
+                "A Take Profit (TP) is an instruction to close a trade at a specific rate if the market rises, to ensure your profit is realized and goes to your available balance.",
+              width: 240,
+            }}
           />
         )}
       />
@@ -41,6 +46,11 @@ const TriggerPrice: FC<Props> = ({ form }) => {
             value={value || ""}
             onChange={onChange}
             error={!!errors.stopLoss}
+            labelTooltip={{
+              message:
+                "A Take Profit (TP) is an instruction to close a trade at a specific rate if the market rises, to ensure your profit is realized and goes to your available balance.",
+              width: 240,
+            }}
           />
         )}
       />

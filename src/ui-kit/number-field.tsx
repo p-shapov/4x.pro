@@ -9,6 +9,7 @@ import type { PropsWithStyles } from "@4x.pro/shared/types";
 import type { Formatter } from "@4x.pro/shared/utils/number";
 
 import { Presets } from "./presets";
+import { Tooltip } from "./tooltip";
 
 type Props = {
   label?: string;
@@ -22,6 +23,11 @@ type Props = {
   readonly?: boolean;
   presets?: number[];
   formatValue?: Formatter;
+  labelTooltip?: {
+    message: ReactNode;
+    icon?: "question";
+    width?: number;
+  };
   mapPreset?: (value: number) => number;
   onFocus?: () => void;
   onChange?: (value: number | "") => void;
@@ -36,6 +42,7 @@ const NumberField: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
   presets,
   value,
   defaultValue,
+  labelTooltip,
   mapPreset = (value) => value,
   ...rest
 }) => {
@@ -56,7 +63,18 @@ const NumberField: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
     <div className={fieldStyles.root}>
       {label && (
         <label htmlFor={id} className={fieldStyles.label}>
-          {label}
+          <span className="inline-flex">
+            <span>{label}</span>
+            {labelTooltip && (
+              <span className={fieldStyles.labelTooltip}>
+                <Tooltip
+                  icon={labelTooltip.icon}
+                  message={labelTooltip.message}
+                  width={labelTooltip.width}
+                />
+              </span>
+            )}
+          </span>
         </label>
       )}
       <span className={fieldStyles.inputWrap}>

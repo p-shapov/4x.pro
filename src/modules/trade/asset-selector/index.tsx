@@ -1,5 +1,5 @@
 "use client";
-import { offset, useFloating } from "@floating-ui/react-dom";
+import { offset, useFloating } from "@floating-ui/react";
 import { Listbox } from "@headlessui/react";
 import type { FC } from "react";
 

@@ -180,7 +180,7 @@ const HistoryTable: FC<Props> = ({ owner, fallback }) => {
                     href={TRX_URL(item.txid)}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="link"
+                    className="link text-content-1"
                   >
                     {trim(item.txid, 5)}
                   </a>

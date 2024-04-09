@@ -50,6 +50,7 @@ const mkFieldStyles = ({ error = false }: Props) => {
     icon: cn("size-[1.6rem]", "bg-content-1"),
     postfix: mkPostfixStyles(),
     prefix: mkPrefixStyles(),
+    labelTooltip: cn("size-max", "text-content-2", "ml-[10px]"),
   };
 };
 

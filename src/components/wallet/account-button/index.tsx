@@ -1,5 +1,5 @@
 "use client";
-import { offset, size, useFloating } from "@floating-ui/react-dom";
+import { offset, size, useFloating } from "@floating-ui/react";
 import { Menu } from "@headlessui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import type { FC } from "react";
