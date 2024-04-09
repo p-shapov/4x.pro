@@ -143,17 +143,17 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
           render={({ field: { value, onChange } }) => (
             <TokenField
               label="Withdraw"
-              value={value || ""}
+              value={value}
               token={collateralToken}
               max={collateral}
               placeholder="0.00"
               labelVariant="max"
               onChange={mkHandleFieldChange(onChange)}
               error={!!errors.withdrawalAmount}
-              showPostfix
               presets={[20, 40, 60, 80]}
               mapPreset={(value) => (collateral || 0) * (value / 100)}
               formatPresets={(value) => formatPercentage(value, 0)}
+              showSymbol
             />
           )}
         />

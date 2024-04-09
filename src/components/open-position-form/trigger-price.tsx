@@ -23,8 +23,8 @@ const TriggerPrice: FC<Props> = ({ form }) => {
           <NumberField
             label="Take profit"
             placeholder="0.00"
-            postfix="$"
-            value={value || ""}
+            unit="$"
+            value={value}
             onChange={onChange}
             error={!!errors.takeProfit}
             labelTooltip={{
@@ -42,8 +42,8 @@ const TriggerPrice: FC<Props> = ({ form }) => {
           <NumberField
             label="Stop loss"
             placeholder="0.00"
-            postfix="$"
-            value={value || ""}
+            unit="$"
+            value={value}
             onChange={onChange}
             error={!!errors.stopLoss}
             labelTooltip={{

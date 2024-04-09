@@ -30,15 +30,15 @@ const TableRow: FC<{ publicKey: PublicKey | null; asset: Token }> = ({
         <TokenBadge token={asset} gap={8} />
       </td>
       <td className={tableStyles.cell}>
-        {formatCurrency(asset)(tokenBalance.data)}
+        {formatCurrency(asset)(tokenBalance.data, 4)}
       </td>
       <td className={tableStyles.cell}>
-        <TokenPrice token={asset} fractionalDigits={2} watch>
+        <TokenPrice token={asset} fractionalDigits={4} watch>
           {tokenBalance.data || null}
         </TokenPrice>
       </td>
       <td className={tableStyles.cell}>
-        <TokenPrice token={asset} fractionalDigits={2} watch />
+        <TokenPrice token={asset} fractionalDigits={4} watch />
       </td>
     </tr>
   );

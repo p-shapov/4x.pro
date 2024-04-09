@@ -22,13 +22,10 @@ const Slippage: FC<Props> = ({ form }) => {
         control={form.control}
         render={({ field: { value, onChange } }) => (
           <NumberField
-            value={value || ""}
-            min={0}
-            max={1}
-            step={0.1}
+            value={value}
             label="Slippage Tolerance"
             placeholder="0.00"
-            postfix="%"
+            unit="%"
             presets={[0.1, 0.5, 0.8]}
             formatValue={(value) => formatPercentage(value, 1)}
             onChange={onChange}

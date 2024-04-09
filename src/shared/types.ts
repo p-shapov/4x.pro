@@ -1,8 +1,12 @@
 import type { QueryFunction } from "@tanstack/react-query";
 import type { FC } from "react";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PropsWithStyles<T, K> = K extends (props: infer U) => any ? T & U : never;
+type PropsWithStyles<T, K, P extends string = ""> = K extends (
+  props: infer U,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+) => any
+  ? T & Omit<U, P>
+  : never;
 type PropsWithClassName<T = object> = T & { className?: string };
 type CompoundComponent<K, T = object> = FC<T> & K;
 type ComponentWithSkeleton<T> = CompoundComponent<{ Skeleton: FC }, T>;

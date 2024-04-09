@@ -8,15 +8,13 @@ import { formatDefault } from "@4x.pro/shared/utils/number";
 
 type Props = {
   options: number[];
-  value?: number | "";
-  defaultValue?: number | "";
+  value?: number;
   formatValue?: Formatter;
   onChange?: (value: number) => void;
 };
 
 const Presets: FC<Props> = ({
   value,
-  defaultValue,
   options,
   formatValue = formatDefault,
   onChange,
@@ -25,7 +23,6 @@ const Presets: FC<Props> = ({
   return (
     <RadioGroup
       value={value}
-      defaultValue={defaultValue}
       className={presetsStyles.root}
       onChange={onChange}
     >

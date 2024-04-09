@@ -138,11 +138,9 @@ const ClosePosition: FC<Props> = ({ position, open, onClose }) => {
                       control={form.control}
                       render={({ field: { value, onChange } }) => (
                         <NumberField
-                          value={value || ""}
-                          min={0.2}
-                          max={0.8}
+                          value={value}
                           placeholder="0.00"
-                          postfix="%"
+                          unit="%"
                           onChange={onChange}
                         />
                       )}

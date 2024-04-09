@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client";
+import { useNumberFormat } from "@react-input/number-format";
 import cn from "classnames";
-import { useId } from "react";
+import { useEffect, useId, useState } from "react";
 import type { ChangeEvent, FC, ReactNode } from "react";
 
 import { mkFieldStyles } from "@4x.pro/shared/styles/field";
@@ -13,13 +14,8 @@ import { Tooltip } from "./tooltip";
 
 type Props = {
   label?: string;
-  value?: number | "";
-  defaultValue?: number | "";
+  value?: number;
   placeholder?: string;
-  postfix?: ReactNode;
-  min?: number;
-  max?: number;
-  step?: number;
   readonly?: boolean;
   presets?: number[];
   formatValue?: Formatter;
@@ -28,37 +24,59 @@ type Props = {
     icon?: "question";
     width?: number;
   };
+  unit?: string;
   mapPreset?: (value: number) => number;
   onFocus?: () => void;
-  onChange?: (value: number | "") => void;
+  onChange?: (value: number) => void;
 };
 
-const NumberField: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
+const NumberField: FC<
+  PropsWithStyles<Props, typeof mkFieldStyles, "notEmpty">
+> = ({
   label,
-  postfix,
   error,
   onChange,
   formatValue,
   presets,
   value,
-  defaultValue,
   labelTooltip,
+  unit,
   mapPreset = (value) => value,
   ...rest
 }) => {
+  const inputRef = useNumberFormat({
+    locales: "en",
+    maximumFractionDigits: 20,
+  });
+  const [inputValue, setInputValue] = useState((value || "").toString());
   const id = useId();
-  const fieldStyles = mkFieldStyles({ error });
+  const fieldStyles = mkFieldStyles({ error, notEmpty: !!value });
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (!/^[0.]*$/.test(event.target.value)) {
-      onChange?.(Number(event.target.value));
-    } else {
-      // @ts-ignore
-      onChange?.(event.target.value);
+    setInputValue(event.target.value);
+    if (/^(\d{1,3}(,\d{3})*|\d+)(\.\d*[1-9])?$/.test(event.target.value)) {
+      onChange?.(Number(event.target.value.replaceAll(",", "")));
+    }
+    if (event.target.value === "") {
+      onChange?.(0);
     }
   };
   const handlePresetsChange = (value: number) => {
+    setInputValue(
+      new Intl.NumberFormat("en", {
+        maximumFractionDigits: 20,
+      }).format(value),
+    );
     onChange?.(mapPreset(value));
   };
+  useEffect(() => {
+    setInputValue(
+      value
+        ? new Intl.NumberFormat("en", {
+            maximumFractionDigits: 20,
+          }).format(value)
+        : "",
+    );
+  }, [value]);
   return (
     <div className={fieldStyles.root}>
       {label && (
@@ -78,23 +96,24 @@ const NumberField: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
         </label>
       )}
       <span className={fieldStyles.inputWrap}>
-        <input
-          id={id}
-          type="number"
-          className={cn(
-            "[-moz-appearance:_textfield]",
-            "[&::-webkit-outer-spin-button]:m-0",
-            "[&::-webkit-outer-spin-button]:appearance-none",
-            "[&::-webkit-inner-spin-button]:m-0",
-            "[&::-webkit-inner-spin-button]:appearance-none",
-            fieldStyles.input,
-          )}
-          value={value}
-          defaultValue={defaultValue}
-          onChange={handleChange}
-          {...rest}
-        />
-        {postfix && <span className={fieldStyles.postfix}>{postfix}</span>}
+        <span className={fieldStyles.fieldWrap}>
+          <span className={fieldStyles.fakeInput}>{inputValue}</span>
+          <input
+            ref={inputRef}
+            id={id}
+            className={cn(fieldStyles.input)}
+            value={inputValue}
+            onChange={handleChange}
+            size={1}
+            style={{
+              minWidth: !inputValue
+                ? `${rest.placeholder?.length || 1}ch`
+                : undefined,
+            }}
+            {...rest}
+          />
+          {unit && <span className={fieldStyles.postfix}>{` ${unit}`}</span>}
+        </span>
         {presets && (
           <Presets
             options={presets}

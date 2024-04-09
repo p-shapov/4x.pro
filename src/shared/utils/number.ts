@@ -7,35 +7,66 @@ const roundToFirstNonZeroDecimal = (value: number) => {
 };
 const formatDefault: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
-  return value.toFixed(fractionalDigits);
+  return new Intl.NumberFormat("en", {
+    maximumFractionDigits: fractionalDigits,
+  }).format(value);
 };
 const formatPercentage: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
-  return value.toFixed(fractionalDigits) + "%";
+  return (
+    new Intl.NumberFormat("en", {
+      maximumFractionDigits: fractionalDigits,
+    }).format(value) + "%"
+  );
 };
 const formatRate: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
-  return value.toFixed(fractionalDigits) + "x";
+  return (
+    new Intl.NumberFormat("en", {
+      maximumFractionDigits: fractionalDigits,
+    }).format(value) + "x"
+  );
 };
 const formatCurrency_USD: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
-  return "$" + value.toFixed(fractionalDigits);
+  return (
+    "$" +
+    new Intl.NumberFormat("en", {
+      maximumFractionDigits: fractionalDigits,
+    }).format(value)
+  );
 };
 const formatCurrency_BTC: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
-  return value.toFixed(fractionalDigits) + " BTC";
+  return (
+    new Intl.NumberFormat("en", {
+      maximumFractionDigits: fractionalDigits,
+    }).format(value) + " BTC"
+  );
 };
 const formatCurrency_ETH: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
-  return value.toFixed(fractionalDigits) + " ETH";
+  return (
+    new Intl.NumberFormat("en", {
+      maximumFractionDigits: fractionalDigits,
+    }).format(value) + " ETH"
+  );
 };
 const formatCurrency_SOL: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
-  return value.toFixed(fractionalDigits) + " SOL";
+  return (
+    new Intl.NumberFormat("en", {
+      maximumFractionDigits: fractionalDigits,
+    }).format(value) + " SOL"
+  );
 };
 const formatCurrency_USDC: Formatter = (value, fractionalDigits = 2) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
-  return value.toFixed(fractionalDigits) + " USDC";
+  return (
+    new Intl.NumberFormat("en", {
+      maximumFractionDigits: fractionalDigits,
+    }).format(value) + " USDC"
+  );
 };
 const formatCurrency = (token: Token | "$") => {
   return currencyFormatters[token];

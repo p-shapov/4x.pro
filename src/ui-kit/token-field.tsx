@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client";
+import { useNumberFormat } from "@react-input/number-format";
 import { useWallet } from "@solana/wallet-adapter-react";
 import cn from "classnames";
 import { useEffect, useId, useState } from "react";
@@ -20,17 +21,15 @@ import { Tooltip } from "./tooltip";
 type Props = {
   tokenList?: ReadonlyArray<Token>;
   label?: string;
-  value?: number | "";
-  defaultValue?: number | "";
+  value?: number;
   token?: Token;
-  defaultToken?: Token;
   placeholder?: string;
   presets?: number[];
   mapPreset?: (value: number) => number;
   formatPresets?: Formatter;
   readonly?: boolean;
   labelVariant?: "balance" | "max";
-  showPostfix?: boolean;
+  showSymbol?: boolean;
   max?: number;
   error?: boolean;
   labelTooltip?: {
@@ -45,14 +44,12 @@ type Props = {
 const TokenField: FC<Props> = ({
   token,
   tokenList,
-  defaultToken,
   onChange,
-  defaultValue,
   value,
   labelVariant,
   label,
   placeholder,
-  showPostfix,
+  showSymbol,
   presets,
   formatPresets,
   labelTooltip,
@@ -61,10 +58,15 @@ const TokenField: FC<Props> = ({
   error,
   ...rest
 }) => {
-  const fieldStyles = mkFieldStyles({ error });
+  const inputRef = useNumberFormat({
+    locales: "en",
+    maximumFractionDigits: 20,
+  });
+  const fieldStyles = mkFieldStyles({ error, notEmpty: !!value });
   const id = useId();
-  const [amount, setAmount] = useState<number>(value || defaultValue || 0);
-  const [currentToken, setCurrentToken] = useState(token || defaultToken);
+  const [inputValue, setInputValue] = useState((value || "").toString());
+  const [amount, setAmount] = useState<number>(value || 0);
+  const [currentToken, setCurrentToken] = useState(token);
   if (!currentToken) throw new Error("Token is required");
   const { publicKey } = useWallet();
   const tokenBalance = useTokenBalance({
@@ -73,20 +75,38 @@ const TokenField: FC<Props> = ({
   });
   const tokenListKey = tokenList?.join("");
   useEffect(() => {
-    setCurrentToken(token || defaultToken);
-    setAmount(value || defaultValue || 0);
+    setCurrentToken(token);
+    setAmount(value || 0);
+    setInputValue(
+      value
+        ? new Intl.NumberFormat("en", {
+            maximumFractionDigits: 20,
+          }).format(value)
+        : "",
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenListKey, token]);
+  useEffect(() => {
+    setInputValue(
+      value
+        ? new Intl.NumberFormat("en", {
+            maximumFractionDigits: 20,
+          }).format(value)
+        : "",
+    );
+  }, [value]);
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (!/^[0.]*$/.test(e.target.value)) {
-      const amount = Number(e.currentTarget.value);
+    setInputValue(e.target.value);
+    console.log(e.target.value);
+    if (/^(\d{1,3}(,\d{3})*|\d+)(\.\d*[1-9])?$/.test(e.target.value)) {
+      console.log(e.target.value.replaceAll(",", ""));
+      const amount = Number(e.currentTarget.value.replaceAll(",", ""));
       setAmount(amount);
       onChange?.({ amount, token: currentToken });
-    } else {
-      // @ts-ignore
-      setAmount(e.target.value);
-      // @ts-ignore
-      onChange?.({ amount: e.target.value, token: currentToken });
+    }
+    if (e.target.value === "") {
+      setAmount(0);
+      onChange?.({ amount: 0, token: currentToken });
     }
   };
   const handleSelect = (token: string) => {
@@ -95,6 +115,13 @@ const TokenField: FC<Props> = ({
     onChange?.({ amount, token: token as Token });
   };
   const handleSetPresets = (preset: number) => {
+    setInputValue(
+      value
+        ? new Intl.NumberFormat("en", {
+            maximumFractionDigits: 20,
+          }).format(value)
+        : "",
+    );
     setAmount(mapPreset(preset));
     onChange?.({
       amount: mapPreset(preset),
@@ -147,30 +174,28 @@ const TokenField: FC<Props> = ({
         </label>
       )}
       <span className={fieldStyles.inputWrap}>
-        <input
-          id={id}
-          type="number"
-          className={cn(
-            "[-moz-appearance:_textfield]",
-            "[&::-webkit-outer-spin-button]:m-0",
-            "[&::-webkit-outer-spin-button]:appearance-none",
-            "[&::-webkit-inner-spin-button]:m-0",
-            "[&::-webkit-inner-spin-button]:appearance-none",
-            fieldStyles.input,
+        <span className={fieldStyles.fieldWrap}>
+          <span className={fieldStyles.fakeInput}>{inputValue}</span>
+          <input
+            ref={inputRef}
+            id={id}
+            className={cn(fieldStyles.input)}
+            value={inputValue}
+            onChange={handleChange}
+            placeholder={placeholder}
+            style={{
+              minWidth: !inputValue
+                ? `${placeholder?.length || 1}ch`
+                : undefined,
+            }}
+            {...rest}
+          />
+          {showSymbol && (
+            <span className={fieldStyles.postfix}>
+              {getTokenSymbol(currentToken)}
+            </span>
           )}
-          value={value}
-          defaultValue={defaultValue}
-          onChange={handleChange}
-          placeholder={placeholder}
-          min={0}
-          max={max}
-          {...rest}
-        />
-        {showPostfix && (
-          <span className={fieldStyles.postfix}>
-            {getTokenSymbol(currentToken)}
-          </span>
-        )}
+        </span>
         {presets && (
           <Presets
             options={presets}
@@ -187,7 +212,6 @@ const TokenField: FC<Props> = ({
                 content: <TokenBadge token={token} gap={8} />,
               }))}
               value={token}
-              defaultValue={defaultToken}
               onChange={handleSelect}
               popoverPosition="left"
             />

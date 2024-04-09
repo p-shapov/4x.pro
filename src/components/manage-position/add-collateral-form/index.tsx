@@ -142,7 +142,7 @@ const AddCollateralForm: FC<Props> = ({ position, form }) => {
           control={form.control}
           render={({ field: { value, onChange } }) => (
             <TokenField
-              value={value || ""}
+              value={value}
               token={collateralToken}
               onChange={mkHandleFieldChange(onChange)}
               label="Deposit"
@@ -152,7 +152,7 @@ const AddCollateralForm: FC<Props> = ({ position, form }) => {
               presets={[20, 40, 60, 80]}
               mapPreset={(value) => (collateralBalance || 0) * (value / 100)}
               formatPresets={(value) => formatPercentage(value, 0)}
-              showPostfix
+              showSymbol
             />
           )}
         />

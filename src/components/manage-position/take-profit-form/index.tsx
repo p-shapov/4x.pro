@@ -75,9 +75,9 @@ const TakeProfitForm: FC<Props> = ({ position, form }) => {
         render={({ field: { value, onChange } }) => (
           <NumberField
             label={`Stop Loss Price: ${formatCurrency_USD(newTriggerPrice)}`}
-            postfix="$"
+            unit="$"
             placeholder="0.00"
-            value={value || ""}
+            value={value}
             onChange={mkHandleChange(onChange)}
             error={!!errors.triggerPrice}
           />

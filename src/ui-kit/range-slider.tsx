@@ -9,7 +9,6 @@ import { formatDefault } from "@4x.pro/shared/utils/number";
 
 type Props = {
   value?: number;
-  defaultValue?: number;
   min?: number;
   max?: number;
   step?: number;
@@ -23,13 +22,12 @@ const RangeSlider: FC<Props> = ({
   max = 100,
   step = 5,
   tickStep = step,
-  defaultValue = 0,
   onChange,
   formatValue = formatDefault,
   ...rest
 }) => {
   const rangeStyles = mkRangeStyles();
-  const [value, setValue] = useState<number>(rest.value || defaultValue || min);
+  const [value, setValue] = useState<number>(rest.value || min);
   const listId = useId();
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = Number(event.target.value);
@@ -56,9 +54,6 @@ const RangeSlider: FC<Props> = ({
           min={min}
           max={max}
           step={step}
-          defaultValue={
-            typeof rest.value !== "undefined" ? undefined : defaultValue
-          }
           onChange={handleChange}
           list={listId}
           className={cn(rangeStyles.input, rangeStyles.thumb)}

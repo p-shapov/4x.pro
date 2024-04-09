@@ -24,16 +24,13 @@ const Leverage: FC<Props> = ({ form }) => {
         control={form.control}
         render={({ field: { value, onChange } }) => (
           <NumberField
-            value={value || ""}
-            min={1}
-            max={100}
-            step={0.1}
+            value={value}
             label="Leverage"
             placeholder="0.00"
             error={!!errors.leverage}
             onChange={onChange}
-            postfix="x"
-            presets={[25, 50, 75, 100]}
+            unit="x"
+            presets={[5, 10, 15, 25]}
             formatValue={(value) => formatRate(value, 0)}
           />
         )}

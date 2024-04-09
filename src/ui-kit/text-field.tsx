@@ -23,16 +23,11 @@ type Props = {
   onChange?: (value: string) => void;
 };
 
-const TextField: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
-  label,
-  postfix,
-  onChange,
-  error,
-  labelTooltip,
-  ...rest
-}) => {
+const TextField: FC<
+  PropsWithStyles<Props, typeof mkFieldStyles, "notEmpty">
+> = ({ label, postfix, onChange, error, labelTooltip, ...rest }) => {
   const id = useId();
-  const fieldStyles = mkFieldStyles({ error });
+  const fieldStyles = mkFieldStyles({ error, notEmpty: !!rest.value });
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange?.(event.target.value);
   };
@@ -55,12 +50,20 @@ const TextField: FC<PropsWithStyles<Props, typeof mkFieldStyles>> = ({
         </label>
       )}
       <span className={fieldStyles.inputWrap}>
-        <input
-          id={id}
-          className={fieldStyles.input}
-          onChange={handleChange}
-          {...rest}
-        />
+        <span className={fieldStyles.fieldWrap}>
+          <span className={fieldStyles.fakeInput}>
+            {rest.value?.toString()}
+          </span>
+          <input
+            id={id}
+            className={fieldStyles.input}
+            onChange={handleChange}
+            style={{
+              minWidth: `${rest.placeholder?.length || 1}ch`,
+            }}
+            {...rest}
+          />
+        </span>
         {postfix && <span className={fieldStyles.postfix}>{postfix}</span>}
       </span>
     </div>
