@@ -74,7 +74,7 @@ const AddCollateralForm: FC<Props> = ({ position, form }) => {
   const collateralAfterDeposit = collateral && collateral + depositAmount;
   const leverageAfterDeposit =
     collateralAfterDeposit && size && size / collateralAfterDeposit;
-  const sizeAfterWithdraw =
+  const sizeAfterDeposit =
     collateralAfterDeposit &&
     size &&
     (collateralAfterDeposit > size ? collateralAfterDeposit : size);
@@ -87,7 +87,9 @@ const AddCollateralForm: FC<Props> = ({ position, form }) => {
   });
   const handleSubmit = form.handleSubmit(async (data) => {
     if (leverageAfterDeposit && leverageAfterDeposit < 1) {
-      messageToast("Position leverage cannot be less than 1", "error");
+      messageToast("Position leverage is too low", "error");
+    } else if (leverageAfterDeposit && leverageAfterDeposit > 20) {
+      messageToast("Position leverage exceeds limit", "error");
     } else if (!pool) {
       messageToast("No pool found", "error");
     } else {
@@ -178,7 +180,7 @@ const AddCollateralForm: FC<Props> = ({ position, form }) => {
           content={
             <Comparison
               initial={size}
-              final={sizeAfterWithdraw}
+              final={sizeAfterDeposit}
               formatValue={formatCurrency(collateralToken)}
             />
           }
@@ -204,13 +206,17 @@ const AddCollateralForm: FC<Props> = ({ position, form }) => {
           }
         />
         <Definition
-          term="Liquidation Price"
+          term="Liq. Price"
           content={
-            <Comparison
-              initial={liqPrice}
-              final={liqPriceAfterDeposit}
-              formatValue={formatCurrency_USD}
-            />
+            liqPrice && liqPriceAfterDeposit ? (
+              <Comparison
+                initial={liqPrice}
+                final={liqPriceAfterDeposit}
+                formatValue={formatCurrency_USD}
+              />
+            ) : (
+              "-"
+            )
           }
         />
       </dl>

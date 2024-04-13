@@ -193,7 +193,7 @@ interface Position {
   openTime: BN;
   updateTime: BN;
 
-  side: PositionSide;
+  side: { long?: unknown; short?: unknown };
   price: BN;
   sizeUsd: BN;
   collateralUsd: BN;

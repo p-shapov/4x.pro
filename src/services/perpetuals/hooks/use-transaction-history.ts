@@ -21,7 +21,7 @@ const useTransactionHistoryQuery = createQuery({
     if (!account) return [];
     return getHistory(account);
   },
-  initialData: keepPreviousData as InitialDataFunction<TransactionLog[]>,
+  placeholderData: keepPreviousData as InitialDataFunction<TransactionLog[]>,
 });
 
 const useTransactionHistory = ({ owner }: { owner?: PublicKey | null }) => {

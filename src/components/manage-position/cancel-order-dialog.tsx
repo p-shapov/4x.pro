@@ -4,30 +4,20 @@ import type { FC } from "react";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import { Icon } from "@4x.pro/ui-kit/icon";
 
+import { CancelOrderForm, useCancelOrderForm } from "./cancel-order-form";
 import { ProfNLoss } from "./prof-n-loss";
-import { StopLossForm, useStopLossForm } from "./stop-loss-form";
 import { mkManagePositionDialogStyles } from "./styles";
-import { TakeProfitForm, useTakeProfitForm } from "./take-profit-form";
 
 type Props = {
+  position: PositionAccount;
   type: "stop-loss" | "take-profit";
   open: boolean;
-  position: PositionAccount;
   onClose: () => void;
 };
 
-const ManageOrderDialog: FC<Props> = ({ type, onClose, open, position }) => {
+const CancelOrderDialog: FC<Props> = ({ position, open, type, onClose }) => {
+  const form = useCancelOrderForm();
   const managePositionDialogStyles = mkManagePositionDialogStyles();
-  const stopLossForm = useStopLossForm();
-  const takeProfitForm = useTakeProfitForm();
-  const getForm = () => {
-    switch (type) {
-      case "stop-loss":
-        return <StopLossForm position={position} form={stopLossForm} />;
-      case "take-profit":
-        return <TakeProfitForm position={position} form={takeProfitForm} />;
-    }
-  };
   return (
     <Dialog
       open={open}
@@ -38,7 +28,7 @@ const ManageOrderDialog: FC<Props> = ({ type, onClose, open, position }) => {
         <Dialog.Panel className={managePositionDialogStyles.panel}>
           <div className={managePositionDialogStyles.header}>
             <Dialog.Title className={managePositionDialogStyles.title}>
-              Manage Order
+              Cancel Order
             </Dialog.Title>
             <div className={managePositionDialogStyles.pnl}>
               <ProfNLoss position={position} />
@@ -50,11 +40,13 @@ const ManageOrderDialog: FC<Props> = ({ type, onClose, open, position }) => {
               />
             </button>
           </div>
-          <div className={managePositionDialogStyles.content}>{getForm()}</div>
+          <div className={managePositionDialogStyles.content}>
+            <CancelOrderForm form={form} position={position} type={type} />
+          </div>
         </Dialog.Panel>
       </div>
     </Dialog>
   );
 };
 
-export { ManageOrderDialog };
+export { CancelOrderDialog };

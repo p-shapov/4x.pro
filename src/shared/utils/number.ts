@@ -1,70 +1,114 @@
 import type { Token } from "@4x.pro/app-config";
 
-type Formatter = (value?: number | null, fractionalDigits?: number) => string;
+type Formatter = (
+  value?: number | null,
+  maximumFractionDigits?: number,
+  minimumFractionDigits?: number,
+) => string;
 
 const roundToFirstNonZeroDecimal = (value: number) => {
   return Number(value.toFixed(20).match(/^-?\d*\.?0*\d{0,2}/)?.[0] || 0);
 };
-const formatDefault: Formatter = (value, fractionalDigits = 2) => {
+const formatDefault: Formatter = (
+  value,
+  maximumFractionDigits = 2,
+  minimumFractionDigits = maximumFractionDigits,
+) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
   return new Intl.NumberFormat("en", {
-    maximumFractionDigits: fractionalDigits,
+    maximumFractionDigits,
+    minimumFractionDigits,
   }).format(value);
 };
-const formatPercentage: Formatter = (value, fractionalDigits = 2) => {
+const formatPercentage: Formatter = (
+  value,
+  maximumFractionDigits = 2,
+  minimumFractionDigits = maximumFractionDigits,
+) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
   return (
     new Intl.NumberFormat("en", {
-      maximumFractionDigits: fractionalDigits,
+      minimumFractionDigits,
+      maximumFractionDigits,
     }).format(value) + "%"
   );
 };
-const formatRate: Formatter = (value, fractionalDigits = 2) => {
+const formatRate: Formatter = (
+  value,
+  maximumFractionDigits = 2,
+  minimumFractionDigits = maximumFractionDigits,
+) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
   return (
     new Intl.NumberFormat("en", {
-      maximumFractionDigits: fractionalDigits,
+      minimumFractionDigits,
+      maximumFractionDigits,
     }).format(value) + "x"
   );
 };
-const formatCurrency_USD: Formatter = (value, fractionalDigits = 2) => {
+const formatCurrency_USD: Formatter = (
+  value,
+  maximumFractionDigits = 2,
+  minimumFractionDigits = maximumFractionDigits,
+) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
   return (
     "$" +
     new Intl.NumberFormat("en", {
-      maximumFractionDigits: fractionalDigits,
+      minimumFractionDigits,
+      maximumFractionDigits,
     }).format(value)
   );
 };
-const formatCurrency_BTC: Formatter = (value, fractionalDigits = 2) => {
+const formatCurrency_BTC: Formatter = (
+  value,
+  maximumFractionDigits = 2,
+  minimumFractionDigits = maximumFractionDigits,
+) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
   return (
     new Intl.NumberFormat("en", {
-      maximumFractionDigits: fractionalDigits,
+      minimumFractionDigits,
+      maximumFractionDigits,
     }).format(value) + " BTC"
   );
 };
-const formatCurrency_ETH: Formatter = (value, fractionalDigits = 2) => {
+const formatCurrency_ETH: Formatter = (
+  value,
+  maximumFractionDigits = 2,
+  minimumFractionDigits = maximumFractionDigits,
+) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
   return (
     new Intl.NumberFormat("en", {
-      maximumFractionDigits: fractionalDigits,
+      minimumFractionDigits,
+      maximumFractionDigits,
     }).format(value) + " ETH"
   );
 };
-const formatCurrency_SOL: Formatter = (value, fractionalDigits = 2) => {
+const formatCurrency_SOL: Formatter = (
+  value,
+  maximumFractionDigits = 2,
+  minimumFractionDigits = maximumFractionDigits,
+) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
   return (
     new Intl.NumberFormat("en", {
-      maximumFractionDigits: fractionalDigits,
+      minimumFractionDigits,
+      maximumFractionDigits,
     }).format(value) + " SOL"
   );
 };
-const formatCurrency_USDC: Formatter = (value, fractionalDigits = 2) => {
+const formatCurrency_USDC: Formatter = (
+  value,
+  maximumFractionDigits = 2,
+  minimumFractionDigits = maximumFractionDigits,
+) => {
   if (typeof value !== "number" || isNaN(value)) return "-";
   return (
     new Intl.NumberFormat("en", {
-      maximumFractionDigits: fractionalDigits,
+      minimumFractionDigits,
+      maximumFractionDigits,
     }).format(value) + " USDC"
   );
 };
@@ -78,37 +122,6 @@ const currencyFormatters: Record<Token | "$", Formatter> = {
   SOL: formatCurrency_SOL,
   USDC: formatCurrency_USDC,
 };
-const calculateLiquidationPrice = (
-  entryPrice: number,
-  leverage: number,
-  isLong: boolean,
-) => {
-  if (isLong) {
-    return entryPrice * (1 / leverage);
-  }
-  return entryPrice * (1 / leverage);
-};
-const calculatePnL = (
-  entryPrice: number,
-  exitPrice: number,
-  size: number,
-  isLong: boolean,
-) => {
-  if (isLong) {
-    return size * (exitPrice - entryPrice);
-  }
-  return size * (entryPrice - exitPrice);
-};
-const calculatePnLPercentage = (
-  entryPrice: number,
-  exitPrice: number,
-  size: number,
-  isLong: boolean,
-) => {
-  return (
-    calculatePnL(entryPrice, exitPrice, size, isLong) / (entryPrice * size)
-  );
-};
 
 export {
   formatDefault,
@@ -120,10 +133,7 @@ export {
   formatCurrency_SOL,
   formatCurrency_USDC,
   currencyFormatters,
-  calculateLiquidationPrice,
   roundToFirstNonZeroDecimal,
   formatCurrency,
-  calculatePnL,
-  calculatePnLPercentage,
 };
 export type { Formatter };

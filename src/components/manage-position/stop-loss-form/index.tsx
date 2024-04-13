@@ -5,13 +5,14 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
-import { getTokenSymbol } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
+import { useLiquidationPriceStats } from "@4x.pro/services/perpetuals/hooks/use-liquidation-price-stats";
+import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
+import { useUpdateOrder } from "@4x.pro/services/perpetuals/hooks/use-update-order";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import {
-  calculateLiquidationPrice,
-  calculatePnL,
+  formatCurrency,
   formatCurrency_USD,
   formatRate,
 } from "@4x.pro/shared/utils/number";
@@ -38,41 +39,43 @@ const useStopLossForm = (triggerPrice: number = 0) => {
 
 const StopLossForm: FC<Props> = ({ position, form }) => {
   const collateral = position.collateralAmount.toNumber() / LAMPORTS_PER_SOL;
-  const entryPrice = position.getPrice();
   const collateralToken = position.token;
   const leverage = position.getLeverage();
-  // TODO - get trigger price from position
-  const triggerPrice = undefined;
+  const triggerPrice = position.getStopLoss() || 0;
+  const updateOrder = useUpdateOrder();
   const stopLossFormStyles = mkStopLossFormStyles();
   const newTriggerPrice = useWatch({
     control: form.control,
     name: "triggerPrice",
   });
-  const side = position.side;
+  const { data: poolsData } = usePools();
+  const pool = Object.values(poolsData || {})[0];
   const walletContextState = useWallet();
   const { price: marketPrice } =
     useWatchPythPriceFeed(collateralToken).priceData || {};
   const size = collateral * leverage;
-  const liquidationPrice = calculateLiquidationPrice(
-    entryPrice,
-    leverage,
-    side === "long",
-  );
-  const estimatedPnL = newTriggerPrice
-    ? calculatePnL(
-        entryPrice,
-        newTriggerPrice,
-        size * entryPrice,
-        side === "long",
-      )
-    : undefined;
+  const liquidationPrice = useLiquidationPriceStats({
+    position,
+  });
   const mkHandleChange =
     (onChange: (value: number) => void) => (value: number | "") => {
       onChange(Number(value));
     };
   const errors = form.formState.errors;
+  const handleSubmit = form.handleSubmit(async (data) => {
+    await updateOrder.mutateAsync({
+      type: "stop-loss",
+      position,
+      pool,
+      triggerPrice: data.triggerPrice,
+    });
+  });
   return (
-    <form className={stopLossFormStyles.root} noValidate>
+    <form
+      className={stopLossFormStyles.root}
+      noValidate
+      onSubmit={handleSubmit}
+    >
       <Controller<SubmitData, "triggerPrice">
         name="triggerPrice"
         control={form.control}
@@ -92,12 +95,12 @@ const StopLossForm: FC<Props> = ({ position, form }) => {
           term="Mark price"
           content={formatCurrency_USD(marketPrice)}
         />
-        <Definition
+        {/* <Definition
           term="Estimated PnL"
           content={formatCurrency_USD(estimatedPnL)}
-        />
+        /> */}
         <Definition
-          term="TriggerPrice"
+          term="Trigger Price"
           content={
             <Comparison
               initial={triggerPrice}
@@ -107,23 +110,28 @@ const StopLossForm: FC<Props> = ({ position, form }) => {
           }
         />
         <Definition
-          term={`Size (${getTokenSymbol(collateralToken)})`}
-          content={size}
+          term="Size"
+          content={formatCurrency(collateralToken)(size)}
         />
         <Definition
-          term={`Collateral (${getTokenSymbol(collateralToken)})`}
-          content={collateral}
+          term="Collateral"
+          content={formatCurrency(collateralToken)(collateral)}
         />
         <Definition term="Leverage" content={formatRate(leverage)} />
         <Definition
-          term="Liquidation Price"
-          content={formatCurrency_USD(liquidationPrice)}
+          term="Liq. Price"
+          content={formatCurrency_USD(liquidationPrice.data)}
         />
       </dl>
       {!walletContextState.connected ? (
         <Wallet.Connect variant="accent" size="lg" />
       ) : (
-        <Button type="submit" variant="accent" size="lg">
+        <Button
+          type="submit"
+          variant="accent"
+          size="lg"
+          loading={updateOrder.isPending}
+        >
           {newTriggerPrice > 0 ? "Set stop loss" : "Enter amount"}
         </Button>
       )}

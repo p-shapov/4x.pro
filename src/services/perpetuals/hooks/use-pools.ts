@@ -21,7 +21,7 @@ const usePoolsQuery = createQuery({
     if (!custodyInfos) return {};
     return getPoolData(rpcEndpoint, custodyInfos);
   },
-  initialData: keepPreviousData as InitialDataFunction<
+  placeholderData: keepPreviousData as InitialDataFunction<
     Record<string, PoolAccount>
   >,
   queryKeyHashFn: (queryKey) => {

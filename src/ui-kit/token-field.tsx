@@ -97,9 +97,7 @@ const TokenField: FC<Props> = ({
   }, [value]);
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setInputValue(e.target.value);
-    console.log(e.target.value);
     if (/^(\d{1,3}(,\d{3})*|\d+)(\.\d*[1-9])?$/.test(e.target.value)) {
-      console.log(e.target.value.replaceAll(",", ""));
       const amount = Number(e.currentTarget.value.replaceAll(",", ""));
       setAmount(amount);
       onChange?.({ amount, token: currentToken });

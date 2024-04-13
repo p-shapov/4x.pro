@@ -1142,6 +1142,44 @@ export type Perpetuals = {
       ]
     },
     {
+      "name": "updatePositionLimits",
+      "accounts": [
+        {
+          "name": "owner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "perpetuals",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "position",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "custody",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "UpdatePositionLimitsParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "liquidate",
       "accounts": [
         {
@@ -2740,6 +2778,26 @@ export type Perpetuals = {
           {
             "name": "price",
             "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UpdatePositionLimitsParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "stopLoss",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "takeProfit",
+            "type": {
+              "option": "u64"
+            }
           }
         ]
       }
@@ -4740,6 +4798,44 @@ export const IDL: Perpetuals = {
       ]
     },
     {
+      "name": "updatePositionLimits",
+      "accounts": [
+        {
+          "name": "owner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "perpetuals",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "position",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "custody",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "UpdatePositionLimitsParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "liquidate",
       "accounts": [
         {
@@ -6338,6 +6434,26 @@ export const IDL: Perpetuals = {
           {
             "name": "price",
             "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UpdatePositionLimitsParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "stopLoss",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "takeProfit",
+            "type": {
+              "option": "u64"
+            }
           }
         ]
       }

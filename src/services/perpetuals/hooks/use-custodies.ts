@@ -12,7 +12,7 @@ const useCustodiesQuery = createQuery({
   fetcher: async ({ rpcEndpoint }: { rpcEndpoint: string }) => {
     return (await getCustodyData(rpcEndpoint)) || {};
   },
-  initialData: keepPreviousData as InitialDataFunction<
+  placeholderData: keepPreviousData as InitialDataFunction<
     Record<string, CustodyAccount>
   >,
 });

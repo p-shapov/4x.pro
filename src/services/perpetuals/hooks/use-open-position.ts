@@ -12,6 +12,7 @@ import type { PoolAccount } from "../lib/pool-account";
 import type { PositionSide } from "../lib/types";
 
 const useOpenPositionMutation = createMutation({
+  mutationKey: ["open-position"],
   mutationFn: async ({
     rpcEndpoint,
     connection,

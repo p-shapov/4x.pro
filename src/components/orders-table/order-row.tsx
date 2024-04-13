@@ -19,6 +19,7 @@ import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
 
 import { mkOrderRowStyles } from "./styles";
 import { ManageOrderDialog } from "../manage-position";
+import { CancelOrderDialog } from "../manage-position/cancel-order-dialog";
 
 type Props = {
   type: OrderTxType;
@@ -27,6 +28,7 @@ type Props = {
 
 const OrderRow: FC<Props> = ({ type, position }) => {
   const [openManageOrderDialog, setOpenManageOrderDialog] = useState(false);
+  const [openCancelOrderDialog, setOpenCancelOrderDialog] = useState(false);
   const orderRowStyles = mkOrderRowStyles();
   const { data: custodies } = useCustodies();
   const custody = custodies?.[position.custody.toString()];
@@ -46,19 +48,32 @@ const OrderRow: FC<Props> = ({ type, position }) => {
       }),
   });
   const getType = () => {
-    if (type === "stop-loss") {
-      return "Stop Loss";
+    switch (type) {
+      case "stop-loss":
+        return "Stop Loss";
+      case "take-profit":
+        return "Take Profit";
     }
-    if (type === "take-profit") {
-      return "Take Profit";
+  };
+  const getTriggerPrice = () => {
+    switch (type) {
+      case "stop-loss":
+        return position.getStopLoss()!;
+      case "take-profit":
+        return position.getTakeProfit()!;
     }
-    return "";
   };
   const handleOpenManageOrderDialog = () => {
     setOpenManageOrderDialog(true);
   };
   const handleCloseManageOrderDialog = () => {
     setOpenManageOrderDialog(false);
+  };
+  const handleOpenCancelOrderDialog = () => {
+    setOpenCancelOrderDialog(true);
+  };
+  const handleCloseCancelOrderDialog = () => {
+    setOpenCancelOrderDialog(false);
   };
   return (
     <tr key={position.address.toString()} className={cn(orderRowStyles.root)}>
@@ -82,25 +97,32 @@ const OrderRow: FC<Props> = ({ type, position }) => {
         {formatCurrency_USD(marketPrice, 2)}
       </td>
       <td className={orderRowStyles.cell}>
-        {type === "stop-loss" &&
-          formatCurrency_USD(Number(position.stopLoss) / 10 ** 6, 2)}
-        {type === "take-profit" &&
-          formatCurrency_USD(Number(position.takeProfit) / 10 ** 6, 2)}
+        {formatCurrency_USD(getTriggerPrice(), 2)}
       </td>
       <td className={orderRowStyles.cell}>
         <div className={cn("flex", "gap-[2rem]")}>
-          <Link
-            variant="accent"
-            iconSrc="/icons/edit-2.svg"
-            onClick={handleOpenManageOrderDialog}
-          ></Link>
           <ManageOrderDialog
             type={type}
             open={openManageOrderDialog}
             position={position}
             onClose={handleCloseManageOrderDialog}
           />
-          <Link variant="red" iconSrc="/icons/close-circle.svg"></Link>
+          <Link
+            variant="accent"
+            iconSrc="/icons/edit-2.svg"
+            onClick={handleOpenManageOrderDialog}
+          ></Link>
+          <CancelOrderDialog
+            position={position}
+            type={type}
+            open={openCancelOrderDialog}
+            onClose={handleCloseCancelOrderDialog}
+          />
+          <Link
+            variant="red"
+            iconSrc="/icons/close-circle.svg"
+            onClick={handleOpenCancelOrderDialog}
+          ></Link>
         </div>
       </td>
     </tr>

@@ -49,7 +49,7 @@ const AppConfigProvider: FC<PropsWithChildren> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <ConnectionProvider endpoint={rpcEndpoint}>
-        <WalletProvider wallets={wallets}>
+        <WalletProvider wallets={wallets} autoConnect>
           {children}
           <ToastContainer />
         </WalletProvider>

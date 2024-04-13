@@ -5,7 +5,7 @@ import { getTokenSymbol } from "@4x.pro/app-config";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import { Icon } from "@4x.pro/ui-kit/icon";
 
-import { ClosePositionForm, useClosePositionForm } from "./close-position-form";
+import { ClosePositionForm, useClosePositionForm } from "./close-position";
 import { mkManagePositionDialogStyles } from "./styles";
 
 type Props = {

@@ -84,7 +84,9 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
   const changeCollateral = useChangeCollateral();
   const handleSubmit = form.handleSubmit(async (data) => {
     if (leverageAfterWithdraw && leverageAfterWithdraw < 1) {
-      messageToast("Position leverage cannot be less than 1", "error");
+      messageToast("Position leverage is too low", "error");
+    } else if (leverageAfterWithdraw && leverageAfterWithdraw > 20) {
+      messageToast("Position leverage exceeds limit", "error");
     } else if (!pool) {
       messageToast("No pool found", "error");
     } else {
@@ -239,11 +241,15 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
         <Definition
           term="Liquidation Price"
           content={
-            <Comparison
-              initial={liqPrice}
-              final={liqPriceAfterWithdraw}
-              formatValue={formatCurrency_USD}
-            />
+            liqPrice && liqPriceAfterWithdraw ? (
+              <Comparison
+                initial={liqPrice}
+                final={liqPriceAfterWithdraw}
+                formatValue={formatCurrency_USD}
+              />
+            ) : (
+              "-"
+            )
           }
         />
       </dl>

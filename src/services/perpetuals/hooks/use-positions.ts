@@ -25,7 +25,7 @@ const usePositionsQuery = createQuery({
     if (!custodyInfos) return {};
     return getPositionData(rpcEndpoint, custodyInfos, owner || undefined);
   },
-  initialData: keepPreviousData as InitialDataFunction<
+  placeholderData: keepPreviousData as InitialDataFunction<
     Record<string, PositionAccount>
   >,
   refetchInterval: 60 * 1 * 1000,

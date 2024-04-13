@@ -24,7 +24,7 @@ const OrdersTable: FC<Props> = ({ owner, fallback }) => {
       className={orderTableStyles.root}
       style={{
         // @ts-expect-error - CSS variable
-        "--tw-table-cols": 6,
+        "--tw-table-cols": 7,
       }}
     >
       <thead className={cn(orderTableStyles.head, "pl-[2.4rem]")}>
@@ -35,7 +35,7 @@ const OrdersTable: FC<Props> = ({ owner, fallback }) => {
           <th className={orderTableStyles.headingCell}>Type</th>
           <th className={orderTableStyles.headingCell}>Mark Price</th>
           <th className={orderTableStyles.headingCell}>Trigger Price</th>
-          {/* <th className={orderTableStyles.headingCell}>Action</th> */}
+          <th className={orderTableStyles.headingCell}>Action</th>
         </tr>
       </thead>
       <tbody className={orderTableStyles.body}>

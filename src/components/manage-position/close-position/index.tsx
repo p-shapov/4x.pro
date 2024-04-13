@@ -189,7 +189,7 @@ const ClosePositionForm: FC<Props> = ({ position, form }) => {
         <dl className={closePositionStyles.stats}>
           <Definition term="Size" content={formatCurrency_USD(size)} />
           <Definition
-            term="Collateral (USD)"
+            term="Collateral"
             content={
               <TokenPrice token={collateralToken} watch>
                 {collateral}

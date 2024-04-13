@@ -1,15 +1,15 @@
-"use client";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import type { FC } from "react";
+import { useForm } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
-import { Controller, useForm, useWatch } from "react-hook-form";
 
 import { Wallet } from "@4x.pro/components/wallet";
 import { useLiquidationPriceStats } from "@4x.pro/services/perpetuals/hooks/use-liquidation-price-stats";
 import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
 import { useUpdateOrder } from "@4x.pro/services/perpetuals/hooks/use-update-order";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
+import type { OrderTxType } from "@4x.pro/services/perpetuals/lib/types";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import {
   formatCurrency,
@@ -19,92 +19,64 @@ import {
 import { Button } from "@4x.pro/ui-kit/button";
 import { Comparison } from "@4x.pro/ui-kit/comparison";
 import { Definition } from "@4x.pro/ui-kit/definition";
-import { NumberField } from "@4x.pro/ui-kit/number-field";
 
-import type { SubmitData } from "./schema";
-import { mkTakeProfitFormStyles } from "./styles";
+import { mkCancelOrderFormStyles } from "./styles";
 
 type Props = {
+  type: OrderTxType;
   position: PositionAccount;
-  form: UseFormReturn<SubmitData>;
+  form: UseFormReturn;
 };
 
-const useTakeProfitForm = (triggerPrice: number = 0) => {
-  return useForm<SubmitData>({
-    defaultValues: {
-      triggerPrice,
-    },
-  });
+const useCancelOrderForm = () => {
+  return useForm();
 };
 
-const TakeProfitForm: FC<Props> = ({ position, form }) => {
+const CancelOrderForm: FC<Props> = ({ type, position, form }) => {
   const collateral = position.collateralAmount.toNumber() / LAMPORTS_PER_SOL;
   const collateralToken = position.token;
   const leverage = position.getLeverage();
-  const triggerPrice = position.getTakeProfit() || 0;
-  const takeProfitFormStyles = mkTakeProfitFormStyles();
-  const newTriggerPrice = useWatch({
-    control: form.control,
-    name: "triggerPrice",
-  });
-  const { price: marketPrice } =
-    useWatchPythPriceFeed(collateralToken).priceData || {};
-  const walletContextState = useWallet();
-  const size = collateral * leverage;
-  const liquidationPrice = useLiquidationPriceStats({
-    position: position,
-  });
+  const triggerPrice = position.getStopLoss() || 0;
+  const updateOrder = useUpdateOrder();
+  const cancelOrderFormStyles = mkCancelOrderFormStyles();
   const { data: poolsData } = usePools();
   const pool = Object.values(poolsData || {})[0];
-  const mkHandleChange =
-    (onChange: (value: number) => void) => (value: number | "") => {
-      onChange(value || 0);
-    };
-  const updateOrder = useUpdateOrder();
-  const errors = form.formState.errors;
-  const handleSubmit = form.handleSubmit(async (data) => {
+  const walletContextState = useWallet();
+  const { price: marketPrice } =
+    useWatchPythPriceFeed(collateralToken).priceData || {};
+  const size = collateral * leverage;
+  const liquidationPrice = useLiquidationPriceStats({
+    position,
+  });
+  const handleSubmit = form.handleSubmit(async () => {
     await updateOrder.mutateAsync({
-      type: "stop-loss",
+      type,
       position,
       pool,
-      triggerPrice: data.triggerPrice,
+      triggerPrice: null,
     });
   });
   return (
     <form
-      className={takeProfitFormStyles.root}
+      className={cancelOrderFormStyles.root}
       noValidate
       onSubmit={handleSubmit}
     >
-      <Controller<SubmitData, "triggerPrice">
-        name="triggerPrice"
-        control={form.control}
-        render={({ field: { value, onChange } }) => (
-          <NumberField
-            label={`Take Profit Price: ${formatCurrency_USD(newTriggerPrice)}`}
-            unit="$"
-            placeholder="0.00"
-            value={value}
-            onChange={mkHandleChange(onChange)}
-            error={!!errors.triggerPrice}
-          />
-        )}
-      />
-      <dl className={takeProfitFormStyles.statsList}>
+      <dl className={cancelOrderFormStyles.statsList}>
         <Definition
           term="Mark price"
           content={formatCurrency_USD(marketPrice)}
         />
         {/* <Definition
           term="Estimated PnL"
-          content={formatCurrency_USD(pnl.data)}
+          content={formatCurrency_USD(estimatedPnL)}
         /> */}
         <Definition
           term="Trigger Price"
           content={
             <Comparison
               initial={triggerPrice}
-              final={newTriggerPrice}
+              final={undefined}
               formatValue={formatCurrency_USD}
             />
           }
@@ -132,11 +104,11 @@ const TakeProfitForm: FC<Props> = ({ position, form }) => {
           size="lg"
           loading={updateOrder.isPending}
         >
-          {newTriggerPrice > 0 ? "Set take profit" : "Enter amount"}
+          Cancel Order
         </Button>
       )}
     </form>
   );
 };
 
-export { TakeProfitForm, useTakeProfitForm };
+export { CancelOrderForm, useCancelOrderForm };

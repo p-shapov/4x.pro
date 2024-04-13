@@ -48,7 +48,7 @@ export class PositionAccount {
     this.stopLoss = position.stopLoss;
     this.takeProfit = position.takeProfit;
 
-    this.side = position.side;
+    this.side = position.side.long ? "long" : "short";
     this.price = position.price;
     this.sizeUsd = position.sizeUsd;
     this.collateralUsd = position.collateralUsd;
@@ -83,6 +83,14 @@ export class PositionAccount {
 
   getPrice(): number {
     return Number(this.price) / 10 ** 6;
+  }
+
+  getStopLoss(): number | null {
+    return this.stopLoss && Number(this.stopLoss) / 10 ** 6;
+  }
+
+  getTakeProfit(): number | null {
+    return this.takeProfit && Number(this.takeProfit) / 10 ** 6;
   }
 
   getSizeUsd(): number {
