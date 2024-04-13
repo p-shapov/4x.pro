@@ -49,11 +49,21 @@ const OrdersTable: FC<Props> = ({ owner, fallback }) => {
             <Fragment key={item.address.toString()}>
               {item.stopLoss && item.takeProfit ? (
                 <>
-                  <OrderRow position={item} type="sl" />
-                  <OrderRow position={item} type="tp" />
+                  <OrderRow position={item} type="stop-loss" />
+                  <OrderRow position={item} type="take-profit" />
                 </>
               ) : (
-                <OrderRow position={item} type={item.stopLoss ? "sl" : "tp"} />
+                <OrderRow
+                  position={item}
+                  type={
+                    item.stopLoss
+                      ? "stop-loss"
+                      : item.takeProfit
+                      ? "take-profit"
+                      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        ("" as any)
+                  }
+                />
               )}
             </Fragment>
           ))}

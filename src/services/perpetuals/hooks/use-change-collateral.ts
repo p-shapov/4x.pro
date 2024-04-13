@@ -9,7 +9,7 @@ import { usePositionsQuery } from "./use-positions";
 import { changeCollateral } from "../actions/change-collateral";
 import type { PoolAccount } from "../lib/pool-account";
 import type { PositionAccount } from "../lib/position-account";
-import type { Tab } from "../lib/types";
+import type { ChangeCollateralTxType } from "../lib/types";
 
 const useChangeCollateralMutation = createMutation({
   mutationKey: ["change-collateral"],
@@ -20,7 +20,7 @@ const useChangeCollateralMutation = createMutation({
     pool,
     position,
     collatNum,
-    tab,
+    type,
   }: {
     rpcEndpoint: string;
     connection: Connection;
@@ -28,16 +28,16 @@ const useChangeCollateralMutation = createMutation({
     pool: PoolAccount;
     position: PositionAccount;
     collatNum: number;
-    tab: Tab;
+    type: ChangeCollateralTxType;
   }) => {
     const res = await changeCollateral(
+      type,
       rpcEndpoint,
       connection,
       walletContextState,
       pool,
       position,
       collatNum,
-      tab,
     );
     await queryClient.invalidateQueries({
       queryKey: usePositionsQuery.getKey(),
@@ -54,10 +54,10 @@ const useChangeCollateral = () => {
   return {
     ...mutation,
     mutate: (params: {
+      type: ChangeCollateralTxType;
       pool: PoolAccount;
       position: PositionAccount;
       collatNum: number;
-      tab: Tab;
     }) =>
       mutation.mutate({
         ...params,
@@ -66,10 +66,10 @@ const useChangeCollateral = () => {
         rpcEndpoint,
       }),
     mutateAsync: async (params: {
+      type: ChangeCollateralTxType;
       pool: PoolAccount;
       position: PositionAccount;
       collatNum: number;
-      tab: Tab;
     }) =>
       mutation.mutateAsync({
         ...params,

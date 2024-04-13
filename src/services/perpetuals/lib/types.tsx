@@ -142,17 +142,36 @@ interface TradeStats {
   oiShortUsd: BN;
 }
 
-enum Side {
-  None = "None",
-  Long = "Long",
-  Short = "Short",
-  Swap = "Swap",
-}
+type PositionSide = "short" | "long";
 
-enum Tab {
-  Add,
-  Remove,
-}
+type ChangeCollateralTxType = "add-collateral" | "remove-collateral";
+type OrderTxType = "stop-loss" | "take-profit";
+type PositionTxType = "open-position" | "close-position" | "liquidate";
+type ChangeLiquidityTxType = "add-liquidity" | "remove-liquidity";
+
+type TransactionType =
+  | OrderTxType
+  | PositionTxType
+  | ChangeCollateralTxType
+  | ChangeLiquidityTxType;
+
+type TransactionLogData = {
+  side?: PositionSide;
+  price?: number;
+  fee?: number;
+  pnl?: number;
+  leverage?: number;
+  collateral?: number;
+  size?: number;
+};
+
+type TransactionLog = {
+  token: Token;
+  type: TransactionType;
+  time: number;
+  txid: string;
+  txData: TransactionLogData;
+};
 
 interface AccountMeta {
   pubkey: PublicKey;
@@ -174,7 +193,7 @@ interface Position {
   openTime: BN;
   updateTime: BN;
 
-  side: Side;
+  side: PositionSide;
   price: BN;
   sizeUsd: BN;
   collateralUsd: BN;
@@ -215,5 +234,13 @@ export type {
   Position,
   PriceStat,
   PriceStats,
+  PositionSide,
+  ChangeCollateralTxType,
+  TransactionType,
+  PositionTxType,
+  ChangeLiquidityTxType,
+  TransactionLog,
+  TransactionLogData,
+  OrderTxType,
 };
-export { FeesMode, OracleType, Side, Tab, TradeSide };
+export { FeesMode, OracleType, TradeSide };

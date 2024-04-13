@@ -13,7 +13,7 @@ import {
   useRemoveCollateralForm,
 } from "./remove-collateral-form";
 import { StopLossForm, useStopLossForm } from "./stop-loss-form";
-import { mkManagePositionStyles } from "./styles";
+import { mkManagePositionDialogStyles } from "./styles";
 import { TakeProfitForm, useTakeProfitForm } from "./take-profit-form";
 
 type Props = {
@@ -22,58 +22,66 @@ type Props = {
   onClose: () => void;
 };
 
-const ManagePosition: FC<Props> = ({ position, open, onClose }) => {
+const ManagePositionDialog: FC<Props> = ({ position, open, onClose }) => {
   const collateralToken = position.token;
-  const managePositionStyles = mkManagePositionStyles();
+  const managePositionDialogStyles = mkManagePositionDialogStyles();
   const addCollateralForm = useAddCollateralForm();
   const removeCollateralForm = useRemoveCollateralForm(collateralToken);
   const stopLossForm = useStopLossForm(undefined);
   const takeProfitForm = useTakeProfitForm(undefined);
   return (
-    <Dialog className={managePositionStyles.root} open={open} onClose={onClose}>
-      <div className={managePositionStyles.layout}>
-        <Dialog.Panel className={managePositionStyles.panel}>
-          <div className={managePositionStyles.header}>
-            <Dialog.Title className={managePositionStyles.title}>
+    <Dialog
+      className={managePositionDialogStyles.root}
+      open={open}
+      onClose={onClose}
+    >
+      <div className={managePositionDialogStyles.layout}>
+        <Dialog.Panel className={managePositionDialogStyles.panel}>
+          <div className={managePositionDialogStyles.header}>
+            <Dialog.Title className={managePositionDialogStyles.title}>
               Manage Position
             </Dialog.Title>
-            <div className={managePositionStyles.pnl}>
+            <div className={managePositionDialogStyles.pnl}>
               <ProfNLoss position={position} />
             </div>
             <button type="button" onClick={onClose}>
               <Icon
                 src="/icons/close.svg"
-                className={managePositionStyles.closeBtn}
+                className={managePositionDialogStyles.closeBtn}
               />
             </button>
           </div>
           <Tabs
             classNames={{
-              items: managePositionStyles.tabsList,
-              tab: managePositionStyles.tab,
-              panel: managePositionStyles.content,
+              items: managePositionDialogStyles.tabsList,
+              tab: managePositionDialogStyles.tab,
+              panel: managePositionDialogStyles.content,
             }}
             items={[
-              { id: "add", content: "Add collateral" },
-              { id: "remove", content: "Remove collateral" },
-              { id: "sl", content: "Stop loss", disabled: true },
-              { id: "tp", content: "Take profit", disabled: true },
+              { id: "add-collateral", content: "Add collateral" },
+              { id: "remove-collateral", content: "Remove collateral" },
+              { id: "stop-loss", content: "Stop loss" },
+              { id: "take-profit", content: "Take profit" },
             ]}
             panels={{
-              add: (
+              "add-collateral": (
                 <AddCollateralForm
                   position={position}
                   form={addCollateralForm}
                 />
               ),
-              remove: (
+              "remove-collateral": (
                 <RemoveCollateralForm
                   position={position}
                   form={removeCollateralForm}
                 />
               ),
-              sl: <StopLossForm position={position} form={stopLossForm} />,
-              tp: <TakeProfitForm position={position} form={takeProfitForm} />,
+              "stop-loss": (
+                <StopLossForm position={position} form={stopLossForm} />
+              ),
+              "take-profit": (
+                <TakeProfitForm position={position} form={takeProfitForm} />
+              ),
             }}
           />
         </Dialog.Panel>
@@ -82,4 +90,4 @@ const ManagePosition: FC<Props> = ({ position, open, onClose }) => {
   );
 };
 
-export { ManagePosition };
+export { ManagePositionDialog };

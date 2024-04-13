@@ -19,6 +19,7 @@ const ProfNLoss: FC<Props> = ({ position }) => {
   const custody = custodies?.[position.token];
   const { data: pnl } = usePnLStats({ position });
   const collateralToken = position.token;
+  const side = position.side;
   const collateral =
     custody && position.collateralAmount.toNumber() / custody.decimals;
   const pnlPercentage = pnl && collateral && pnl / collateral;
@@ -28,7 +29,7 @@ const ProfNLoss: FC<Props> = ({ position }) => {
     <div className={profNLossStyles.root}>
       <span className={profNLossStyles.item}>
         <Icon className={profNLossStyles.icon} src="/icons/trend-up.svg" />
-        <span className="uppercase">{position.side.toString()}</span>
+        <span className="uppercase">{side}</span>
       </span>
       <span className={profNLossStyles.item}>
         {getTokenSymbol(collateralToken)} / PnL

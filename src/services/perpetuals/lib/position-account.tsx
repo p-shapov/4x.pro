@@ -4,8 +4,7 @@ import type { PublicKey } from "@solana/web3.js";
 import type { Token } from "@4x.pro/app-config";
 
 import type { CustodyAccount } from "./custody-account";
-import type { Position } from "./types";
-import { Side } from "./types";
+import type { Position, PositionSide } from "./types";
 
 export class PositionAccount {
   public owner: PublicKey;
@@ -16,7 +15,7 @@ export class PositionAccount {
   public openTime: BN;
   public updateTime: BN;
 
-  public side: Side;
+  public side: PositionSide;
   public price: BN;
   public sizeUsd: BN;
   public collateralUsd: BN;
@@ -49,7 +48,7 @@ export class PositionAccount {
     this.stopLoss = position.stopLoss;
     this.takeProfit = position.takeProfit;
 
-    this.side = position.side.hasOwnProperty("long") ? Side.Long : Side.Short;
+    this.side = position.side;
     this.price = position.price;
     this.sizeUsd = position.sizeUsd;
     this.collateralUsd = position.collateralUsd;

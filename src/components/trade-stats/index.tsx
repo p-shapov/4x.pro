@@ -5,7 +5,7 @@ import type { Token } from "@4x.pro/app-config";
 import { useEntryPriceStats } from "@4x.pro/services/perpetuals/hooks/use-entry-price-stats";
 import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
 import { usePriceStats } from "@4x.pro/services/perpetuals/hooks/use-price-stats";
-import { Side } from "@4x.pro/services/perpetuals/lib/types";
+import type { PositionSide } from "@4x.pro/services/perpetuals/lib/types";
 import { formatCurrency_USD, formatRate } from "@4x.pro/shared/utils/number";
 import { Definition } from "@4x.pro/ui-kit/definition";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
@@ -13,7 +13,7 @@ import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
 import { mkTradeStatsStyles } from "./styles";
 
 type Props = {
-  side: "long" | "short";
+  side: PositionSide;
   collateralToken: Token;
   collateral: number;
   leverage: number;
@@ -31,10 +31,10 @@ const TradeStats: FC<Props> = ({
   const tradeStatsStyles = mkTradeStatsStyles();
   const size = collateral * leverage;
   const { data: statsData } = useEntryPriceStats({
+    side,
     collateralToken,
     collateral: useDeferredValue(collateral),
     size: useDeferredValue(size),
-    side: side === "long" ? Side.Long : Side.Short,
   });
   return (
     <dl className={tradeStatsStyles.root}>

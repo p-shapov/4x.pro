@@ -12,8 +12,8 @@ import { useEntryPriceStats } from "@4x.pro/services/perpetuals/hooks/use-entry-
 import { useOpenPosition } from "@4x.pro/services/perpetuals/hooks/use-open-position";
 import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
 import { usePositions } from "@4x.pro/services/perpetuals/hooks/use-positions";
-import { Side } from "@4x.pro/services/perpetuals/lib/types";
-import { useUpdateTradingHistory } from "@4x.pro/services/trading-history/hooks/use-update-trading-history";
+import { useLogTransaction } from "@4x.pro/services/perpetuals/hooks/use-transaction-history";
+import type { PositionSide } from "@4x.pro/services/perpetuals/lib/types";
 import { useIsInsufficientBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import { Button } from "@4x.pro/ui-kit/button";
 import { messageToast } from "@4x.pro/ui-kit/message-toast";
@@ -30,7 +30,7 @@ import { Wallet } from "../wallet";
 
 type Props = {
   form: UseFormReturn<SubmitData>;
-  side: "short" | "long";
+  side: PositionSide;
   collateralTokens: readonly Token[];
 };
 
@@ -56,7 +56,7 @@ const useOpenPositionForm = () => {
 };
 
 const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
-  const tradingHistory = useUpdateTradingHistory();
+  const logTransaction = useLogTransaction();
   const openPositionFormStyles = mkOpenPositionFormStyles();
   const walletContextState = useWallet();
   const openPosition = useOpenPosition();
@@ -86,21 +86,21 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
         const txid = await openPosition.mutateAsync({
           pool,
           price,
+          side,
           payAmount: data.position.base.size,
           payToken: data.position.base.token,
           positionAmount: data.position.quote.size,
           positionToken: data.position.quote.token,
           leverage: data.leverage,
-          side: side === "long" ? Side.Long : Side.Short,
           slippage: data.slippage,
           stopLoss: data.stopLoss || null,
           takeProfit: data.takeProfit || null,
         });
-        await tradingHistory.mutateAsync({
+        await logTransaction.mutateAsync({
           txid,
           token: data.position.quote.token,
           time: dayjs().utc(false).unix(),
-          type: "open",
+          type: "open-position",
           txData: {
             side,
             price,
@@ -133,10 +133,10 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
   });
   const size = positionQuote.size * leverage;
   const { data: priceStats } = useEntryPriceStats({
+    side,
     collateralToken: positionQuote.token,
     size: useDeferredValue(size),
     collateral: useDeferredValue(positionQuote.size),
-    side: side === "long" ? Side.Long : Side.Short,
   });
   const getTitle = () => {
     switch (side) {

@@ -7,7 +7,7 @@ import type { Token } from "@4x.pro/app-config";
 import { usePools } from "./use-pools";
 import type { CustodyAccount } from "../lib/custody-account";
 import type { PoolAccount } from "../lib/pool-account";
-import type { Side } from "../lib/types";
+import type { PositionSide } from "../lib/types";
 import { getPerpetualProgramAndProvider } from "../utils/constants";
 import { ViewHelper } from "../utils/view-helpers";
 
@@ -23,7 +23,7 @@ const useEntryPriceStatsQuery = createQuery({
   }: {
     collateral: number;
     size: number;
-    side: Side;
+    side: PositionSide;
     rpcEndpoint: string;
     pool: PoolAccount | null;
     custody: CustodyAccount | null;
@@ -47,7 +47,7 @@ const useEntryPriceStatsQuery = createQuery({
       rpcEndpoint: string;
       collateral: number;
       size: number;
-      side: Side;
+      side: PositionSide;
       pool: PoolAccount | null;
       custody: CustodyAccount | null;
     };
@@ -64,7 +64,7 @@ const useEntryPriceStats = ({
   collateralToken: Token;
   collateral: number;
   size: number;
-  side: Side;
+  side: PositionSide;
 }) => {
   const { rpcEndpoint } = useAppConfig();
   const pools = usePools();

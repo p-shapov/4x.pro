@@ -21,7 +21,8 @@ import {
 import { swapTransactionBuilder } from "./swap";
 import type { CustodyAccount } from "../lib/custody-account";
 import type { PoolAccount } from "../lib/pool-account";
-import { TradeSide, Side } from "../lib/types";
+import type { PositionSide } from "../lib/types";
+import { TradeSide } from "../lib/types";
 import {
   PERPETUALS_ADDRESS,
   TRANSFER_AUTHORITY,
@@ -39,7 +40,7 @@ const openPositionBuilder = async (
   payAmount: number,
   positionAmount: number,
   price: number,
-  side: Side,
+  side: PositionSide,
   leverage: number,
   slippage: number,
   stopLoss: number | null,
@@ -51,7 +52,7 @@ const openPositionBuilder = async (
   );
   const publicKey = walletContextState.publicKey!;
   const newPrice =
-    side.toString() == "Long"
+    side === "long"
       ? new BN(price * 10 ** 6 * (1 + slippage))
       : new BN(price * 10 ** 6 * (1 - slippage));
   const userCustodyTokenAccount = await getAssociatedTokenAddress(
@@ -65,7 +66,7 @@ const openPositionBuilder = async (
       pool.address.toBuffer(),
       positionCustody.address.toBuffer(),
       // @ts-ignore
-      side === Side.Long ? [1] : [2],
+      side === "long" ? [1] : [2],
     ],
     perpetual_program.programId,
   )[0];
@@ -144,19 +145,10 @@ const openPositionBuilder = async (
     price: newPrice,
     collateral: new BN(finalPayAmount * 10 ** positionCustody.decimals),
     size: new BN(positionAmount * 10 ** positionCustody.decimals),
-    side: side.toString() == "Long" ? TradeSide.Long : TradeSide.Short,
+    side: side == "long" ? TradeSide.Long : TradeSide.Short,
     stopLoss: stopLoss ? new BN(stopLoss * 10 ** 6) : null,
     takeProfit: takeProfit ? new BN(takeProfit * 10 ** 6) : null,
   };
-  console.log("params", {
-    leverage,
-    price: newPrice,
-    collateral: finalPayAmount,
-    size: positionAmount,
-    side: side.toString(),
-    stopLoss: stopLoss,
-    takeProfit: takeProfit,
-  });
   let methodBuilder = perpetual_program.methods.openPosition(params).accounts({
     owner: publicKey,
     fundingAccount: userCustodyTokenAccount,
@@ -184,8 +176,8 @@ const openPositionBuilder = async (
     walletContextState.signTransaction,
     "Open position",
     {
-      price: formatCurrency_USD(price),
-      size: formatCurrency(positionCustody.getToken())(positionAmount, 4),
+      Price: formatCurrency_USD(price),
+      Size: formatCurrency(positionCustody.getToken())(positionAmount, 4),
     },
   );
 };
@@ -200,7 +192,7 @@ const openPosition = async (
   payAmount: number,
   positionAmount: number,
   price: number,
-  side: Side,
+  side: PositionSide,
   leverage: number,
   slippage: number,
   stopLoss: number | null,

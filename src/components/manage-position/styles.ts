@@ -2,7 +2,7 @@ import cn from "classnames";
 
 import { mkDialogStyles } from "@4x.pro/shared/styles/dialog";
 
-const mkManagePositionStyles = () => {
+const mkManagePositionDialogStyles = () => {
   const dialogStyles = mkDialogStyles();
   return {
     root: cn(dialogStyles.root),
@@ -29,4 +29,4 @@ const mkManagePositionStyles = () => {
   };
 };
 
-export { mkManagePositionStyles };
+export { mkManagePositionDialogStyles };

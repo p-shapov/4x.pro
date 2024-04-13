@@ -11,9 +11,8 @@ import { useChangeCollateral } from "@4x.pro/services/perpetuals/hooks/use-chang
 import { useCustodies } from "@4x.pro/services/perpetuals/hooks/use-custodies";
 import { useLiquidationPriceStats } from "@4x.pro/services/perpetuals/hooks/use-liquidation-price-stats";
 import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
+import { useLogTransaction } from "@4x.pro/services/perpetuals/hooks/use-transaction-history";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
-import { Side, Tab } from "@4x.pro/services/perpetuals/lib/types";
-import { useUpdateTradingHistory } from "@4x.pro/services/trading-history/hooks/use-update-trading-history";
 import { useTokenBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import {
   formatCurrency,
@@ -55,10 +54,10 @@ const AddCollateralForm: FC<Props> = ({ position, form }) => {
     custody && position.collateralAmount.toNumber() / 10 ** custody.decimals;
   const entryPrice = position.getPrice();
   const collateralToken = position.token;
+  const side = position.side;
   const leverage = position.getLeverage();
-  const side = position.side === Side.Long ? "long" : "short";
   const changeCollateral = useChangeCollateral();
-  const tradingHistory = useUpdateTradingHistory();
+  const logTransaction = useLogTransaction();
   const addCollateralFormStyles = mkAddCollateralFormStyles();
   const depositAmount = useWatch({
     control: form.control,
@@ -95,12 +94,12 @@ const AddCollateralForm: FC<Props> = ({ position, form }) => {
       try {
         messageToast("Transaction submitted", "success");
         const txid = await changeCollateral.mutateAsync({
+          type: "add-collateral",
           collatNum: data.depositAmount,
-          tab: Tab.Add,
           pool,
           position,
         });
-        await tradingHistory.mutateAsync({
+        await logTransaction.mutateAsync({
           txid,
           type: "add-collateral",
           time: dayjs().utc(false).unix(),

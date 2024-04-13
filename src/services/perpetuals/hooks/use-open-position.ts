@@ -9,7 +9,7 @@ import type { Token } from "@4x.pro/app-config";
 import { usePositionsQuery } from "./use-positions";
 import { openPosition } from "../actions/open-position";
 import type { PoolAccount } from "../lib/pool-account";
-import type { Side } from "../lib/types";
+import type { PositionSide } from "../lib/types";
 
 const useOpenPositionMutation = createMutation({
   mutationFn: async ({
@@ -37,7 +37,7 @@ const useOpenPositionMutation = createMutation({
     payAmount: number;
     positionAmount: number;
     price: number;
-    side: Side;
+    side: PositionSide;
     leverage: number;
     slippage: number;
     stopLoss: number | null;
@@ -80,7 +80,7 @@ const useOpenPosition = () => {
       payAmount: number;
       positionAmount: number;
       price: number;
-      side: Side;
+      side: PositionSide;
       leverage: number;
       slippage: number;
       stopLoss: number | null;
@@ -99,7 +99,7 @@ const useOpenPosition = () => {
       payAmount: number;
       positionAmount: number;
       price: number;
-      side: Side;
+      side: PositionSide;
       leverage: number;
       slippage: number;
       stopLoss: number | null;

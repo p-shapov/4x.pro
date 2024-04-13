@@ -13,7 +13,7 @@ import {
 
 import type { CustodyAccount } from "../lib/custody-account";
 import type { PoolAccount } from "../lib/pool-account";
-import { Tab } from "../lib/types";
+import type { ChangeLiquidityTxType } from "../lib/types";
 import {
   getPerpetualProgramAndProvider,
   PERPETUALS_ADDRESS,
@@ -21,6 +21,7 @@ import {
 } from "../utils/constants";
 
 const changeLiquidity = async (
+  type: ChangeLiquidityTxType,
   rpcEndpoint: string,
   walletContextState: WalletContextState,
   connection: Connection,
@@ -28,7 +29,6 @@ const changeLiquidity = async (
   custody: CustodyAccount,
   tokenAmount: number,
   liquidityAmount: number,
-  tab: Tab,
 ) => {
   const { perpetual_program } = await getPerpetualProgramAndProvider(
     rpcEndpoint,
@@ -72,56 +72,59 @@ const changeLiquidity = async (
   const unwrapTx = await unwrapSolIfNeeded(publicKey);
   if (unwrapTx) postInstructions.push(...unwrapTx);
   let methodBuilder;
-  if (tab == Tab.Add) {
-    let amountIn;
-    const minLpAmountOut = new BN(
-      liquidityAmount * 10 ** pool.lpData.decimals * 0.8,
-    );
-    if (custody.getToken() === "SOL") {
-      amountIn = new BN(tokenAmount * LAMPORTS_PER_SOL);
-    } else {
-      amountIn = new BN(tokenAmount * 10 ** custody.decimals);
+  switch (type) {
+    case "add-liquidity": {
+      let amountIn;
+      const minLpAmountOut = new BN(
+        liquidityAmount * 10 ** pool.lpData.decimals * 0.8,
+      );
+      if (custody.getToken() === "SOL") {
+        amountIn = new BN(tokenAmount * LAMPORTS_PER_SOL);
+      } else {
+        amountIn = new BN(tokenAmount * 10 ** custody.decimals);
+      }
+      methodBuilder = await perpetual_program.methods
+        .addLiquidity({ amountIn, minLpAmountOut })
+        .accounts({
+          owner: publicKey,
+          fundingAccount: userCustodyTokenAccount, // user token account for custody token account
+          lpTokenAccount,
+          transferAuthority: TRANSFER_AUTHORITY,
+          perpetuals: PERPETUALS_ADDRESS,
+          pool: pool.address,
+          custody: custody.address,
+          custodyOracleAccount: custody.oracle.oracleAccount,
+          custodyTokenAccount: custody.tokenAccount,
+          lpTokenMint: pool.getLpTokenMint(),
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .remainingAccounts(pool.getCustodyMetas());
     }
-    methodBuilder = await perpetual_program.methods
-      .addLiquidity({ amountIn, minLpAmountOut })
-      .accounts({
-        owner: publicKey,
-        fundingAccount: userCustodyTokenAccount, // user token account for custody token account
-        lpTokenAccount,
-        transferAuthority: TRANSFER_AUTHORITY,
-        perpetuals: PERPETUALS_ADDRESS,
-        pool: pool.address,
-        custody: custody.address,
-        custodyOracleAccount: custody.oracle.oracleAccount,
-        custodyTokenAccount: custody.tokenAccount,
-        lpTokenMint: pool.getLpTokenMint(),
-        tokenProgram: TOKEN_PROGRAM_ID,
-      })
-      .remainingAccounts(pool.getCustodyMetas());
-  } else if (tab == Tab.Remove) {
-    const lpAmountIn = new BN(liquidityAmount * 10 ** pool.lpData.decimals);
-    let minAmountOut;
-    if (custody.getToken() === "SOL") {
-      minAmountOut = new BN(tokenAmount * LAMPORTS_PER_SOL * 0.9);
-    } else {
-      minAmountOut = new BN(tokenAmount * 10 ** custody.decimals * 0.9);
+    case "remove-liquidity": {
+      const lpAmountIn = new BN(liquidityAmount * 10 ** pool.lpData.decimals);
+      let minAmountOut;
+      if (custody.getToken() === "SOL") {
+        minAmountOut = new BN(tokenAmount * LAMPORTS_PER_SOL * 0.9);
+      } else {
+        minAmountOut = new BN(tokenAmount * 10 ** custody.decimals * 0.9);
+      }
+      methodBuilder = await perpetual_program.methods
+        .removeLiquidity({ lpAmountIn, minAmountOut })
+        .accounts({
+          owner: publicKey,
+          receivingAccount: userCustodyTokenAccount, // user token account for custody token account
+          lpTokenAccount,
+          transferAuthority: TRANSFER_AUTHORITY,
+          perpetuals: PERPETUALS_ADDRESS,
+          pool: pool.address,
+          custody: custody.address,
+          custodyOracleAccount: custody.oracle.oracleAccount,
+          custodyTokenAccount: custody.tokenAccount,
+          lpTokenMint: pool.getLpTokenMint(),
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .remainingAccounts(pool.getCustodyMetas());
     }
-    methodBuilder = await perpetual_program.methods
-      .removeLiquidity({ lpAmountIn, minAmountOut })
-      .accounts({
-        owner: publicKey,
-        receivingAccount: userCustodyTokenAccount, // user token account for custody token account
-        lpTokenAccount,
-        transferAuthority: TRANSFER_AUTHORITY,
-        perpetuals: PERPETUALS_ADDRESS,
-        pool: pool.address,
-        custody: custody.address,
-        custodyOracleAccount: custody.oracle.oracleAccount,
-        custodyTokenAccount: custody.tokenAccount,
-        lpTokenMint: pool.getLpTokenMint(),
-        tokenProgram: TOKEN_PROGRAM_ID,
-      })
-      .remainingAccounts(pool.getCustodyMetas());
   }
   if (preInstructions)
     methodBuilder = methodBuilder?.preInstructions(preInstructions);

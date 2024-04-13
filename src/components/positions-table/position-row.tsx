@@ -10,7 +10,6 @@ import { usePnLStats } from "@4x.pro/services/perpetuals/hooks/use-pnl-stats";
 import { usePositionsQuery } from "@4x.pro/services/perpetuals/hooks/use-positions";
 import { useWatchPosition } from "@4x.pro/services/perpetuals/hooks/use-watch-position";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
-import { Side } from "@4x.pro/services/perpetuals/lib/types";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import {
   formatCurrency_USD,
@@ -22,8 +21,7 @@ import { Link } from "@4x.pro/ui-kit/link";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
 
 import { mkPositionRowStyles } from "./styles";
-import { ClosePosition } from "../close-position";
-import { ManagePosition } from "../manage-position";
+import { ManagePositionDialog, ClosePositionDialog } from "../manage-position";
 
 type Props = {
   position: PositionAccount;
@@ -37,8 +35,9 @@ const PositionRow: FC<Props> = ({ position }) => {
   const entryPrice = position.getPrice();
   const collateralToken = position.token;
   const leverage = position.getLeverage();
-  const side = position.side === Side.Long ? "long" : "short";
-  const [openManagePosition, setOpenManagePosition] = useState(false);
+  const side = position.side;
+  const [openManagePositionDialog, setOpenManagePositionDialog] =
+    useState(false);
   const [openClosePosition, setOpenClosePosition] = useState(false);
   const size = collateral && collateral * leverage;
   const { price: marketPrice } =
@@ -56,11 +55,11 @@ const PositionRow: FC<Props> = ({ position }) => {
         queryKey: usePositionsQuery.getKey(),
       }),
   });
-  const handleOpenManagePosition = () => {
-    setOpenManagePosition(true);
+  const handleOpenManagePositionDialog = () => {
+    setOpenManagePositionDialog(true);
   };
-  const handleCloseManagePosition = () => {
-    setOpenManagePosition(false);
+  const handleCloseManagePositionDialog = () => {
+    setOpenManagePositionDialog(false);
   };
   const handleOpenClosePosition = () => {
     setOpenClosePosition(true);
@@ -120,17 +119,17 @@ const PositionRow: FC<Props> = ({ position }) => {
       </td>
       <td className={positionRowStyles.cell}>
         <span className={cn("flex", "gap-[2rem]")}>
-          <ManagePosition
-            open={openManagePosition}
-            onClose={handleCloseManagePosition}
+          <ManagePositionDialog
+            open={openManagePositionDialog}
+            onClose={handleCloseManagePositionDialog}
             position={position}
           />
           <Link
             variant="accent"
             iconSrc="/icons/setting-2.svg"
-            onClick={handleOpenManagePosition}
+            onClick={handleOpenManagePositionDialog}
           ></Link>
-          <ClosePosition
+          <ClosePositionDialog
             open={openClosePosition}
             onClose={handleCloseClosePosition}
             position={position}

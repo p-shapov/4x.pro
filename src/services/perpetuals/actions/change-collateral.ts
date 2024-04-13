@@ -16,7 +16,7 @@ import {
 
 import type { PoolAccount } from "../lib/pool-account";
 import type { PositionAccount } from "../lib/position-account";
-import { Tab } from "../lib/types";
+import type { ChangeCollateralTxType } from "../lib/types";
 import {
   getPerpetualProgramAndProvider,
   PERPETUALS_ADDRESS,
@@ -24,13 +24,13 @@ import {
 } from "../utils/constants";
 
 const changeCollateral = async (
+  type: ChangeCollateralTxType,
   rpcEndpoint: string,
   connection: Connection,
   walletContextState: WalletContextState,
   pool: PoolAccount,
   position: PositionAccount,
   collatNum: number,
-  tab: Tab,
 ) => {
   const { perpetual_program } = await getPerpetualProgramAndProvider(
     rpcEndpoint,
@@ -47,68 +47,72 @@ const changeCollateral = async (
   const postInstructions: TransactionInstruction[] = [];
   const unwrapTx = await unwrapSolIfNeeded(publicKey);
   if (unwrapTx) postInstructions.push(...unwrapTx);
-  if (tab == Tab.Add) {
-    if (position.token == "SOL") {
-      const ataIx = await createAtaIfNeeded(
-        publicKey,
-        publicKey,
-        NATIVE_MINT,
-        connection,
-      );
-      if (ataIx) preInstructions.push(ataIx);
-      const wrapInstructions = await wrapSolIfNeeded(
-        publicKey,
-        connection,
-        collatNum,
-      );
-      if (wrapInstructions) {
-        preInstructions.push(...wrapInstructions);
+
+  switch (type) {
+    case "add-collateral": {
+      if (position.token == "SOL") {
+        const ataIx = await createAtaIfNeeded(
+          publicKey,
+          publicKey,
+          NATIVE_MINT,
+          connection,
+        );
+        if (ataIx) preInstructions.push(ataIx);
+        const wrapInstructions = await wrapSolIfNeeded(
+          publicKey,
+          connection,
+          collatNum,
+        );
+        if (wrapInstructions) {
+          preInstructions.push(...wrapInstructions);
+        }
       }
+      const collateral = new BN(collatNum * 10 ** custody.decimals);
+      methodBuilder = perpetual_program.methods
+        .addCollateral({
+          collateral,
+        })
+        .accounts({
+          owner: publicKey,
+          fundingAccount: userCustodyTokenAccount, // user token account for custody token account
+          transferAuthority: TRANSFER_AUTHORITY,
+          perpetuals: PERPETUALS_ADDRESS,
+          pool: pool.address,
+          position: position.address,
+          custody: custody.address,
+          custodyOracleAccount: custody.oracle.oracleAccount,
+          custodyTokenAccount: custody.tokenAccount,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        });
     }
-    const collateral = new BN(collatNum * 10 ** custody.decimals);
-    methodBuilder = perpetual_program.methods
-      .addCollateral({
-        collateral,
-      })
-      .accounts({
-        owner: publicKey,
-        fundingAccount: userCustodyTokenAccount, // user token account for custody token account
-        transferAuthority: TRANSFER_AUTHORITY,
-        perpetuals: PERPETUALS_ADDRESS,
-        pool: pool.address,
-        position: position.address,
-        custody: custody.address,
-        custodyOracleAccount: custody.oracle.oracleAccount,
-        custodyTokenAccount: custody.tokenAccount,
-        tokenProgram: TOKEN_PROGRAM_ID,
-      });
-  } else {
-    if (position.token == "SOL") {
-      const ataIx = await createAtaIfNeeded(
-        publicKey,
-        publicKey,
-        NATIVE_MINT,
-        connection,
-      );
-      if (ataIx) preInstructions.push(ataIx);
+    case "remove-collateral": {
+      if (position.token == "SOL") {
+        const ataIx = await createAtaIfNeeded(
+          publicKey,
+          publicKey,
+          NATIVE_MINT,
+          connection,
+        );
+        if (ataIx) preInstructions.push(ataIx);
+      }
+      const collateralUsd = new BN(collatNum * 10 ** 6);
+      methodBuilder = perpetual_program.methods
+        .removeCollateral({
+          collateralUsd,
+        })
+        .accounts({
+          owner: publicKey,
+          receivingAccount: userCustodyTokenAccount,
+          transferAuthority: TRANSFER_AUTHORITY,
+          perpetuals: PERPETUALS_ADDRESS,
+          pool: pool.address,
+          position: position.address,
+          custody: custody.address,
+          custodyOracleAccount: custody.oracle.oracleAccount,
+          custodyTokenAccount: custody.tokenAccount,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        });
     }
-    const collateralUsd = new BN(collatNum * 10 ** 6);
-    methodBuilder = perpetual_program.methods
-      .removeCollateral({
-        collateralUsd,
-      })
-      .accounts({
-        owner: publicKey,
-        receivingAccount: userCustodyTokenAccount,
-        transferAuthority: TRANSFER_AUTHORITY,
-        perpetuals: PERPETUALS_ADDRESS,
-        pool: pool.address,
-        position: position.address,
-        custody: custody.address,
-        custodyOracleAccount: custody.oracle.oracleAccount,
-        custodyTokenAccount: custody.tokenAccount,
-        tokenProgram: TOKEN_PROGRAM_ID,
-      });
   }
   if (preInstructions)
     methodBuilder = methodBuilder.preInstructions(preInstructions);

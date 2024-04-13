@@ -13,9 +13,8 @@ import { useChangeCollateral } from "@4x.pro/services/perpetuals/hooks/use-chang
 import { useCustodies } from "@4x.pro/services/perpetuals/hooks/use-custodies";
 import { useLiquidationPriceStats } from "@4x.pro/services/perpetuals/hooks/use-liquidation-price-stats";
 import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
+import { useLogTransaction } from "@4x.pro/services/perpetuals/hooks/use-transaction-history";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
-import { Side, Tab } from "@4x.pro/services/perpetuals/lib/types";
-import { useUpdateTradingHistory } from "@4x.pro/services/trading-history/hooks/use-update-trading-history";
 import {
   formatCurrency,
   formatCurrency_USD,
@@ -61,10 +60,10 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
   const entryPrice = position.getPrice();
   const collateralToken = position.token;
   const leverage = position.getLeverage();
-  const side = position.side === Side.Long ? "long" : "short";
+  const side = position.side;
   const errors = form.formState.errors;
   const removeCollateralFormStyles = mkRemoveCollateralFormStyles();
-  const tradingHistory = useUpdateTradingHistory();
+  const logTransaction = useLogTransaction();
   const withdrawalAmount = useWatch({
     control: form.control,
     name: "withdrawalAmount",
@@ -92,12 +91,12 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
       try {
         messageToast("Transaction submitted", "success");
         const txid = await changeCollateral.mutateAsync({
+          type: "remove-collateral",
           collatNum: data.withdrawalAmount * entryPrice,
-          tab: Tab.Remove,
           position,
           pool,
         });
-        await tradingHistory.mutateAsync({
+        await logTransaction.mutateAsync({
           token: collateralToken,
           type: "remove-collateral",
           time: dayjs().utc(false).unix(),

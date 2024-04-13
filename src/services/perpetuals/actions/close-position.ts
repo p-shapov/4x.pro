@@ -38,7 +38,7 @@ export async function closePosition(
   );
   const publicKey = walletContextState.publicKey!;
   const adjustedPrice =
-    position.side.toString() == "Long"
+    position.side === "long"
       ? new BN(price * 10 ** 6 * (1 - slippage))
       : new BN(price * 10 ** 6 * (1 + slippage));
   const userCustodyTokenAccount = await getAssociatedTokenAddress(
@@ -83,8 +83,8 @@ export async function closePosition(
     walletContextState.signTransaction,
     "Close position",
     {
-      price: formatCurrency_USD(position.getPrice()),
-      size: `${formatCurrency(position.token)(
+      Price: formatCurrency_USD(position.getPrice()),
+      Size: `${formatCurrency(position.token)(
         (position.getLeverage() * Number(position.collateralAmount)) /
           10 ** custody.decimals,
         4,

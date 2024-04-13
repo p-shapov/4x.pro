@@ -3,7 +3,8 @@ import cn from "classnames";
 import dayjs from "dayjs";
 import type { FC, ReactNode } from "react";
 
-import { useTradingHistory } from "@4x.pro/services/trading-history/hooks/use-trading-history";
+import { useTransactionHistory } from "@4x.pro/services/perpetuals/hooks/use-transaction-history";
+import type { TransactionType } from "@4x.pro/services/perpetuals/lib/types";
 import { TRX_URL } from "@4x.pro/services/transaction-flow/utils";
 import { mkTableStyles } from "@4x.pro/shared/styles/table";
 import {
@@ -21,26 +22,26 @@ type Props = {
 };
 
 const HistoryTable: FC<Props> = ({ owner, fallback }) => {
-  const { data: items = [], isFetched } = useTradingHistory({ owner });
+  const { data: items = [], isFetched } = useTransactionHistory({ owner });
   const tableStyles = mkTableStyles();
-  const getType = (type: string) => {
+  const getType = (type: TransactionType) => {
     switch (type) {
-      case "open":
-        return "Open";
-      case "close":
-        return "Close";
-      case "liquidation":
-        return "Liquidation";
-      case "stop":
-        return "Stop";
-      case "take-profit":
-        return "Take Profit";
       case "add-collateral":
         return "Add Collateral";
       case "remove-collateral":
         return "Remove Collateral";
+      case "open-position":
+        return "Open Position";
+      case "close-position":
+        return "Close Position";
+      case "liquidate":
+        return "Liquidate";
+      case "stop-loss":
+        return "Stop Loss";
+      case "take-profit":
+        return "Take Profit";
       default:
-        return "Unknown";
+        return "";
     }
   };
   return (

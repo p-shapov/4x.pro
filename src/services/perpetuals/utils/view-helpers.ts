@@ -22,7 +22,7 @@ import { IdlCoder } from "./idl-coder";
 import type { CustodyAccount } from "../lib/custody-account";
 import type { PoolAccount } from "../lib/pool-account";
 import type { PositionAccount } from "../lib/position-account";
-import type { Side } from "../lib/types";
+import type { PositionSide } from "../lib/types";
 
 class ViewHelper {
   program: Program<Perpetuals>;
@@ -104,7 +104,7 @@ class ViewHelper {
   getEntryPriceAndFee = async (
     payAmount: number,
     positionAmount: number,
-    side: Side,
+    side: PositionSide,
     pool: PoolAccount,
     custody: CustodyAccount,
   ) => {
@@ -120,7 +120,7 @@ class ViewHelper {
       .getEntryPriceAndFee({
         collateral,
         size,
-        side: side === "Long" ? { long: {} } : { short: {} },
+        side: side === "long" ? { long: {} } : { short: {} },
       })
       .accounts({
         perpetuals: PERPETUALS_ADDRESS,

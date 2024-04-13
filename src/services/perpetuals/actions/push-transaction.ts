@@ -1,6 +1,6 @@
 import type { Token } from "@4x.pro/app-config";
 
-import type { TransactionData, TransactionType } from "../utils/types";
+import type { TransactionLogData, TransactionType } from "../lib/types";
 
 const pushTransaction = async (
   account: string,
@@ -8,7 +8,7 @@ const pushTransaction = async (
   type: TransactionType,
   time: number,
   txid: string,
-  txData: TransactionData,
+  txData: TransactionLogData,
 ) => {
   const prevTransactions =
     localStorage.getItem(`4xprotocol-tx-history-${account}`) || "[]";

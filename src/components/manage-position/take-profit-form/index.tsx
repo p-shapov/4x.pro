@@ -8,7 +8,6 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { getTokenSymbol } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
-import { Side } from "@4x.pro/services/perpetuals/lib/types";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import {
   calculateLiquidationPrice,
@@ -42,7 +41,7 @@ const TakeProfitForm: FC<Props> = ({ position, form }) => {
   const entryPrice = position.getPrice();
   const collateralToken = position.token;
   const leverage = position.getLeverage();
-  const side = position.side === Side.Long ? "long" : "short";
+  const side = position.side;
   // TODO - get trigger price from position
   const triggerPrice = undefined;
   const takeProfitFormStyles = mkTakeProfitFormStyles();

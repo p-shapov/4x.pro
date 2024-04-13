@@ -7,7 +7,7 @@ import { Controller, useWatch } from "react-hook-form";
 import { depositTokens } from "@4x.pro/app-config";
 import type { Token } from "@4x.pro/app-config";
 import { useEntryPriceStats } from "@4x.pro/services/perpetuals/hooks/use-entry-price-stats";
-import { Side } from "@4x.pro/services/perpetuals/lib/types";
+import type { PositionSide } from "@4x.pro/services/perpetuals/lib/types";
 import { roundToFirstNonZeroDecimal } from "@4x.pro/shared/utils/number";
 import { TokenField } from "@4x.pro/ui-kit/token-field";
 import { TokenPrice } from "@4x.pro/ui-kit/token-price";
@@ -18,7 +18,7 @@ import { mkPositionStyles } from "./styles";
 
 type Props = {
   form: UseFormReturn<SubmitData>;
-  side: "short" | "long";
+  side: PositionSide;
   collateralTokens: readonly Token[];
 };
 
@@ -45,15 +45,15 @@ const Position: FC<Props> = ({ form, side, collateralTokens }) => {
   });
   const leverage = useWatch({ control: form.control, name: "leverage" });
   const { data: basePriceStats } = useEntryPriceStats({
+    side,
     collateral: useDeferredValue(baseSize) || 0,
     collateralToken: baseToken,
-    side: side === "long" ? Side.Long : Side.Short,
     size: useDeferredValue(baseSize * leverage) || 0,
   });
   const { data: quotePriceStats } = useEntryPriceStats({
+    side,
     collateral: useDeferredValue(quoteSize) || 0,
     collateralToken: quoteToken,
-    side: side === "long" ? Side.Long : Side.Short,
     size: useDeferredValue(quoteSize * leverage) || 0,
   });
   const rate =

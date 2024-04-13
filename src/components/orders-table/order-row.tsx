@@ -1,4 +1,5 @@
 import cn from "classnames";
+import { useState } from "react";
 import type { FC } from "react";
 
 import { queryClient } from "@4x.pro/app-config";
@@ -6,22 +7,26 @@ import { useCustodies } from "@4x.pro/services/perpetuals/hooks/use-custodies";
 import { usePositionsQuery } from "@4x.pro/services/perpetuals/hooks/use-positions";
 import { useWatchPosition } from "@4x.pro/services/perpetuals/hooks/use-watch-position";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
+import type { OrderTxType } from "@4x.pro/services/perpetuals/lib/types";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import {
   formatCurrency,
   formatCurrency_USD,
   formatRate,
 } from "@4x.pro/shared/utils/number";
+import { Link } from "@4x.pro/ui-kit/link";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
 
 import { mkOrderRowStyles } from "./styles";
+import { ManageOrderDialog } from "../manage-position";
 
 type Props = {
-  type: "sl" | "tp";
+  type: OrderTxType;
   position: PositionAccount;
 };
 
 const OrderRow: FC<Props> = ({ type, position }) => {
+  const [openManageOrderDialog, setOpenManageOrderDialog] = useState(false);
   const orderRowStyles = mkOrderRowStyles();
   const { data: custodies } = useCustodies();
   const custody = custodies?.[position.custody.toString()];
@@ -41,13 +46,19 @@ const OrderRow: FC<Props> = ({ type, position }) => {
       }),
   });
   const getType = () => {
-    if (type === "sl") {
+    if (type === "stop-loss") {
       return "Stop Loss";
     }
-    if (type === "tp") {
+    if (type === "take-profit") {
       return "Take Profit";
     }
     return "";
+  };
+  const handleOpenManageOrderDialog = () => {
+    setOpenManageOrderDialog(true);
+  };
+  const handleCloseManageOrderDialog = () => {
+    setOpenManageOrderDialog(false);
   };
   return (
     <tr key={position.address.toString()} className={cn(orderRowStyles.root)}>
@@ -71,16 +82,27 @@ const OrderRow: FC<Props> = ({ type, position }) => {
         {formatCurrency_USD(marketPrice, 2)}
       </td>
       <td className={orderRowStyles.cell}>
-        {type === "sl" &&
+        {type === "stop-loss" &&
           formatCurrency_USD(Number(position.stopLoss) / 10 ** 6, 2)}
-        {type === "tp" &&
+        {type === "take-profit" &&
           formatCurrency_USD(Number(position.takeProfit) / 10 ** 6, 2)}
       </td>
-      {/* <td className={orderRowStyles.cell}>
+      <td className={orderRowStyles.cell}>
         <div className={cn("flex", "gap-[2rem]")}>
+          <Link
+            variant="accent"
+            iconSrc="/icons/edit-2.svg"
+            onClick={handleOpenManageOrderDialog}
+          ></Link>
+          <ManageOrderDialog
+            type={type}
+            open={openManageOrderDialog}
+            position={position}
+            onClose={handleCloseManageOrderDialog}
+          />
           <Link variant="red" iconSrc="/icons/close-circle.svg"></Link>
         </div>
-      </td> */}
+      </td>
     </tr>
   );
 };
