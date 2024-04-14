@@ -9,7 +9,7 @@ import type { Token } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
 import { useAddLiquidityStats } from "@4x.pro/services/perpetuals/hooks/use-add-liquidity-stats";
 import { useChangeLiquidity } from "@4x.pro/services/perpetuals/hooks/use-change-liquidity";
-import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
+import type { PoolAccount } from "@4x.pro/services/perpetuals/lib/pool-account";
 import {
   useIsInsufficientBalance,
   useTokenBalance,
@@ -30,6 +30,7 @@ import type { SubmitData } from "./shema";
 import { mkMintLPFormStyles } from "./styles";
 
 type Props = {
+  pool: PoolAccount;
   form: UseFormReturn<SubmitData>;
 };
 
@@ -46,12 +47,10 @@ const useMintLPForm = () => {
   });
 };
 
-const MintLPForm: FC<Props> = ({ form }) => {
+const MintLPForm: FC<Props> = ({ pool, form }) => {
   const changeLiquidity = useChangeLiquidity();
   const handleSubmit = form.handleSubmit(async (data) => {
-    if (!pool) {
-      return messageToast("No pool found", "error");
-    } else if (!custody) {
+    if (!custody) {
       return messageToast("No custody found", "error");
     } else {
       try {
@@ -86,9 +85,7 @@ const MintLPForm: FC<Props> = ({ form }) => {
     control: form.control,
     name: "pay.token",
   });
-  const pools = usePools();
-  const pool = Object.values(pools.data || {})[0] || null;
-  const custody = pool?.getCustodyAccount(payToken) || null;
+  const custody = pool?.getCustodyAccount(payToken);
   const { data: payBalance } = useTokenBalance({
     token: payToken,
     account: walletContextState.publicKey,
@@ -117,7 +114,7 @@ const MintLPForm: FC<Props> = ({ form }) => {
             labelVariant="balance"
             onChange={mkHandleChangePay(onChange)}
             presets={[25, 50, 75, 100]}
-            tokenList={["USDC", "SOL", "BTC", "ETH"]}
+            tokenList={["USDC", "SOL", "BTC"]}
             formatPresets={(value) => formatPercentage(value, 0)}
             mapPreset={(value) => (payBalance || 0) * (value / 100)}
             error={!!(errors.pay?.amount || errors.pay?.token)}

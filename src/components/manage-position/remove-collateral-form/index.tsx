@@ -12,7 +12,7 @@ import { Wallet } from "@4x.pro/components/wallet";
 import { useChangeCollateral } from "@4x.pro/services/perpetuals/hooks/use-change-collateral";
 import { useCustodies } from "@4x.pro/services/perpetuals/hooks/use-custodies";
 import { useLiquidationPriceStats } from "@4x.pro/services/perpetuals/hooks/use-liquidation-price-stats";
-import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
+import { usePool } from "@4x.pro/services/perpetuals/hooks/use-pool";
 import { useLogTransaction } from "@4x.pro/services/perpetuals/hooks/use-transaction-history";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import {
@@ -49,7 +49,7 @@ type Props = {
   form: UseFormReturn<SubmitData>;
 };
 
-// const receiveTokens: readonly Token[] = ["SOL", "USDC", "BTC", "ETH"];
+// const receiveTokens: readonly Token[] = ["SOL", "USDC", "BTC"];
 
 const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
   const walletContextState = useWallet();
@@ -79,8 +79,7 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
     position,
     withdrawalAmount: useDeferredValue(withdrawalAmount),
   });
-  const { data: poolsData } = usePools();
-  const pool = Object.values(poolsData || {})[0];
+  const { data: pool } = usePool({ address: position.pool });
   const changeCollateral = useChangeCollateral();
   const handleSubmit = form.handleSubmit(async (data) => {
     if (leverageAfterWithdraw && leverageAfterWithdraw < 1) {

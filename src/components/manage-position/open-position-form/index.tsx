@@ -10,9 +10,9 @@ import { useForm, useWatch } from "react-hook-form";
 import type { Token } from "@4x.pro/app-config";
 import { useEntryPriceStats } from "@4x.pro/services/perpetuals/hooks/use-entry-price-stats";
 import { useOpenPosition } from "@4x.pro/services/perpetuals/hooks/use-open-position";
-import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
 import { usePositions } from "@4x.pro/services/perpetuals/hooks/use-positions";
 import { useLogTransaction } from "@4x.pro/services/perpetuals/hooks/use-transaction-history";
+import type { PoolAccount } from "@4x.pro/services/perpetuals/lib/pool-account";
 import type { PositionSide } from "@4x.pro/services/perpetuals/lib/types";
 import { useIsInsufficientBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import { Button } from "@4x.pro/ui-kit/button";
@@ -29,6 +29,7 @@ import { TriggerPrice } from "./trigger-price";
 import { Wallet } from "../../wallet";
 
 type Props = {
+  pool: PoolAccount;
   form: UseFormReturn<SubmitData>;
   side: PositionSide;
   collateralTokens: readonly Token[];
@@ -55,13 +56,16 @@ const useOpenPositionForm = () => {
   return form;
 };
 
-const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
+const OpenPositionForm: FC<Props> = ({
+  pool,
+  side,
+  form,
+  collateralTokens,
+}) => {
   const logTransaction = useLogTransaction();
   const openPositionFormStyles = mkOpenPositionFormStyles();
   const walletContextState = useWallet();
   const openPosition = useOpenPosition();
-  const pools = usePools();
-  const pool = Object.values(pools.data || {})[0];
   const quoteToken = useWatch({
     control: form.control,
     name: "position.quote.token",
@@ -78,8 +82,6 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
       messageToast("You already have an open position", "error");
     } else if (!price) {
       messageToast("Price data is not available", "error");
-    } else if (!pool) {
-      messageToast("No pool found", "error");
     } else {
       try {
         messageToast("Transaction submitted", "success");
@@ -133,6 +135,7 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
   });
   const size = positionQuote.size * leverage;
   const { data: priceStats } = useEntryPriceStats({
+    pool,
     side,
     collateralToken: positionQuote.token,
     size: useDeferredValue(size),
@@ -160,7 +163,12 @@ const OpenPositionForm: FC<Props> = ({ side, form, collateralTokens }) => {
       onSubmit={handleSubmit}
       noValidate
     >
-      <Position form={form} side={side} collateralTokens={collateralTokens} />
+      <Position
+        pool={pool}
+        form={form}
+        side={side}
+        collateralTokens={collateralTokens}
+      />
       <Leverage form={form} />
       <Slippage form={form} />
       <TriggerPrice form={form} />

@@ -15,8 +15,6 @@ import type {
   Stats,
   TradeStats,
   Permissions,
-  PriceStat,
-  PriceStats,
 } from "./types";
 
 class CustodyAccount {
@@ -75,14 +73,10 @@ class CustodyAccount {
     return tokenAddressToToken(this.mint.toString())!;
   }
 
-  getCustodyLiquidity(stats: PriceStats): number {
-    if (Object.values(stats).length === 0) {
-      throw new Error("stats not loaded");
-    }
+  getCustodyLiquidity(currentPrice: number): number {
     try {
       return (
-        (stats[this.getToken()].currentPrice *
-          Number(this.assets.owned.sub(this.assets.locked))) /
+        (currentPrice * Number(this.assets.owned.sub(this.assets.locked))) /
         10 ** this.decimals
       );
     } catch (e) {
@@ -90,11 +84,9 @@ class CustodyAccount {
     }
   }
 
-  getCurrentWeight(stats: PriceStat, liquidity: number): number {
+  getCurrentWeight(currentPrice: number, liquidity: number): number {
     const weight =
-      (100 *
-        stats.currentPrice *
-        (Number(this.assets.owned) / 10 ** this.decimals)) /
+      (100 * currentPrice * (Number(this.assets.owned) / 10 ** this.decimals)) /
       liquidity;
 
     return weight ? weight : 0;

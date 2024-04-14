@@ -4,7 +4,6 @@ import { createQuery } from "react-query-kit";
 import { useAppConfig } from "@4x.pro/app-config";
 import type { Token } from "@4x.pro/app-config";
 
-import { usePools } from "./use-pools";
 import type { CustodyAccount } from "../lib/custody-account";
 import type { PoolAccount } from "../lib/pool-account";
 import type { PositionSide } from "../lib/types";
@@ -60,15 +59,15 @@ const useEntryPriceStats = ({
   collateral,
   size,
   side,
+  pool,
 }: {
   collateralToken: Token;
   collateral: number;
   size: number;
   side: PositionSide;
+  pool: PoolAccount | null;
 }) => {
   const { rpcEndpoint } = useAppConfig();
-  const pools = usePools();
-  const pool = Object.values(pools.data || {})[0] || null;
   const custody = pool?.getCustodyAccount(collateralToken) || null;
   return useEntryPriceStatsQuery({
     variables: {

@@ -8,8 +8,8 @@ import type { UseFormReturn } from "react-hook-form";
 import type { Token } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
 import { useChangeLiquidity } from "@4x.pro/services/perpetuals/hooks/use-change-liquidity";
-import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
 import { useRemoveLiquidityStats } from "@4x.pro/services/perpetuals/hooks/use-remove-liquidity-stats";
+import type { PoolAccount } from "@4x.pro/services/perpetuals/lib/pool-account";
 import {
   useIsInsufficientBalance,
   useTokenBalance,
@@ -30,6 +30,7 @@ import type { SubmitData } from "./shema";
 import { mkBurnLPFormStyles } from "./styles";
 
 type Props = {
+  pool: PoolAccount;
   form: UseFormReturn<SubmitData>;
 };
 
@@ -43,16 +44,15 @@ const useBurnLPForm = () => {
   });
 };
 
-const BurnLPForm: FC<Props> = ({ form }) => {
+const BurnLPForm: FC<Props> = ({ pool, form }) => {
   const changeLiquidity = useChangeLiquidity();
   const handleSubmit = form.handleSubmit(async (data) => {
-    if (!pool) {
-      return messageToast("No pool found", "error");
+    if (!removeLiquidityStats.data) {
+      return messageToast("No stats found", "error");
     } else if (!custody) {
       return messageToast("No custody found", "error");
-    } else if (!removeLiquidityStats.data) {
-      return messageToast("No stats found", "error");
-    } else {
+    }
+    {
       try {
         messageToast("Transaction submitted", "success");
         await changeLiquidity.mutateAsync({
@@ -87,9 +87,7 @@ const BurnLPForm: FC<Props> = ({ form }) => {
     control: form.control,
     name: "receiveToken",
   });
-  const pools = usePools();
-  const pool = Object.values(pools.data || {})[0] || null;
-  const custody = pool?.getCustodyAccount(receiveToken) || null;
+  const custody = pool.getCustodyAccount(receiveToken);
   const { data: lpBalance } = useTokenBalance({
     token: receiveToken,
     account: walletContextState.publicKey,
@@ -138,7 +136,7 @@ const BurnLPForm: FC<Props> = ({ form }) => {
             token={value}
             label="Receive"
             readonlyAmount
-            tokenList={["USDC", "SOL", "BTC", "ETH"]}
+            tokenList={["USDC", "SOL", "BTC"]}
             onChange={mkHandleChangeReceive(onChange)}
             labelVariant="balance"
             placeholder="0.00"

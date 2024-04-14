@@ -55,7 +55,6 @@ type PriceFeed = {
 const PriceFeeds: Record<Token, PriceFeed> = {
   BTC: {},
   SOL: {},
-  ETH: {},
   USDC: {},
   LP: {},
 };
@@ -63,7 +62,6 @@ const PriceFeeds: Record<Token, PriceFeed> = {
 const TokenMap: Record<string, Exclude<Token, "LP">> = {
   BTC: "BTC",
   SOL: "SOL",
-  ETH: "ETH",
   USDC: "USDC",
 };
 const listeners = new Set<() => void>();

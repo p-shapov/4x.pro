@@ -207,14 +207,12 @@ interface Position {
   takeProfit: BN | null;
 }
 
-interface PriceStat {
+interface PriceStats {
   change24hr: number;
   currentPrice: number;
   high24hr: number;
   low24hr: number;
 }
-
-type PriceStats = Record<Token, PriceStat>;
 
 export type {
   Pool,
@@ -232,7 +230,6 @@ export type {
   TradeStats,
   AccountMeta,
   Position,
-  PriceStat,
   PriceStats,
   PositionSide,
   ChangeCollateralTxType,

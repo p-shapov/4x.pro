@@ -6,6 +6,7 @@ import type { IChartingLibraryWidget } from "@public/vendor/charting_library/cha
 import type { Token } from "@4x.pro/app-config";
 import { getTickerSymbol } from "@4x.pro/app-config";
 import { useOpenPositionForm } from "@4x.pro/components/manage-position";
+import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
 import { useResizableLayout } from "@4x.pro/shared/hooks/use-resizable-layout";
 
 import { AssetsToolbar } from "./assets-toolbar";
@@ -16,6 +17,8 @@ import { Tables } from "./tables";
 import { TradingViewChart } from "./trading-view-chart";
 
 const TradeModule = () => {
+  const { data: pools } = usePools();
+  const pool = Object.values(pools || {})?.[0];
   const contentRef = useRef<HTMLDivElement>(null);
   const { hydrated, selectAsset, selectedAsset } = useTradeModule((state) => ({
     hydrated: state.hydrated,
@@ -65,7 +68,7 @@ const TradeModule = () => {
   }, [hydrated, selectedAsset, openPositionForm]);
   return (
     <div className={tradeModuleStyles.root}>
-      {hydrated && (
+      {hydrated && pool && (
         <>
           <AssetsToolbar onChange={handleAssetChange} />
           <div className={tradeModuleStyles.content} ref={contentRef}>
@@ -81,7 +84,7 @@ const TradeModule = () => {
             ></div>
             <Tables />
           </div>
-          <Sidebar openPositionForm={openPositionForm} />
+          <Sidebar pool={pool} openPositionForm={openPositionForm} />
         </>
       )}
     </div>

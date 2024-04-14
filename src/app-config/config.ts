@@ -4,10 +4,10 @@ import { mainnetConfig } from "./config.mainnet";
 const rpcProviders = ["helius"] as const;
 type RpcProvider = (typeof rpcProviders)[number];
 
-const tokenList = ["BTC", "ETH", "USDC", "SOL", "LP"] as const;
+const tokenList = ["BTC", "USDC", "SOL", "LP"] as const;
 type Token = (typeof tokenList)[number];
-const depositTokens: readonly Token[] = ["BTC", "ETH", "USDC", "SOL"];
-const collateralTokens: readonly Token[] = ["SOL", "ETH", "BTC"];
+const depositTokens: readonly Token[] = ["BTC", "USDC", "SOL"];
+const collateralTokens: readonly Token[] = ["SOL", "BTC"];
 
 type Config = {
   rpcEndpoints: Record<RpcProvider, string>;
@@ -25,7 +25,6 @@ const tickerSymbols: Record<Token, string> = {
   SOL: "Crypto.SOL/USD",
   USDC: "Crypto.USDC/USD",
   BTC: "Crypto.BTC/USD",
-  ETH: "Crypto.ETH/USD",
   LP: "",
 };
 
@@ -33,13 +32,11 @@ const pythTickerSymbols: Record<Token, string> = {
   SOL: "PYTH:SOLUSD",
   USDC: "PYTH:USDCUSD",
   BTC: "PYTH:BTCUSD",
-  ETH: "PYTH:ETHUSD",
   LP: "",
 };
 
 const tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>> = {
   BTC: "/coins/BTC.svg",
-  ETH: "/coins/ETH.svg",
   SOL: "/coins/SOL.svg",
   USDC: "/coins/USDC.svg",
 };
@@ -48,7 +45,6 @@ const tokenSymbols: Record<Token, string> = {
   SOL: "SOL",
   USDC: "USDC",
   BTC: "BTC",
-  ETH: "ETH",
   LP: "LP",
 };
 
@@ -56,7 +52,6 @@ const tokenNetworks: Record<Token, string> = {
   SOL: "Solana",
   USDC: "Solana",
   BTC: "Bitcoin",
-  ETH: "Ethereum",
   LP: "Solana",
 };
 
@@ -64,7 +59,6 @@ const tokenIds: Record<Token, string> = {
   SOL: "solana",
   USDC: "usd-coin",
   BTC: "bitcoin",
-  ETH: "ethereum",
   LP: "liquidity-provider",
 };
 

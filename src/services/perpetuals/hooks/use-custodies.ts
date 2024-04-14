@@ -12,6 +12,7 @@ const useCustodiesQuery = createQuery({
   fetcher: async ({ rpcEndpoint }: { rpcEndpoint: string }) => {
     return (await getCustodyData(rpcEndpoint)) || {};
   },
+  refetchInterval: 60 * 10 * 1000,
   placeholderData: keepPreviousData as InitialDataFunction<
     Record<string, CustodyAccount>
   >,

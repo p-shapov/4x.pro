@@ -8,10 +8,7 @@ type SubmitData = {
 };
 
 const submitDataSchema = yup.object<SubmitData>().shape({
-  receiveToken: yup
-    .string()
-    .oneOf<Token>(["SOL", "USDC", "BTC", "ETH"])
-    .required(),
+  receiveToken: yup.string().oneOf<Token>(["SOL", "USDC", "BTC"]).required(),
   withdrawalAmount: yup.number().moreThan(0).required(),
 });
 

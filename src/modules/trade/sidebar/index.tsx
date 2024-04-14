@@ -8,16 +8,18 @@ import {
   OpenPositionFormProvider,
 } from "@4x.pro/components/manage-position";
 import { TradeStats } from "@4x.pro/components/trade-stats";
+import type { PoolAccount } from "@4x.pro/services/perpetuals/lib/pool-account";
 import { Tabs } from "@4x.pro/ui-kit/tabs";
 
 import { mkSidebarStyles } from "./styles";
 import { useTradeModule } from "../store";
 
 type Props = {
+  pool: PoolAccount;
   openPositionForm: ReturnType<typeof useOpenPositionForm>;
 };
 
-const Sidebar: FC<Props> = ({ openPositionForm }) => {
+const Sidebar: FC<Props> = ({ pool, openPositionForm }) => {
   const sidebarStyles = mkSidebarStyles();
   const { selectedAsset, favorites } = useTradeModule((state) => ({
     selectedAsset: state.selectedAsset,
@@ -61,6 +63,7 @@ const Sidebar: FC<Props> = ({ openPositionForm }) => {
             panels={{
               long: (
                 <OpenPositionForm
+                  pool={pool}
                   side="long"
                   form={openPositionForm}
                   collateralTokens={collateralTokens}
@@ -68,6 +71,7 @@ const Sidebar: FC<Props> = ({ openPositionForm }) => {
               ),
               short: (
                 <OpenPositionForm
+                  pool={pool}
                   side="short"
                   form={openPositionForm}
                   collateralTokens={collateralTokens}
@@ -79,6 +83,7 @@ const Sidebar: FC<Props> = ({ openPositionForm }) => {
       </div>
       <div className={sidebarStyles.stats}>
         <TradeStats
+          pool={pool}
           collateral={collateral}
           collateralToken={selectedAsset}
           side={side}

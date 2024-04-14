@@ -10,7 +10,7 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { useChangeCollateral } from "@4x.pro/services/perpetuals/hooks/use-change-collateral";
 import { useCustodies } from "@4x.pro/services/perpetuals/hooks/use-custodies";
 import { useLiquidationPriceStats } from "@4x.pro/services/perpetuals/hooks/use-liquidation-price-stats";
-import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
+import { usePool } from "@4x.pro/services/perpetuals/hooks/use-pool";
 import { useLogTransaction } from "@4x.pro/services/perpetuals/hooks/use-transaction-history";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import { useTokenBalance } from "@4x.pro/shared/hooks/use-token-balance";
@@ -67,8 +67,7 @@ const AddCollateralForm: FC<Props> = ({ position, form }) => {
     token: collateralToken,
     account: walletContextState.publicKey,
   });
-  const { data: poolsData } = usePools();
-  const pool = Object.values(poolsData || {})[0];
+  const { data: pool } = usePool({ address: position.pool });
   const errors = form.formState.errors;
   const size = collateral && collateral * leverage;
   const collateralAfterDeposit = collateral && collateral + depositAmount;

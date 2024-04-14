@@ -7,11 +7,16 @@ import {
   useBurnLPForm,
   useMintLPForm,
 } from "@4x.pro/components/manage-liquidity";
+import type { PoolAccount } from "@4x.pro/services/perpetuals/lib/pool-account";
 import { Tabs } from "@4x.pro/ui-kit/tabs";
 
 import { mkLiquidityTabsStyles } from "./styles";
 
-const LiquidityTabs: FC = () => {
+type Props = {
+  pool: PoolAccount;
+};
+
+const LiquidityTabs: FC<Props> = ({ pool }) => {
   const mintLPForm = useMintLPForm();
   const burnLPForm = useBurnLPForm();
   const liquidityTabsStyles = mkLiquidityTabsStyles();
@@ -30,8 +35,8 @@ const LiquidityTabs: FC = () => {
           },
         ]}
         panels={{
-          mint: <MintLPForm form={mintLPForm} />,
-          burn: <BurnLPForm form={burnLPForm} />,
+          mint: <MintLPForm pool={pool} form={mintLPForm} />,
+          burn: <BurnLPForm pool={pool} form={burnLPForm} />,
         }}
         classNames={{
           tab: liquidityTabsStyles.tab,

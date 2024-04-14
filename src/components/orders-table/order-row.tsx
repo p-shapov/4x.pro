@@ -76,7 +76,7 @@ const OrderRow: FC<Props> = ({ type, position }) => {
     setOpenCancelOrderDialog(false);
   };
   return (
-    <tr key={position.address.toString()} className={cn(orderRowStyles.root)}>
+    <tr className={cn(orderRowStyles.root)}>
       <td className={orderRowStyles.cell}>
         <TokenBadge token={position.token} showNetwork gap={8} />
       </td>

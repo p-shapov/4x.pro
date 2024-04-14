@@ -20,7 +20,7 @@ const WatchTokenPrice: FC<Props> = ({
   currency = "$",
   fractionalDigits,
 }) => {
-  const { priceData } = useWatchPythPriceFeed(token);
+  const { priceData } = useWatchPythPriceFeed(token) || {};
   const getPrice = (price?: number) => {
     if (!price) return formatCurrency(currency)(undefined);
     if (typeof children === "function") {

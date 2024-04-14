@@ -1,3 +1,4 @@
+import type { Token } from "@4x.pro/app-config";
 import { getTokenId, tokenList } from "@4x.pro/app-config";
 
 import type { PriceStats } from "../lib/types";
@@ -10,7 +11,7 @@ type FetchedData = {
   };
 };
 
-const fetchAllStats = () => {
+const fetchAllStats = (token: Token) => {
   const stats = fetch(
     `https://api.coingecko.com/api/v3/simple/price?ids=${tokenList
       .map(getTokenId)
@@ -20,31 +21,37 @@ const fetchAllStats = () => {
   )
     .then((resp) => resp.json())
     .then((data: FetchedData) => {
-      const allStats = tokenList.reduce((acc, token) => {
-        const tokenData = data[getTokenId(token)];
-        acc[token] = {
-          change24hr: tokenData.usd_24h_change,
-          currentPrice: tokenData.usd,
-          high24hr: 0,
-          low24hr: 0,
-        };
-        return acc;
-      }, {} as PriceStats);
+      const allStats = tokenList.reduce(
+        (acc, token) => {
+          const tokenData = data[getTokenId(token)];
+          acc[token] = {
+            change24hr: tokenData.usd_24h_change,
+            currentPrice: tokenData.usd,
+            high24hr: 0,
+            low24hr: 0,
+          };
+          return acc;
+        },
+        {} as Record<Token, PriceStats>,
+      );
 
-      return allStats;
+      return allStats[token];
     })
     .catch(() => {
-      const allStats = tokenList.reduce((acc, token) => {
-        acc[token] = {
-          change24hr: 0,
-          currentPrice: 0,
-          high24hr: 0,
-          low24hr: 0,
-        };
+      const allStats = tokenList.reduce(
+        (acc, token) => {
+          acc[token] = {
+            change24hr: 0,
+            currentPrice: 0,
+            high24hr: 0,
+            low24hr: 0,
+          };
 
-        return acc;
-      }, {} as PriceStats);
-      return allStats;
+          return acc;
+        },
+        {} as Record<Token, PriceStats>,
+      );
+      return allStats[token];
     });
 
   return stats;

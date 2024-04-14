@@ -15,6 +15,49 @@ interface FetchPool {
 
 const getPoolData = async (
   rpcEndpoint: string,
+  poolPublicKey: PublicKey,
+  custodyInfos: Record<string, CustodyAccount>,
+) => {
+  const { perpetual_program, provider } =
+    await getPerpetualProgramAndProvider(rpcEndpoint);
+  const pool = await perpetual_program.account.pool.fetch(poolPublicKey);
+  const lpTokenMint = findProgramAddressSync(
+    [Buffer.from("lp_token_mint"), poolPublicKey.toBuffer()],
+    perpetual_program.programId,
+  )[0];
+  const lpData = await getMint(provider.connection, lpTokenMint);
+  const View = new ViewHelper(provider.connection, provider);
+  const poolData: Pool = {
+    name: pool.name,
+    custodies: pool.custodies,
+    ratios: pool.ratios,
+    aumUsd: pool.aumUsd,
+    bump: pool.bump,
+    lpTokenBump: pool.lpTokenBump,
+    inceptionTime: pool.inceptionTime,
+  };
+  const poolObj = new PoolAccount(
+    poolData,
+    custodyInfos,
+    poolPublicKey,
+    lpData,
+  );
+  let fetchedAum;
+  let loopStatus = true;
+  while (loopStatus) {
+    try {
+      fetchedAum = await View.getAssetsUnderManagement(poolObj);
+      loopStatus = false;
+    } catch (error) {}
+  }
+  if (fetchedAum) {
+    poolObj.setAum(fetchedAum);
+  }
+  return poolObj;
+};
+
+const getPoolsData = async (
+  rpcEndpoint: string,
   custodyInfos: Record<string, CustodyAccount>,
 ) => {
   const { perpetual_program, provider } =
@@ -70,4 +113,4 @@ const getPoolData = async (
   return poolObjs;
 };
 
-export { getPoolData };
+export { getPoolsData, getPoolData };

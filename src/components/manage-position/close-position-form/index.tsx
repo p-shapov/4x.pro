@@ -13,7 +13,7 @@ import { useCustodies } from "@4x.pro/services/perpetuals/hooks/use-custodies";
 import { useExitPriceStats } from "@4x.pro/services/perpetuals/hooks/use-exit-price-stats";
 import { useLiquidationPriceStats } from "@4x.pro/services/perpetuals/hooks/use-liquidation-price-stats";
 import { usePnLStats } from "@4x.pro/services/perpetuals/hooks/use-pnl-stats";
-import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
+import { usePool } from "@4x.pro/services/perpetuals/hooks/use-pool";
 import { useLogTransaction } from "@4x.pro/services/perpetuals/hooks/use-transaction-history";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import {
@@ -38,7 +38,7 @@ type Props = {
   position: PositionAccount;
 };
 
-// const receiveTokens: readonly Token[] = ["SOL", "USDC", "BTC", "ETH"];
+// const receiveTokens: readonly Token[] = ["SOL", "USDC", "BTC"];
 
 const useClosePositionForm = (receiveToken: Token) => {
   return useForm<SubmitData>({
@@ -59,12 +59,12 @@ const ClosePositionForm: FC<Props> = ({ position, form }) => {
   const entryPrice = position.getPrice();
   const collateralToken = position.token;
   const leverage = position.getLeverage();
-  const pools = usePools();
   const closePosition = useClosePosition();
   const size = collateral && collateral * leverage;
   const side = position.side;
   const walletContextState = useWallet();
   const logTransaction = useLogTransaction();
+  const { data: pool } = usePool({ address: position.pool });
   const { data: pnl } = usePnLStats({ position });
   const { data: liquidationPrice } = useLiquidationPriceStats({ position });
   const { data: priceStats } = useExitPriceStats({ position });
@@ -73,7 +73,6 @@ const ClosePositionForm: FC<Props> = ({ position, form }) => {
   //     onChange(token as Token);
   //   };
   const handleFormSubmit = form.handleSubmit(async (data) => {
-    const pool = Object.values(pools.data || {})[0];
     if (!pool) {
       messageToast("No pool found", "error");
     } else if (!custody) {

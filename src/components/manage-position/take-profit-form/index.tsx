@@ -7,7 +7,7 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 
 import { Wallet } from "@4x.pro/components/wallet";
 import { useLiquidationPriceStats } from "@4x.pro/services/perpetuals/hooks/use-liquidation-price-stats";
-import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
+import { usePool } from "@4x.pro/services/perpetuals/hooks/use-pool";
 import { useUpdateOrder } from "@4x.pro/services/perpetuals/hooks/use-update-order";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
@@ -19,6 +19,7 @@ import {
 import { Button } from "@4x.pro/ui-kit/button";
 import { Comparison } from "@4x.pro/ui-kit/comparison";
 import { Definition } from "@4x.pro/ui-kit/definition";
+import { messageToast } from "@4x.pro/ui-kit/message-toast";
 import { NumberField } from "@4x.pro/ui-kit/number-field";
 
 import type { SubmitData } from "./schema";
@@ -54,8 +55,7 @@ const TakeProfitForm: FC<Props> = ({ position, form }) => {
   const liquidationPrice = useLiquidationPriceStats({
     position: position,
   });
-  const { data: poolsData } = usePools();
-  const pool = Object.values(poolsData || {})[0];
+  const { data: pool } = usePool({ address: position.pool });
   const mkHandleChange =
     (onChange: (value: number) => void) => (value: number | "") => {
       onChange(value || 0);
@@ -63,12 +63,16 @@ const TakeProfitForm: FC<Props> = ({ position, form }) => {
   const updateOrder = useUpdateOrder();
   const errors = form.formState.errors;
   const handleSubmit = form.handleSubmit(async (data) => {
-    await updateOrder.mutateAsync({
-      type: "stop-loss",
-      position,
-      pool,
-      triggerPrice: data.triggerPrice,
-    });
+    if (!pool) {
+      return messageToast("No pool found", "error");
+    } else {
+      await updateOrder.mutateAsync({
+        type: "stop-loss",
+        position,
+        pool,
+        triggerPrice: data.triggerPrice,
+      });
+    }
   });
   return (
     <form

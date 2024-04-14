@@ -7,7 +7,7 @@ import type { UseFormReturn } from "react-hook-form";
 
 import { Wallet } from "@4x.pro/components/wallet";
 import { useLiquidationPriceStats } from "@4x.pro/services/perpetuals/hooks/use-liquidation-price-stats";
-import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
+import { usePool } from "@4x.pro/services/perpetuals/hooks/use-pool";
 import { useUpdateOrder } from "@4x.pro/services/perpetuals/hooks/use-update-order";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import type { OrderTxType } from "@4x.pro/services/perpetuals/lib/types";
@@ -20,6 +20,7 @@ import {
 import { Button } from "@4x.pro/ui-kit/button";
 import { Comparison } from "@4x.pro/ui-kit/comparison";
 import { Definition } from "@4x.pro/ui-kit/definition";
+import { messageToast } from "@4x.pro/ui-kit/message-toast";
 
 import { mkCancelOrderFormStyles } from "./styles";
 
@@ -40,8 +41,7 @@ const CancelOrderForm: FC<Props> = ({ type, position, form }) => {
   const triggerPrice = position.getStopLoss() || 0;
   const updateOrder = useUpdateOrder();
   const cancelOrderFormStyles = mkCancelOrderFormStyles();
-  const { data: poolsData } = usePools();
-  const pool = Object.values(poolsData || {})[0];
+  const { data: pool } = usePool({ address: position.pool });
   const walletContextState = useWallet();
   const { price: marketPrice } =
     useWatchPythPriceFeed(collateralToken).priceData || {};
@@ -50,12 +50,16 @@ const CancelOrderForm: FC<Props> = ({ type, position, form }) => {
     position,
   });
   const handleSubmit = form.handleSubmit(async () => {
-    await updateOrder.mutateAsync({
-      type,
-      position,
-      pool,
-      triggerPrice: null,
-    });
+    if (!pool) {
+      return messageToast("No pool found", "error");
+    } else {
+      await updateOrder.mutateAsync({
+        type,
+        position,
+        pool,
+        triggerPrice: null,
+      });
+    }
   });
   return (
     <form

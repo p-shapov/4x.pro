@@ -6,6 +6,7 @@ import { createMutation } from "react-query-kit";
 import { queryClient, useAppConfig } from "@4x.pro/app-config";
 import { useTokenBalanceQuery } from "@4x.pro/shared/hooks/use-token-balance";
 
+import { usePoolsQuery } from "./use-pools";
 import { changeLiquidity } from "../actions/change-liquidity";
 import type { CustodyAccount } from "../lib/custody-account";
 import type { PoolAccount } from "../lib/pool-account";
@@ -42,9 +43,14 @@ const useChangeLiquidityMutation = createMutation({
       tokenAmount,
       liquidityAmount,
     );
-    await queryClient.invalidateQueries({
-      queryKey: useTokenBalanceQuery.getKey(),
-    });
+    await Promise.all([
+      queryClient.invalidateQueries({
+        queryKey: useTokenBalanceQuery.getKey(),
+      }),
+      queryClient.invalidateQueries({
+        queryKey: usePoolsQuery.getKey(),
+      }),
+    ]);
     return res;
   },
 });
