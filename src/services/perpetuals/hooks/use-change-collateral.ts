@@ -4,7 +4,6 @@ import type { Connection } from "@solana/web3.js";
 import { createMutation } from "react-query-kit";
 
 import { queryClient, useAppConfig } from "@4x.pro/app-config";
-import { awaitTransactionSignatureConfirmation } from "@4x.pro/services/transaction-flow/handlers";
 import { useTokenBalanceQuery } from "@4x.pro/shared/hooks/use-token-balance";
 
 import { usePositionsQuery } from "./use-positions";
