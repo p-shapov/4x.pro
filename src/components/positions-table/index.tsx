@@ -42,12 +42,14 @@ const PositionsTable: FC<Props> = ({ owner, fallback }) => {
           </tr>
         )}
         {isFetched &&
-          Object.values(positions).map((position) => (
-            <PositionRow
-              key={position.address.toString()}
-              position={position}
-            />
-          ))}
+          Object.values(positions)
+            .sort((a, b) => (a.openTime.gt(b.openTime) ? 1 : -1))
+            .map((position) => (
+              <PositionRow
+                key={position.address.toString()}
+                position={position}
+              />
+            ))}
       </tbody>
     </table>
   );

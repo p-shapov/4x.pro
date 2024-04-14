@@ -2,6 +2,7 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import cn from "classnames";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import type { FC, PropsWithChildren } from "react";
 
 import { Wallet } from "@4x.pro/components/wallet";
@@ -15,6 +16,7 @@ const PerpetualsLayout: FC<PropsWithClassName<PropsWithChildren>> = ({
   className,
   children,
 }) => {
+  const pathname = usePathname();
   const isMounted = useIsMounted();
   const perpetualsLayoutStyles = mkPerpetualsLayoutStyles();
   const { connected } = useWallet();
@@ -25,13 +27,33 @@ const PerpetualsLayout: FC<PropsWithClassName<PropsWithChildren>> = ({
       <div className={perpetualsLayoutStyles.root}>
         <header className={perpetualsLayoutStyles.header}>
           <nav>
-            <ul>
-              <li>
+            <ul className={perpetualsLayoutStyles.links}>
+              <li
+                className={cn(perpetualsLayoutStyles.link, {
+                  [perpetualsLayoutStyles.activeLink]: pathname === "/trade",
+                  [perpetualsLayoutStyles.inactiveLink]: pathname !== "/trade",
+                })}
+              >
                 <Link
                   href="/trade"
                   size="lg"
                   text="Trade"
                   iconSrc="/icons/status-up.svg"
+                  variant={pathname === "/trade" ? "inherit" : "grey"}
+                />
+              </li>
+              <li
+                className={cn(perpetualsLayoutStyles.link, {
+                  [perpetualsLayoutStyles.activeLink]: pathname === "/earn",
+                  [perpetualsLayoutStyles.inactiveLink]: pathname !== "/earn",
+                })}
+              >
+                <Link
+                  href="/earn"
+                  size="lg"
+                  text="Earn"
+                  variant={pathname === "/earn" ? "inherit" : "grey"}
+                  iconSrc="/icons/arrange-square.svg"
                 />
               </li>
             </ul>

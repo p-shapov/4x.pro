@@ -26,7 +26,7 @@ import { submitDataSchema } from "./schema";
 import { Slippage } from "./slippage";
 import { mkOpenPositionFormStyles } from "./styles";
 import { TriggerPrice } from "./trigger-price";
-import { Wallet } from "../wallet";
+import { Wallet } from "../../wallet";
 
 type Props = {
   form: UseFormReturn<SubmitData>;

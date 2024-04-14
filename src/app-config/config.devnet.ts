@@ -5,6 +5,7 @@ const pythFeedIds_to_USD: Record<Token, string> = {
   USDC: "5SSkXsEKQepHHAewytPVwdej4epN1nxgLVM84L4KXgy7",
   BTC: "HovQMDrbAgAYPCmHVSrezcSmkMtXSSUsLDFANExrZh2J",
   ETH: "EdVCmQ9FSPcVe5YySXDPCRmc8aDQLKJ9xvYBMZPie1Vw",
+  LP: "",
 };
 
 const publicKeys: Record<Token, string> = {
@@ -12,6 +13,7 @@ const publicKeys: Record<Token, string> = {
   USDC: "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr",
   BTC: "9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E",
   ETH: "Ff5JqsAYUD4vAfQUtfRprT4nXu9e28tTBZTDFMnJNdvd",
+  LP: "",
 };
 
 const devnetConfig = {

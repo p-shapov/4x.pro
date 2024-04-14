@@ -22,12 +22,8 @@ const localStorageSchema = yup.object({
   rpcProvider: yup.string().oneOf(rpcProviders).required(),
 });
 
-const rpcEndpoint =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:8899/"
-    : getRpcEndpoint("helius");
-const rpcProvider =
-  process.env.NODE_ENV === "development" ? "custom" : "helius";
+const rpcEndpoint = getRpcEndpoint("helius");
+const rpcProvider = "helius";
 
 const useAppConfig = create<Store & Actions>()(
   persist(

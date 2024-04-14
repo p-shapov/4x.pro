@@ -41,7 +41,7 @@ const OrdersTable: FC<Props> = ({ owner, fallback }) => {
       <tbody className={orderTableStyles.body}>
         {orders.length === 0 && isFetched && (
           <tr className={orderTableStyles.fallbackRow}>
-            <td colSpan={6}>{fallback}</td>
+            <td colSpan={7}>{fallback}</td>
           </tr>
         )}
         {isFetched &&

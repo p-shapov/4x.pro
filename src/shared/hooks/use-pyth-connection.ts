@@ -20,21 +20,13 @@ const connectionsMap = new Map<string, PythConnection>();
 const pythProgramKey = getPythProgramKeyForCluster(
   process.env.NEXT_PUBLIC_IS_DEVNET === "true" ? "devnet" : "mainnet-beta",
 );
-const pythFeedIds_to_USD = getPythFeedIds_to_USD();
+const pythFeedIds_to_USD = getPythFeedIds_to_USD().filter(Boolean);
 
 const usePythConnection = () => {
   const { rpcEndpoint } = useAppConfig();
   const pythConnection = useMemo(() => {
-    const connection = new Connection(
-      process.env.NODE_ENV === "development"
-        ? getRpcEndpoint("helius")
-        : rpcEndpoint,
-    );
-    let pythConnection = connectionsMap.get(
-      process.env.NODE_ENV === "development"
-        ? getRpcEndpoint("helius")
-        : rpcEndpoint,
-    );
+    const connection = new Connection(rpcEndpoint);
+    let pythConnection = connectionsMap.get(rpcEndpoint);
     if (!pythConnection) {
       pythConnection = new PythConnection(
         connection,
@@ -65,9 +57,10 @@ const PriceFeeds: Record<Token, PriceFeed> = {
   SOL: {},
   ETH: {},
   USDC: {},
+  LP: {},
 };
 
-const TokenMap: Record<string, Token> = {
+const TokenMap: Record<string, Exclude<Token, "LP">> = {
   BTC: "BTC",
   SOL: "SOL",
   ETH: "ETH",

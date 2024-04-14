@@ -65,7 +65,7 @@ const AddCollateralForm: FC<Props> = ({ position, form }) => {
   });
   const { data: collateralBalance } = useTokenBalance({
     token: collateralToken,
-    account: walletContextState.publicKey?.toBase58(),
+    account: walletContextState.publicKey,
   });
   const { data: poolsData } = usePools();
   const pool = Object.values(poolsData || {})[0];

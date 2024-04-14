@@ -5,7 +5,7 @@ import type { IChartingLibraryWidget } from "@public/vendor/charting_library/cha
 
 import type { Token } from "@4x.pro/app-config";
 import { getTickerSymbol } from "@4x.pro/app-config";
-import { useOpenPositionForm } from "@4x.pro/components/open-position-form";
+import { useOpenPositionForm } from "@4x.pro/components/manage-position";
 import { useResizableLayout } from "@4x.pro/shared/hooks/use-resizable-layout";
 
 import { AssetsToolbar } from "./assets-toolbar";

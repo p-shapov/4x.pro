@@ -20,8 +20,9 @@ import {
 import { Link } from "@4x.pro/ui-kit/link";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
 
+import { ClosePositionDialog } from "./close-position-dialog";
+import { PositionSettingsDialog } from "./position-settings-dialog";
 import { mkPositionRowStyles } from "./styles";
-import { ManagePositionDialog, ClosePositionDialog } from "../manage-position";
 
 type Props = {
   position: PositionAccount;
@@ -55,7 +56,7 @@ const PositionRow: FC<Props> = ({ position }) => {
         queryKey: usePositionsQuery.getKey(),
       }),
   });
-  const handleOpenManagePositionDialog = () => {
+  const handleOpenPositionSettingsDialog = () => {
     setOpenManagePositionDialog(true);
   };
   const handleCloseManagePositionDialog = () => {
@@ -94,16 +95,16 @@ const PositionRow: FC<Props> = ({ position }) => {
       </td>
       <td className={cn(positionRowStyles.cell, positionRowStyles.pnl)}>
         {pnl.data ? (
-          <>
+          <div>
             <span>
               {isPositive ? "+" : "-"}
               {formatCurrency_USD(pnl.data && Math.abs(pnl.data))}
-            </span>
+            </span>{" "}
             <span>
               ({isPositive ? "+" : "-"}
               {formatPercentage(pnlPercentage && Math.abs(pnlPercentage))})
             </span>
-          </>
+          </div>
         ) : (
           "-"
         )}
@@ -119,7 +120,7 @@ const PositionRow: FC<Props> = ({ position }) => {
       </td>
       <td className={positionRowStyles.cell}>
         <span className={cn("flex", "gap-[2rem]")}>
-          <ManagePositionDialog
+          <PositionSettingsDialog
             open={openManagePositionDialog}
             onClose={handleCloseManagePositionDialog}
             position={position}
@@ -127,7 +128,7 @@ const PositionRow: FC<Props> = ({ position }) => {
           <Link
             variant="accent"
             iconSrc="/icons/setting-2.svg"
-            onClick={handleOpenManagePositionDialog}
+            onClick={handleOpenPositionSettingsDialog}
           ></Link>
           <ClosePositionDialog
             open={openClosePosition}

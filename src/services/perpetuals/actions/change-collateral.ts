@@ -84,6 +84,7 @@ const changeCollateral = async (
           custodyTokenAccount: custody.tokenAccount,
           tokenProgram: TOKEN_PROGRAM_ID,
         });
+      break;
     }
     case "remove-collateral": {
       if (position.token == "SOL") {
@@ -112,6 +113,7 @@ const changeCollateral = async (
           custodyTokenAccount: custody.tokenAccount,
           tokenProgram: TOKEN_PROGRAM_ID,
         });
+      break;
     }
   }
   if (preInstructions)

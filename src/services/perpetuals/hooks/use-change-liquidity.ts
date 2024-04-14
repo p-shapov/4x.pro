@@ -6,89 +6,83 @@ import { createMutation } from "react-query-kit";
 import { queryClient, useAppConfig } from "@4x.pro/app-config";
 import { useTokenBalanceQuery } from "@4x.pro/shared/hooks/use-token-balance";
 
-import { usePositionsQuery } from "./use-positions";
-import { closePosition } from "../actions/close-position";
+import { changeLiquidity } from "../actions/change-liquidity";
 import type { CustodyAccount } from "../lib/custody-account";
 import type { PoolAccount } from "../lib/pool-account";
-import type { PositionAccount } from "../lib/position-account";
+import type { ChangeLiquidityTxType } from "../lib/types";
 
-const useClosePositionMutation = createMutation({
-  mutationKey: ["close-position"],
+const useChangeLiquidityMutation = createMutation({
+  mutationKey: ["change-liquidity"],
   mutationFn: async ({
+    type,
     rpcEndpoint,
     walletContextState,
     connection,
     pool,
-    position,
     custody,
-    price,
-    slippage,
+    tokenAmount,
+    liquidityAmount,
   }: {
+    type: ChangeLiquidityTxType;
     rpcEndpoint: string;
     walletContextState: WalletContextState;
     connection: Connection;
     pool: PoolAccount;
-    position: PositionAccount;
     custody: CustodyAccount;
-    price: number;
-    slippage: number;
+    tokenAmount: number;
+    liquidityAmount: number;
   }) => {
-    const res = await closePosition(
+    const res = await changeLiquidity(
+      type,
       rpcEndpoint,
       walletContextState,
       connection,
       pool,
-      position,
       custody,
-      price,
-      slippage,
+      tokenAmount,
+      liquidityAmount,
     );
-    await Promise.all([
-      queryClient.invalidateQueries({
-        queryKey: usePositionsQuery.getKey(),
-      }),
-      queryClient.invalidateQueries({
-        queryKey: useTokenBalanceQuery.getKey(),
-      }),
-    ]);
+    await queryClient.invalidateQueries({
+      queryKey: useTokenBalanceQuery.getKey(),
+    });
     return res;
   },
 });
 
-const useClosePosition = () => {
+const useChangeLiquidity = () => {
+  const mutation = useChangeLiquidityMutation();
   const walletContextState = useWallet();
   const { rpcEndpoint } = useAppConfig();
   const { connection } = useConnection();
-  const mutation = useClosePositionMutation();
   return {
     ...mutation,
-    mutate: (params: {
+    mutate: (data: {
+      type: ChangeLiquidityTxType;
       pool: PoolAccount;
-      position: PositionAccount;
       custody: CustodyAccount;
-      price: number;
-      slippage: number;
+      tokenAmount: number;
+      liquidityAmount: number;
     }) =>
       mutation.mutate({
-        rpcEndpoint,
+        ...data,
         walletContextState,
+        rpcEndpoint,
         connection,
-        ...params,
       }),
-    mutateAsync: async (params: {
+    mutateAsync: async (data: {
+      type: ChangeLiquidityTxType;
       pool: PoolAccount;
-      position: PositionAccount;
       custody: CustodyAccount;
-      price: number;
-      slippage: number;
+      tokenAmount: number;
+      liquidityAmount: number;
     }) =>
       mutation.mutateAsync({
-        rpcEndpoint,
+        ...data,
         walletContextState,
+        rpcEndpoint,
         connection,
-        ...params,
       }),
   };
 };
 
-export { useClosePosition, useClosePositionMutation };
+export { useChangeLiquidityMutation, useChangeLiquidity };

@@ -17,9 +17,9 @@ import {
 import { Link } from "@4x.pro/ui-kit/link";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
 
+import { CancelOrderDialog } from "./cancel-order-dialog";
+import { EditOrderDialog } from "./edit-order-dialog";
 import { mkOrderRowStyles } from "./styles";
-import { ManageOrderDialog } from "../manage-position";
-import { CancelOrderDialog } from "../manage-position/cancel-order-dialog";
 
 type Props = {
   type: OrderTxType;
@@ -101,7 +101,7 @@ const OrderRow: FC<Props> = ({ type, position }) => {
       </td>
       <td className={orderRowStyles.cell}>
         <div className={cn("flex", "gap-[2rem]")}>
-          <ManageOrderDialog
+          <EditOrderDialog
             type={type}
             open={openManageOrderDialog}
             position={position}

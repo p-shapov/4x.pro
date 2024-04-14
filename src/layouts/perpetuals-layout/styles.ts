@@ -1,6 +1,9 @@
 import cn from "classnames";
 
+import { mkTabsStyles } from "@4x.pro/shared/styles/tabs";
+
 const mkPerpetualsLayoutStyles = () => {
+  const tabsStyles = mkTabsStyles({ stretchTabs: false });
   return {
     overlay: cn(
       "w-full",
@@ -25,11 +28,16 @@ const mkPerpetualsLayoutStyles = () => {
       "justify-between",
       "justify-items-center",
       "items-center",
-      "py-[20px]",
+      "pt-[12px]",
+      "pb-[16px]",
     ),
     logo: cn("absolute"),
     main: cn("h-full", "min-h-[0px]"),
     controls: cn("flex", "gap-[12px]"),
+    links: cn(tabsStyles.items, "gap-[24px]"),
+    link: cn(tabsStyles.tab, "after:!bottom-[calc(100%+8px)]"),
+    activeLink: tabsStyles.activeTab,
+    inactiveLink: tabsStyles.inactiveTab,
   };
 };
 

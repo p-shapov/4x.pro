@@ -112,6 +112,19 @@ const formatCurrency_USDC: Formatter = (
     }).format(value) + " USDC"
   );
 };
+const formatCurrency_LP: Formatter = (
+  value,
+  maximumFractionDigits = 2,
+  minimumFractionDigits = maximumFractionDigits,
+) => {
+  if (typeof value !== "number" || isNaN(value)) return "-";
+  return (
+    new Intl.NumberFormat("en", {
+      minimumFractionDigits,
+      maximumFractionDigits,
+    }).format(value) + " LP"
+  );
+};
 const formatCurrency = (token: Token | "$") => {
   return currencyFormatters[token];
 };
@@ -121,6 +134,7 @@ const currencyFormatters: Record<Token | "$", Formatter> = {
   ETH: formatCurrency_ETH,
   SOL: formatCurrency_SOL,
   USDC: formatCurrency_USDC,
+  LP: formatCurrency_LP,
 };
 
 export {

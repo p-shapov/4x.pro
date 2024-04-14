@@ -5,6 +5,7 @@ import { createMutation } from "react-query-kit";
 
 import { queryClient, useAppConfig } from "@4x.pro/app-config";
 import type { Token } from "@4x.pro/app-config";
+import { useTokenBalanceQuery } from "@4x.pro/shared/hooks/use-token-balance";
 
 import { usePositionsQuery } from "./use-positions";
 import { openPosition } from "../actions/open-position";
@@ -60,9 +61,14 @@ const useOpenPositionMutation = createMutation({
       stopLoss,
       takeProfit,
     );
-    await queryClient.invalidateQueries({
-      queryKey: usePositionsQuery.getKey(),
-    });
+    await Promise.all([
+      queryClient.invalidateQueries({
+        queryKey: usePositionsQuery.getKey(),
+      }),
+      queryClient.invalidateQueries({
+        queryKey: useTokenBalanceQuery.getKey(),
+      }),
+    ]);
     return res;
   },
 });

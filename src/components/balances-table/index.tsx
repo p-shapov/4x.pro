@@ -22,7 +22,7 @@ const TableRow: FC<{ publicKey: PublicKey | null; asset: Token }> = ({
   const tableStyles = mkTableStyles();
   const tokenBalance = useTokenBalance({
     token: asset,
-    account: publicKey?.toBase58(),
+    account: publicKey,
   });
   return (
     <tr className={cn(tableStyles.row, tableStyles.rowDelimiter)} key={asset}>
@@ -30,15 +30,15 @@ const TableRow: FC<{ publicKey: PublicKey | null; asset: Token }> = ({
         <TokenBadge token={asset} gap={8} />
       </td>
       <td className={tableStyles.cell}>
-        {formatCurrency(asset)(tokenBalance.data, 4)}
+        {formatCurrency(asset)(tokenBalance.data, 2)}
       </td>
       <td className={tableStyles.cell}>
-        <TokenPrice token={asset} fractionalDigits={4} watch>
+        <TokenPrice token={asset} fractionalDigits={2} watch>
           {tokenBalance.data || null}
         </TokenPrice>
       </td>
       <td className={tableStyles.cell}>
-        <TokenPrice token={asset} fractionalDigits={4} watch />
+        <TokenPrice token={asset} fractionalDigits={2} watch />
       </td>
     </tr>
   );

@@ -2,11 +2,11 @@ import type { FC } from "react";
 import { useState } from "react";
 import { useWatch } from "react-hook-form";
 
-import type { useOpenPositionForm } from "@4x.pro/components/open-position-form";
+import type { useOpenPositionForm } from "@4x.pro/components/manage-position";
 import {
   OpenPositionForm,
   OpenPositionFormProvider,
-} from "@4x.pro/components/open-position-form";
+} from "@4x.pro/components/manage-position";
 import { TradeStats } from "@4x.pro/components/trade-stats";
 import { Tabs } from "@4x.pro/ui-kit/tabs";
 

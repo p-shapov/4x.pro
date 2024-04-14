@@ -1,6 +1,34 @@
 import cn from "classnames";
 
+import { mkDialogStyles } from "@4x.pro/shared/styles/dialog";
 import { mkTableStyles } from "@4x.pro/shared/styles/table";
+
+const mkPositionSettingsDialogStyles = () => {
+  const dialogStyles = mkDialogStyles();
+  return {
+    tabsList: cn(
+      "grid",
+      "grid-flow-col",
+      "grid-cols-fr",
+      "mb-[18px]",
+      "px-[20px]",
+      "pb-[8px]",
+      "gap-[20px]",
+      "border-t-[1px]",
+      "border-b-[1px]",
+      "border-strong",
+    ),
+    tab: cn("text-h5"),
+    content: dialogStyles.content,
+  };
+};
+
+const mkClosePositionDialogStyles = () => {
+  const dialogStyles = mkDialogStyles();
+  return {
+    content: dialogStyles.content,
+  };
+};
 
 type Props = {
   isPositive: boolean;
@@ -32,4 +60,9 @@ const mkPositionsTableStyles = () => {
   };
 };
 
-export { mkPositionRowStyles, mkPositionsTableStyles };
+export {
+  mkPositionRowStyles,
+  mkPositionsTableStyles,
+  mkPositionSettingsDialogStyles,
+  mkClosePositionDialogStyles,
+};

@@ -2,6 +2,7 @@
 "use client";
 import { useNumberFormat } from "@react-input/number-format";
 import { useWallet } from "@solana/wallet-adapter-react";
+import type { PublicKey } from "@solana/web3.js";
 import cn from "classnames";
 import { useEffect, useId, useState } from "react";
 import type { ChangeEventHandler, FC, ReactNode } from "react";
@@ -23,11 +24,13 @@ type Props = {
   label?: string;
   value?: number;
   token?: Token;
+  poolTokenAddress?: PublicKey;
   placeholder?: string;
   presets?: number[];
   mapPreset?: (value: number) => number;
   formatPresets?: Formatter;
-  readonly?: boolean;
+  readonlyToken?: boolean;
+  readonlyAmount?: boolean;
   labelVariant?: "balance" | "max";
   showSymbol?: boolean;
   max?: number;
@@ -51,11 +54,14 @@ const TokenField: FC<Props> = ({
   placeholder,
   showSymbol,
   presets,
+  poolTokenAddress,
   formatPresets,
   labelTooltip,
   mapPreset = (value) => value,
   max,
   error,
+  readonlyAmount,
+  readonlyToken,
   ...rest
 }) => {
   const inputRef = useNumberFormat({
@@ -70,8 +76,9 @@ const TokenField: FC<Props> = ({
   if (!currentToken) throw new Error("Token is required");
   const { publicKey } = useWallet();
   const tokenBalance = useTokenBalance({
-    token: labelVariant === "balance" ? currentToken : undefined,
-    account: publicKey?.toBase58(),
+    token: currentToken!,
+    account: publicKey,
+    address: poolTokenAddress,
   });
   const tokenListKey = tokenList?.join("");
   useEffect(() => {
@@ -181,6 +188,7 @@ const TokenField: FC<Props> = ({
             value={inputValue}
             onChange={handleChange}
             placeholder={placeholder}
+            readOnly={readonlyAmount}
             style={{
               minWidth: !inputValue
                 ? `${placeholder?.length || 1}ch`
@@ -204,7 +212,7 @@ const TokenField: FC<Props> = ({
         {tokenList && (
           <span className={cn(fieldStyles.postfix, "justify-end")}>
             <Select
-              readonly={rest.readonly}
+              readonly={readonlyToken}
               options={tokenList.map((token) => ({
                 value: token,
                 content: <TokenBadge token={token} gap={8} />,

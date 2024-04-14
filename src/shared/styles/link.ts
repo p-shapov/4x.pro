@@ -1,7 +1,7 @@
 import cn from "classnames";
 
 type Size = "md" | "lg";
-type Variant = "accent" | "red" | "grey";
+type Variant = "accent" | "red" | "grey" | "inherit";
 
 type Props = {
   size?: Size;
@@ -29,6 +29,7 @@ const mkLinkStyles = ({
         "text-accent": variant === "accent",
         "text-red": variant === "red",
         "text-content-2": variant === "grey",
+        "text-inherit": variant === "inherit",
         uppercase: uppercase,
       },
     ),

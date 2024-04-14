@@ -46,6 +46,7 @@ const updateOrder = async (
           position: position.address,
           custody: custody.address,
         });
+      break;
     }
     case "take-profit": {
       methodBuilder = perpetual_program.methods
@@ -60,6 +61,7 @@ const updateOrder = async (
           position: position.address,
           custody: custody.address,
         });
+      break;
     }
   }
 

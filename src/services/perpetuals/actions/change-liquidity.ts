@@ -99,6 +99,7 @@ const changeLiquidity = async (
           tokenProgram: TOKEN_PROGRAM_ID,
         })
         .remainingAccounts(pool.getCustodyMetas());
+      break;
     }
     case "remove-liquidity": {
       const lpAmountIn = new BN(liquidityAmount * 10 ** pool.lpData.decimals);
@@ -124,6 +125,7 @@ const changeLiquidity = async (
           tokenProgram: TOKEN_PROGRAM_ID,
         })
         .remainingAccounts(pool.getCustodyMetas());
+      break;
     }
   }
   if (preInstructions)

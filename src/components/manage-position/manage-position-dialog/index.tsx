@@ -1,44 +1,40 @@
+"use client";
 import { Dialog } from "@headlessui/react";
-import type { FC } from "react";
+import type { FC, ReactNode } from "react";
 
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import { Icon } from "@4x.pro/ui-kit/icon";
 
-import { ProfNLoss } from "./prof-n-loss";
-import { StopLossForm, useStopLossForm } from "./stop-loss-form";
 import { mkManagePositionDialogStyles } from "./styles";
-import { TakeProfitForm, useTakeProfitForm } from "./take-profit-form";
+import { ProfNLoss } from "../prof-n-loss";
 
 type Props = {
-  type: "stop-loss" | "take-profit";
-  open: boolean;
+  title?: string;
+  children: ReactNode;
   position: PositionAccount;
+  open: boolean;
   onClose: () => void;
 };
 
-const ManageOrderDialog: FC<Props> = ({ type, onClose, open, position }) => {
+const ManagePositionDialog: FC<Props> = ({
+  title = "Manage Position",
+  position,
+  open,
+  onClose,
+  children,
+}) => {
   const managePositionDialogStyles = mkManagePositionDialogStyles();
-  const stopLossForm = useStopLossForm();
-  const takeProfitForm = useTakeProfitForm();
-  const getForm = () => {
-    switch (type) {
-      case "stop-loss":
-        return <StopLossForm position={position} form={stopLossForm} />;
-      case "take-profit":
-        return <TakeProfitForm position={position} form={takeProfitForm} />;
-    }
-  };
   return (
     <Dialog
+      className={managePositionDialogStyles.root}
       open={open}
       onClose={onClose}
-      className={managePositionDialogStyles.root}
     >
       <div className={managePositionDialogStyles.layout}>
         <Dialog.Panel className={managePositionDialogStyles.panel}>
           <div className={managePositionDialogStyles.header}>
             <Dialog.Title className={managePositionDialogStyles.title}>
-              Manage Order
+              {title}
             </Dialog.Title>
             <div className={managePositionDialogStyles.pnl}>
               <ProfNLoss position={position} />
@@ -50,11 +46,11 @@ const ManageOrderDialog: FC<Props> = ({ type, onClose, open, position }) => {
               />
             </button>
           </div>
-          <div className={managePositionDialogStyles.content}>{getForm()}</div>
+          {children}
         </Dialog.Panel>
       </div>
     </Dialog>
   );
 };
 
-export { ManageOrderDialog };
+export { ManagePositionDialog };

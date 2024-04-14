@@ -1,6 +1,21 @@
 import cn from "classnames";
 
+import { mkDialogStyles } from "@4x.pro/shared/styles/dialog";
 import { mkTableStyles } from "@4x.pro/shared/styles/table";
+
+const mkEditOrderDialogStyles = () => {
+  const dialogStyles = mkDialogStyles();
+  return {
+    content: dialogStyles.content,
+  };
+};
+
+const mkCancelOrderDialogStyles = () => {
+  const dialogStyles = mkDialogStyles();
+  return {
+    content: dialogStyles.content,
+  };
+};
 
 const mkOrderRowStyles = () => {
   const tableStyles = mkTableStyles();
@@ -23,4 +38,9 @@ const mkOrdersTableStyles = () => {
   };
 };
 
-export { mkOrderRowStyles, mkOrdersTableStyles };
+export {
+  mkOrderRowStyles,
+  mkOrdersTableStyles,
+  mkEditOrderDialogStyles,
+  mkCancelOrderDialogStyles,
+};

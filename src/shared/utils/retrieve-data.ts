@@ -13,15 +13,17 @@ const checkIfAccountExists = async (
   return bal > 0;
 };
 
-const fetchSplTokenBalance = async (
+const fetchTokenBalance = async (
   token: Token,
-  account: string,
+  account: PublicKey,
   connection: Connection,
+  address?: PublicKey,
 ) => {
+  if (token == "LP" && address) {
+    return await fetchLPBalance(address, account, connection);
+  }
   if (token === "SOL") {
-    return (
-      (await connection.getBalance(new PublicKey(account))) / LAMPORTS_PER_SOL
-    );
+    return (await connection.getBalance(account)) / LAMPORTS_PER_SOL;
   }
   const tokenATA = await getAssociatedTokenAddress(
     new PublicKey(getTokenPublicKey(token)),
@@ -46,4 +48,4 @@ const fetchLPBalance = async (
   return 0;
 };
 
-export { checkIfAccountExists, fetchSplTokenBalance, fetchLPBalance };
+export { checkIfAccountExists, fetchTokenBalance, fetchLPBalance };

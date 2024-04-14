@@ -28,7 +28,7 @@ const AccountButton: FC = () => {
   const { wallet, publicKey } = useWallet();
   const balance = useTokenBalance({
     token: "SOL",
-    account: publicKey?.toBase58(),
+    account: publicKey,
   });
   const handleCopyAddress = async () => {
     if (publicKey) {
