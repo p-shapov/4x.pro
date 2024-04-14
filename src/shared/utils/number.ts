@@ -131,7 +131,6 @@ const formatCurrency = (token: Token | "$") => {
 const currencyFormatters: Record<Token | "$", Formatter> = {
   $: formatCurrency_USD,
   BTC: formatCurrency_BTC,
-  ETH: formatCurrency_ETH,
   SOL: formatCurrency_SOL,
   USDC: formatCurrency_USDC,
   LP: formatCurrency_LP,
