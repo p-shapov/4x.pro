@@ -12,7 +12,7 @@ const mkTokenDistributionStyles = () => {
       "gap-[12px]",
       "grid-rows-[max-content_1fr]",
     ),
-    title: cn("text-h3", "text-content-1", "pl-[24px]"),
+    title: cn("text-h3", "text-content-1", "pl-[24px]", "uppercase"),
   };
 };
 

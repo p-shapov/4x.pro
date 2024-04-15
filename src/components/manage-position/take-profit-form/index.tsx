@@ -67,7 +67,7 @@ const TakeProfitForm: FC<Props> = ({ position, form }) => {
       return messageToast("No pool found", "error");
     } else {
       await updateOrder.mutateAsync({
-        type: "stop-loss",
+        type: "take-profit",
         position,
         pool,
         triggerPrice: data.triggerPrice,

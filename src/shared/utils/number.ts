@@ -6,6 +6,8 @@ type Formatter = (
   minimumFractionDigits?: number,
 ) => string;
 
+const noValue = "–";
+
 const roundToFirstNonZeroDecimal = (value: number) => {
   return Number(value.toFixed(20).match(/^-?\d*\.?0*\d{0,2}/)?.[0] || 0);
 };
@@ -14,7 +16,7 @@ const formatDefault: Formatter = (
   maximumFractionDigits = 2,
   minimumFractionDigits = maximumFractionDigits,
 ) => {
-  if (typeof value !== "number" || isNaN(value)) return "-";
+  if (typeof value !== "number" || isNaN(value)) return noValue;
   return new Intl.NumberFormat("en", {
     maximumFractionDigits,
     minimumFractionDigits,
@@ -25,7 +27,7 @@ const formatPercentage: Formatter = (
   maximumFractionDigits = 2,
   minimumFractionDigits = maximumFractionDigits,
 ) => {
-  if (typeof value !== "number" || isNaN(value)) return "-";
+  if (typeof value !== "number" || isNaN(value)) return noValue;
   return (
     new Intl.NumberFormat("en", {
       minimumFractionDigits,
@@ -38,7 +40,7 @@ const formatRate: Formatter = (
   maximumFractionDigits = 2,
   minimumFractionDigits = maximumFractionDigits,
 ) => {
-  if (typeof value !== "number" || isNaN(value)) return "-";
+  if (typeof value !== "number" || isNaN(value)) return noValue;
   return (
     new Intl.NumberFormat("en", {
       minimumFractionDigits,
@@ -51,7 +53,7 @@ const formatCurrency_USD: Formatter = (
   maximumFractionDigits = 2,
   minimumFractionDigits = maximumFractionDigits,
 ) => {
-  if (typeof value !== "number" || isNaN(value)) return "-";
+  if (typeof value !== "number" || isNaN(value)) return noValue;
   return (
     "$" +
     new Intl.NumberFormat("en", {
@@ -65,7 +67,7 @@ const formatCurrency_BTC: Formatter = (
   maximumFractionDigits = 2,
   minimumFractionDigits = maximumFractionDigits,
 ) => {
-  if (typeof value !== "number" || isNaN(value)) return "-";
+  if (typeof value !== "number" || isNaN(value)) return noValue;
   return (
     new Intl.NumberFormat("en", {
       minimumFractionDigits,
@@ -78,7 +80,7 @@ const formatCurrency_ETH: Formatter = (
   maximumFractionDigits = 2,
   minimumFractionDigits = maximumFractionDigits,
 ) => {
-  if (typeof value !== "number" || isNaN(value)) return "-";
+  if (typeof value !== "number" || isNaN(value)) return noValue;
   return (
     new Intl.NumberFormat("en", {
       minimumFractionDigits,
@@ -91,7 +93,7 @@ const formatCurrency_SOL: Formatter = (
   maximumFractionDigits = 2,
   minimumFractionDigits = maximumFractionDigits,
 ) => {
-  if (typeof value !== "number" || isNaN(value)) return "-";
+  if (typeof value !== "number" || isNaN(value)) return noValue;
   return (
     new Intl.NumberFormat("en", {
       minimumFractionDigits,
@@ -104,7 +106,7 @@ const formatCurrency_USDC: Formatter = (
   maximumFractionDigits = 2,
   minimumFractionDigits = maximumFractionDigits,
 ) => {
-  if (typeof value !== "number" || isNaN(value)) return "-";
+  if (typeof value !== "number" || isNaN(value)) return noValue;
   return (
     new Intl.NumberFormat("en", {
       minimumFractionDigits,
@@ -117,7 +119,7 @@ const formatCurrency_LP: Formatter = (
   maximumFractionDigits = 2,
   minimumFractionDigits = maximumFractionDigits,
 ) => {
-  if (typeof value !== "number" || isNaN(value)) return "-";
+  if (typeof value !== "number" || isNaN(value)) return noValue;
   return (
     new Intl.NumberFormat("en", {
       minimumFractionDigits,
