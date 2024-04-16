@@ -38,7 +38,10 @@ const CancelOrderForm: FC<Props> = ({ type, position, form }) => {
   const collateral = position.collateralAmount.toNumber() / LAMPORTS_PER_SOL;
   const collateralToken = position.token;
   const leverage = position.getLeverage();
-  const triggerPrice = position.getStopLoss() || 0;
+  const triggerPrice =
+    (type === "stop-loss"
+      ? position.getStopLoss()
+      : position.getTakeProfit()) || 0;
   const updateOrder = useUpdateOrder();
   const cancelOrderFormStyles = mkCancelOrderFormStyles();
   const { data: pool } = usePool({ address: position.pool });
