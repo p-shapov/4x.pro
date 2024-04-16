@@ -1,5 +1,5 @@
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 
-type Asset = `${Token}/${Token}`;
+type Asset = `${Coin}/${Coin}`;
 
 export type { Asset };

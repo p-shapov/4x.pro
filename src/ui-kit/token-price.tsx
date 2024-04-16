@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from "react";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import {
   usePythPriceFeed,
   useWatchPythPriceFeed,
@@ -8,8 +8,8 @@ import {
 import { formatCurrency } from "@4x.pro/shared/utils/number";
 
 type Props = {
-  token: Token;
-  currency?: Token | "$";
+  token: Coin;
+  currency?: Coin | "$";
   children?: null | number | ((price?: number) => ReactNode);
   fractionalDigits?: number;
 };

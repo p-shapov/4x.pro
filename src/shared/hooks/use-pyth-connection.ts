@@ -8,7 +8,7 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import { useEffect, useMemo, useSyncExternalStore } from "react";
 import { createQuery } from "react-query-kit";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import {
   getPythFeedIds_to_USD,
   getRpcEndpoint,
@@ -52,23 +52,21 @@ type PriceFeed = {
   priceData?: PriceData;
 };
 
-const PriceFeeds: Record<Token, PriceFeed> = {
+const PriceFeeds: Record<Coin, PriceFeed> = {
   SOL: {},
   USDC: {},
-  LP: {},
 };
 
-const TokenMap: Record<string, Token> = {
+const TokenMap: Record<string, Coin> = {
   SOL: "SOL",
   USDC: "USDC",
-  LP: "LP",
 };
 const listeners = new Set<() => void>();
 const emit = () => {
   listeners.forEach((listener) => listener());
 };
 
-const useWatchPythPriceFeed = (token: Token): PriceFeed => {
+const useWatchPythPriceFeed = (token?: Coin): PriceFeed => {
   const pythConnection = usePythConnection();
   return useSyncExternalStore<PriceFeed>(
     (listener) => {
@@ -85,7 +83,7 @@ const useWatchPythPriceFeed = (token: Token): PriceFeed => {
         listeners.delete(listener);
       };
     },
-    () => PriceFeeds[token],
+    () => (token ? PriceFeeds[token] : {}),
     () => ({}),
   );
 };
@@ -96,7 +94,7 @@ const usePythPriceFeedQuery = createQuery({
     token,
     rpcEndpoint,
   }: {
-    token?: Token;
+    token?: Coin;
     rpcEndpoint: string;
   }) => {
     if (!token) return null;
@@ -115,7 +113,7 @@ const usePythPriceFeedQuery = createQuery({
   gcTime: 0,
 });
 
-const usePythPriceFeed = ({ token }: { token?: Token }) => {
+const usePythPriceFeed = ({ token }: { token?: Coin }) => {
   const { rpcEndpoint } = useAppConfig();
   return usePythPriceFeedQuery({
     variables: {

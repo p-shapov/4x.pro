@@ -46,6 +46,7 @@ const useAppConfig = create<Store & Actions>()(
       },
     })),
     {
+      version: 2,
       name: "4xprotocol-app-config",
       partialize: (state) => ({
         rpcProvider: state.rpcProvider,

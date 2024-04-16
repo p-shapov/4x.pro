@@ -31,6 +31,7 @@ const DistributionRow: FC<Props> = ({ pool, custody }) => {
       : 0;
   const target = Number(pool.getRatioStruct(custody.address).target);
   const utilization = custody.getUtilizationRate();
+  if (!token) return null;
   return (
     <tr className={distributionRowStyles.root}>
       <td className={distributionRowStyles.cell}>

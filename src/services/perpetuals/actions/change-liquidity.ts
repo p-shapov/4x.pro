@@ -30,6 +30,9 @@ const changeLiquidity = async (
   tokenAmount: number,
   liquidityAmount: number,
 ) => {
+  if (!custody.getToken()) {
+    throw new Error("Token not found");
+  }
   const { perpetual_program } = await getPerpetualProgramAndProvider(
     rpcEndpoint,
     walletContextState,

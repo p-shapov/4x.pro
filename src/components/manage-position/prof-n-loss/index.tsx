@@ -2,7 +2,7 @@
 import type { FC } from "react";
 
 import { getTokenSymbol } from "@4x.pro/app-config";
-import { useCustodies } from "@4x.pro/services/perpetuals/hooks/use-custodies";
+import { useCustody } from "@4x.pro/services/perpetuals/hooks/use-custodies";
 import { usePnLStats } from "@4x.pro/services/perpetuals/hooks/use-pnl-stats";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
 import {
@@ -18,8 +18,9 @@ type Props = {
 };
 
 const ProfNLoss: FC<Props> = ({ position }) => {
-  const { data: custodies } = useCustodies();
-  const custody = custodies?.[position.custody.toString()];
+  const { data: custody } = useCustody({
+    address: position.custody.toBase58(),
+  });
   const { data: pnl } = usePnLStats({ position });
   const collateralToken = position.token;
   const side = position.side;

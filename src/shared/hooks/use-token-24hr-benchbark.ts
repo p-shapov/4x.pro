@@ -1,13 +1,13 @@
 import { createQuery } from "react-query-kit";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import { getTickerSymbol } from "@4x.pro/app-config";
 
 import { getNowUnix } from "../utils/time";
 
 const useToken24hrBenchmarkQuery = createQuery({
   queryKey: ["token-benchmark"],
-  fetcher: ({ token }: { token: Token }) => {
+  fetcher: ({ token }: { token: Coin }) => {
     const to = getNowUnix();
     const from = to - 24 * 60 * 60;
     return fetch(
@@ -29,7 +29,7 @@ const useToken24hrBenchmarkQuery = createQuery({
   refetchInterval: 60 * 1000,
 });
 
-const useToken24hrBenchmark = ({ token }: { token: Token }) => {
+const useToken24hrBenchmark = ({ token }: { token: Coin }) => {
   return useToken24hrBenchmarkQuery({ variables: { token } });
 };
 

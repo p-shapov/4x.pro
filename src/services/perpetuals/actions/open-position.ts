@@ -6,7 +6,7 @@ import type { WalletContextState } from "@solana/wallet-adapter-react";
 import type { Connection, TransactionInstruction } from "@solana/web3.js";
 import { SystemProgram } from "@solana/web3.js";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import { manualSendTransaction } from "@4x.pro/services/transaction-flow/handlers";
 import {
   createAtaIfNeeded,
@@ -46,6 +46,9 @@ const openPositionBuilder = async (
   stopLoss: number | null,
   takeProfit: number | null,
 ) => {
+  if (!payCustody.getToken() || !positionCustody.getToken()) {
+    throw new Error("Token not found");
+  }
   const { perpetual_program, provider } = await getPerpetualProgramAndProvider(
     rpcEndpoint,
     walletContextState,
@@ -72,7 +75,7 @@ const openPositionBuilder = async (
   )[0];
   const preInstructions: TransactionInstruction[] = [];
   const finalPayAmount = positionAmount / leverage;
-  if (payCustody.getToken() != positionCustody.getToken()) {
+  if (payCustody.getToken() !== positionCustody.getToken()) {
     const View = new ViewHelper(connection, provider);
     const swapInfo = await View.getSwapAmountAndFees(
       payAmount,
@@ -113,8 +116,8 @@ const openPositionBuilder = async (
         walletContextState,
         connection,
         pool,
-        payCustody.getToken(),
-        positionCustody.getToken(),
+        payCustody.getToken()!,
+        positionCustody.getToken()!,
         payAmount + entryFee + swapFee + extraSwap,
         recAmt,
       );
@@ -177,7 +180,7 @@ const openPositionBuilder = async (
     "Open position",
     {
       Price: formatCurrency_USD(price),
-      Size: formatCurrency(positionCustody.getToken())(positionAmount, 4),
+      Size: formatCurrency(positionCustody.getToken()!)(positionAmount, 4),
     },
   );
 };
@@ -187,8 +190,8 @@ const openPosition = async (
   connection: Connection,
   walletContextState: WalletContextState,
   pool: PoolAccount,
-  payToken: Token,
-  positionToken: Token,
+  payToken: Coin,
+  positionToken: Coin,
   payAmount: number,
   positionAmount: number,
   price: number,

@@ -3,26 +3,26 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { tokenList } from "@4x.pro/app-config";
-import type { Token } from "@4x.pro/app-config";
+import { coinList } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 
 type Store = {
   hydrated: boolean;
-  selectedAsset: Token;
-  favorites: readonly Token[];
+  selectedAsset: Coin;
+  favorites: readonly Coin[];
 };
 
 type Actions = {
-  selectAsset: (token: Token) => void;
-  addFavorite: (token: Token) => void;
-  toggleFavorite: (token: Token) => void;
-  removeFavorite: (token: Token) => void;
+  selectAsset: (token: Coin) => void;
+  addFavorite: (token: Coin) => void;
+  toggleFavorite: (token: Coin) => void;
+  removeFavorite: (token: Coin) => void;
 };
 
 const storeSchema = yup.object<Store>({
   hydrated: yup.boolean(),
-  selectedAsset: yup.string().oneOf(tokenList).required(),
-  favorites: yup.array().of(yup.string().oneOf(tokenList)).required(),
+  selectedAsset: yup.string().oneOf(coinList).required(),
+  favorites: yup.array().of(yup.string().oneOf(coinList)).required(),
 });
 
 const useTradeModule = create<Store & Actions>()(
@@ -31,8 +31,8 @@ const useTradeModule = create<Store & Actions>()(
       hydrated: false,
       selectedAsset: "SOL",
       favorites: ["SOL"] as const,
-      selectAsset: (token: Token) => set({ selectedAsset: token }),
-      addFavorite: (token: Token) =>
+      selectAsset: (token: Coin) => set({ selectedAsset: token }),
+      addFavorite: (token: Coin) =>
         set((state) => {
           if (!state.favorites) {
             state.favorites = [];
@@ -40,13 +40,13 @@ const useTradeModule = create<Store & Actions>()(
             state.favorites.push(token);
           }
         }),
-      removeFavorite: (token: Token) =>
+      removeFavorite: (token: Coin) =>
         set((state) => {
           if (state.favorites) {
             state.favorites = state.favorites.filter((t) => t !== token);
           }
         }),
-      toggleFavorite: (token: Token) =>
+      toggleFavorite: (token: Coin) =>
         set((state) => {
           if (!state.favorites) {
             state.favorites = [token];

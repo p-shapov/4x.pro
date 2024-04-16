@@ -19,7 +19,8 @@ const fetchTokenBalance = async (
   connection: Connection,
   address?: PublicKey,
 ) => {
-  if (token == "LP" && address) {
+  if (token == "LP") {
+    if (!address) return null;
     return await fetchLPBalance(address, account, connection);
   }
   if (token === "SOL") {

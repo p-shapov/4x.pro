@@ -8,7 +8,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
 import { useChangeCollateral } from "@4x.pro/services/perpetuals/hooks/use-change-collateral";
-import { useCustodies } from "@4x.pro/services/perpetuals/hooks/use-custodies";
+import { useCustody } from "@4x.pro/services/perpetuals/hooks/use-custodies";
 import { useLiquidationPriceStats } from "@4x.pro/services/perpetuals/hooks/use-liquidation-price-stats";
 import { usePool } from "@4x.pro/services/perpetuals/hooks/use-pool";
 import { useLogTransaction } from "@4x.pro/services/perpetuals/hooks/use-transaction-history";
@@ -48,8 +48,9 @@ type Props = {
 
 const AddCollateralForm: FC<Props> = ({ position, form }) => {
   const walletContextState = useWallet();
-  const { data: custodies } = useCustodies();
-  const custody = custodies?.[position.custody.toBase58()];
+  const { data: custody } = useCustody({
+    address: position.custody.toBase58(),
+  });
   const collateral =
     custody && position.collateralAmount.toNumber() / 10 ** custody.decimals;
   const entryPrice = position.getPrice();

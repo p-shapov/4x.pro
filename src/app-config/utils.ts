@@ -1,11 +1,11 @@
-import type { RpcProvider, Token } from "./config";
+import type { Coin, RpcProvider, Token } from "./config";
 import { DexPlatformConfig } from "./config";
 
-const getPythTickerSymbol = (token: Token) => {
-  return DexPlatformConfig.pythTickerSymbols[token];
+const getPythTickerSymbol = (coin: Coin) => {
+  return DexPlatformConfig.pythTickerSymbols[coin];
 };
-const getTickerSymbol = (token: Token) => {
-  return DexPlatformConfig.tickerSymbols[token];
+const getTickerSymbol = (coin: Coin) => {
+  return DexPlatformConfig.tickerSymbols[coin];
 };
 const getTokenLogo = (token: Token) => {
   return DexPlatformConfig.tokenLogos[token] || "/coins/fallback.svg";
@@ -13,8 +13,8 @@ const getTokenLogo = (token: Token) => {
 const getTokenSymbol = (token: Token) => {
   return DexPlatformConfig.tokenSymbols[token];
 };
-const getTokenPythFeedId_to_USD = (token: Token) => {
-  return DexPlatformConfig.pythFeedIds_to_USD[token];
+const getTokenPythFeedId_to_USD = (coin: Coin) => {
+  return DexPlatformConfig.pythFeedIds_to_USD[coin];
 };
 const getRpcEndpoint = (rpcProvider: RpcProvider) => {
   return DexPlatformConfig.rpcEndpoints[rpcProvider];
@@ -22,16 +22,16 @@ const getRpcEndpoint = (rpcProvider: RpcProvider) => {
 const getPythFeedIds_to_USD = () => {
   return Object.values(DexPlatformConfig.pythFeedIds_to_USD);
 };
-const getTokenPublicKey = (token: Token) => {
+const getTokenPublicKey = (token: Coin) => {
   return DexPlatformConfig.publicKeys[token];
 };
 const getTokenNetwork = (token: Token) => {
   return DexPlatformConfig.tokenNetworks[token];
 };
 const tokenAddressToToken = (tokenAddress: string) => {
-  return (Object.keys(DexPlatformConfig.publicKeys) as readonly Token[]).find(
+  return (Object.keys(DexPlatformConfig.publicKeys) as readonly Coin[]).find(
     (token) => DexPlatformConfig.publicKeys[token] === tokenAddress,
-  ) as Token;
+  );
 };
 const getTokenId = (token: Token) => {
   return DexPlatformConfig.tokenIds[token];

@@ -1,11 +1,11 @@
 import type { PublicKey } from "@solana/web3.js";
-import type { InitialDataFunction } from "@tanstack/react-query";
+import type { PlaceholderDataFunction } from "@tanstack/react-query";
 import { keepPreviousData } from "@tanstack/react-query";
 import { createQuery } from "react-query-kit";
 
 import { useAppConfig } from "@4x.pro/app-config";
 
-import { useCustodies } from "./use-custodies";
+import { getCustodyData } from "../fetchers/fetch-custodies";
 import { getPoolData } from "../fetchers/fetch-pools";
 import type { CustodyAccount } from "../lib/custody-account";
 import type { PoolAccount } from "../lib/pool-account";
@@ -15,16 +15,14 @@ const usePoolQuery = createQuery({
   fetcher: async ({
     poolPublicKey,
     rpcEndpoint,
-    custodyInfos,
   }: {
     poolPublicKey: PublicKey;
     rpcEndpoint: string;
-    custodyInfos?: Record<string, CustodyAccount>;
   }) => {
-    if (!custodyInfos) return null;
+    const custodyInfos = await getCustodyData(rpcEndpoint);
     return getPoolData(rpcEndpoint, poolPublicKey, custodyInfos);
   },
-  placeholderData: keepPreviousData as InitialDataFunction<PoolAccount>,
+  placeholderData: keepPreviousData as PlaceholderDataFunction<PoolAccount>,
   refetchInterval: 60 * 10 * 1000,
   queryKeyHashFn: (queryKey) => {
     const key = queryKey[0];
@@ -38,9 +36,8 @@ const usePoolQuery = createQuery({
 
 const usePool = ({ address }: { address: PublicKey }) => {
   const { rpcEndpoint } = useAppConfig();
-  const { data: custodyInfos } = useCustodies();
   return usePoolQuery({
-    variables: { rpcEndpoint, custodyInfos, poolPublicKey: address },
+    variables: { rpcEndpoint, poolPublicKey: address },
   });
 };
 

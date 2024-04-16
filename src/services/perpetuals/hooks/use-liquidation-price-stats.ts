@@ -3,7 +3,7 @@ import { createQuery } from "react-query-kit";
 
 import { useAppConfig } from "@4x.pro/app-config";
 
-import { useCustodies } from "./use-custodies";
+import { useCustody } from "./use-custodies";
 import type { CustodyAccount } from "../lib/custody-account";
 import type { PositionAccount } from "../lib/position-account";
 import { getPerpetualProgramAndProvider } from "../utils/constants";
@@ -59,14 +59,16 @@ const useLiquidationPriceStats = ({
   depositAmount?: number;
 }) => {
   const { rpcEndpoint } = useAppConfig();
-  const custody = useCustodies().data?.[position.custody.toString()] || null;
+  const { data: custody } = useCustody({
+    address: position.custody.toBase58(),
+  });
   return useLiquidationPriceStatsQuery({
     variables: {
       rpcEndpoint,
       withdrawalAmount,
       depositAmount,
       position,
-      custody,
+      custody: custody || null,
     },
     select: (data) => {
       return Number(data || 0) / 10 ** 6;

@@ -1,7 +1,7 @@
 import { useDeferredValue } from "react";
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import { useEntryPriceStats } from "@4x.pro/services/perpetuals/hooks/use-entry-price-stats";
 import type { PoolAccount } from "@4x.pro/services/perpetuals/lib/pool-account";
 import type { PositionSide } from "@4x.pro/services/perpetuals/lib/types";
@@ -15,7 +15,7 @@ import { mkTradeStatsStyles } from "./styles";
 type Props = {
   pool: PoolAccount;
   side: PositionSide;
-  collateralToken: Token;
+  collateralToken: Coin;
   collateral: number;
   leverage: number;
 };

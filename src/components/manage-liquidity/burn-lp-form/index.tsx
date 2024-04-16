@@ -5,7 +5,7 @@ import type { FC } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
 import { useChangeLiquidity } from "@4x.pro/services/perpetuals/hooks/use-change-liquidity";
 import { useRemoveLiquidityStats } from "@4x.pro/services/perpetuals/hooks/use-remove-liquidity-stats";
@@ -69,13 +69,12 @@ const BurnLPForm: FC<Props> = ({ pool, form }) => {
   });
   const burnLPFormStyles = mkBurnLPFormStyles();
   const mkHandleChangeLP =
-    (onChange: (value: number) => void) =>
-    (data: { amount: number; token: Token }) => {
+    (onChange: (value: number) => void) => (data: { amount: number }) => {
       onChange(data.amount);
     };
   const mkHandleChangeReceive =
-    (onChange: (value: Token) => void) =>
-    (data: { amount: number; token: Token }) => {
+    (onChange: (value: Coin) => void) =>
+    (data: { amount: number; token: Coin }) => {
       onChange(data.token);
     };
   const walletContextState = useWallet();

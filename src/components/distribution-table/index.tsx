@@ -31,13 +31,15 @@ const DistributionTable: FC<Props> = ({ pool }) => {
         </tr>
       </thead>
       <tbody className={distributionTableStyles.body}>
-        {Object.values(pool.custodies).map((custody) => (
-          <DistributionRow
-            key={custody.address.toString()}
-            pool={pool}
-            custody={custody}
-          />
-        ))}
+        {Object.values(pool.custodies)
+          .filter((custody) => !!custody.getToken())
+          .map((custody) => (
+            <DistributionRow
+              key={custody.address.toBase58()}
+              pool={pool}
+              custody={custody}
+            />
+          ))}
       </tbody>
     </table>
   );

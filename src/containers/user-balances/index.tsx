@@ -2,7 +2,6 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import type { FC } from "react";
 
-import { tokenList } from "@4x.pro/app-config";
 import { BalancesTable } from "@4x.pro/components/balances-table";
 import { NoDataFallback } from "@4x.pro/components/no-data-fallback";
 
@@ -11,7 +10,7 @@ const UserBalances: FC = () => {
   return (
     <BalancesTable
       publicKey={publicKey}
-      tokenList={tokenList}
+      coinList={["USDC", "SOL"] as const}
       fallback={
         <NoDataFallback
           iconSrc="/icons/wallet-remove.svg"

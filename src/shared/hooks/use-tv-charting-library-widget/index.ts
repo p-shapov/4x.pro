@@ -7,13 +7,13 @@ import type {
   ResolutionString,
 } from "@public/vendor/charting_library/charting_library";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import { getTickerSymbol } from "@4x.pro/app-config";
 
 import { useDataFeed } from "./datafeed";
 
 const useTvChartingLibraryWidget = (
-  token: Token,
+  token: Coin,
   config: Partial<ChartingLibraryWidgetOptions>,
 ) => {
   const datafeed = useDataFeed();

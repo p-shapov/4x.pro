@@ -3,7 +3,7 @@ import { offset, useFloating } from "@floating-ui/react";
 import { Listbox } from "@headlessui/react";
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import { getTokenLogo, getTokenSymbol } from "@4x.pro/app-config";
 import { formatRate } from "@4x.pro/shared/utils/number";
 import { Icon } from "@4x.pro/ui-kit/icon";
@@ -13,7 +13,7 @@ import { mkAssetSelectorStyles } from "./styles";
 import { useTradeModule } from "../store";
 
 type Props = {
-  onChange?: (asset: Token) => void;
+  onChange?: (asset: Coin) => void;
 };
 
 const collateralTokens = ["SOL"] as const;
@@ -29,7 +29,7 @@ const AssetSelector: FC<Props> = ({ onChange }) => {
     selectedAsset: state.selectedAsset,
     selectAsset: state.selectAsset,
   }));
-  const handleChange = (asset: Token) => {
+  const handleChange = (asset: Coin) => {
     onChange?.(asset);
     selectAsset(asset);
   };

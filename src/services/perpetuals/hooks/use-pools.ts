@@ -4,21 +4,14 @@ import { createQuery } from "react-query-kit";
 
 import { useAppConfig } from "@4x.pro/app-config";
 
-import { useCustodies } from "./use-custodies";
+import { getCustodyData } from "../fetchers/fetch-custodies";
 import { getPoolsData } from "../fetchers/fetch-pools";
-import type { CustodyAccount } from "../lib/custody-account";
 import type { PoolAccount } from "../lib/pool-account";
 
 const usePoolsQuery = createQuery({
   queryKey: ["pools"],
-  fetcher: async ({
-    rpcEndpoint,
-    custodyInfos,
-  }: {
-    rpcEndpoint: string;
-    custodyInfos?: Record<string, CustodyAccount>;
-  }) => {
-    if (!custodyInfos) return {};
+  fetcher: async ({ rpcEndpoint }: { rpcEndpoint: string }) => {
+    const custodyInfos = await getCustodyData(rpcEndpoint);
     return getPoolsData(rpcEndpoint, custodyInfos);
   },
   placeholderData: keepPreviousData as InitialDataFunction<
@@ -27,19 +20,17 @@ const usePoolsQuery = createQuery({
   refetchInterval: 60 * 10 * 1000,
   queryKeyHashFn: (queryKey) => {
     const key = queryKey[0];
-    const { rpcEndpoint, custodyInfos } = queryKey[1] as {
+    const { rpcEndpoint } = queryKey[1] as {
       rpcEndpoint: string;
-      custodyInfos?: Record<string, CustodyAccount>;
     };
-    return `${key}-${rpcEndpoint}-${Object.keys(custodyInfos || {}).join(",")}`;
+    return `${key}-${rpcEndpoint}`;
   },
 });
 
 const usePools = () => {
   const { rpcEndpoint } = useAppConfig();
-  const { data: custodyInfos } = useCustodies();
   return usePoolsQuery({
-    variables: { rpcEndpoint, custodyInfos },
+    variables: { rpcEndpoint },
   });
 };
 

@@ -4,31 +4,31 @@ import { mainnetConfig } from "./config.mainnet";
 const rpcProviders = ["helius"] as const;
 type RpcProvider = (typeof rpcProviders)[number];
 
-const tokenList = ["USDC", "SOL", "LP"] as const;
+const coinList = ["USDC", "SOL"] as const;
+type Coin = (typeof coinList)[number];
+const tokenList = [...coinList, "LP"] as const;
 type Token = (typeof tokenList)[number];
 
 type Config = {
   rpcEndpoints: Record<RpcProvider, string>;
-  tickerSymbols: Record<Token, string>;
-  pythTickerSymbols: Record<Token, string>;
-  pythFeedIds_to_USD: Record<Token, string>;
+  tickerSymbols: Record<Coin, string>;
+  pythTickerSymbols: Record<Coin, string>;
+  pythFeedIds_to_USD: Record<Coin, string>;
   tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>>;
   tokenSymbols: Record<Token, string>;
   tokenNetworks: Record<Token, string>;
   tokenIds: Record<Token, string>;
-  publicKeys: Record<Token, string>;
+  publicKeys: Record<Coin, string>;
 };
 
-const tickerSymbols: Record<Token, string> = {
+const tickerSymbols: Record<Coin, string> = {
   SOL: "Crypto.SOL/USD",
   USDC: "Crypto.USDC/USD",
-  LP: "",
 };
 
-const pythTickerSymbols: Record<Token, string> = {
+const pythTickerSymbols: Record<Coin, string> = {
   SOL: "PYTH:SOLUSD",
   USDC: "PYTH:USDCUSD",
-  LP: "",
 };
 
 const tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>> = {
@@ -69,5 +69,5 @@ const DexPlatformConfig: Config = {
     : mainnetConfig),
 };
 
-export type { Token, RpcProvider };
-export { DexPlatformConfig, tokenList, rpcProviders };
+export type { Token, Coin, RpcProvider };
+export { DexPlatformConfig, coinList, tokenList, rpcProviders };

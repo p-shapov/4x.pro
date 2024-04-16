@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { FC } from "react";
 
 import { queryClient } from "@4x.pro/app-config";
-import { useCustodies } from "@4x.pro/services/perpetuals/hooks/use-custodies";
+import { useCustody } from "@4x.pro/services/perpetuals/hooks/use-custodies";
 import { usePositionsQuery } from "@4x.pro/services/perpetuals/hooks/use-positions";
 import { useWatchPosition } from "@4x.pro/services/perpetuals/hooks/use-watch-position";
 import type { PositionAccount } from "@4x.pro/services/perpetuals/lib/position-account";
@@ -30,8 +30,9 @@ const OrderRow: FC<Props> = ({ type, position }) => {
   const [openManageOrderDialog, setOpenManageOrderDialog] = useState(false);
   const [openCancelOrderDialog, setOpenCancelOrderDialog] = useState(false);
   const orderRowStyles = mkOrderRowStyles();
-  const { data: custodies } = useCustodies();
-  const custody = custodies?.[position.custody.toString()];
+  const { data: custody } = useCustody({
+    address: position.custody.toBase58(),
+  });
   const collateral =
     custody && position.collateralAmount.toNumber() / 10 ** custody.decimals;
   const entryPrice = position.getPrice();

@@ -1,6 +1,6 @@
 import type { PublicKey } from "@solana/web3.js";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import { tokenAddressToToken } from "@4x.pro/app-config";
 
 import type {
@@ -69,8 +69,8 @@ class CustodyAccount {
     this.address = address;
   }
 
-  getToken(): Token {
-    return tokenAddressToToken(this.mint.toString())!;
+  getToken(): Coin | undefined {
+    return tokenAddressToToken(this.mint.toString()) as Coin | undefined;
   }
 
   getCustodyLiquidity(currentPrice: number): number {

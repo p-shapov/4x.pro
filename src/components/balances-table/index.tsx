@@ -2,7 +2,7 @@ import type { PublicKey } from "@solana/web3.js";
 import cn from "classnames";
 import type { FC, ReactNode } from "react";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import { useTokenBalance } from "@4x.pro/shared/hooks/use-token-balance";
 import { mkTableStyles } from "@4x.pro/shared/styles/table";
 import { formatCurrency } from "@4x.pro/shared/utils/number";
@@ -11,11 +11,11 @@ import { TokenPrice } from "@4x.pro/ui-kit/token-price";
 
 type Props = {
   publicKey: PublicKey | null;
-  tokenList: readonly Token[];
+  coinList: readonly Coin[];
   fallback?: ReactNode;
 };
 
-const TableRow: FC<{ publicKey: PublicKey | null; asset: Token }> = ({
+const TableRow: FC<{ publicKey: PublicKey | null; asset: Coin }> = ({
   publicKey,
   asset,
 }) => {
@@ -44,7 +44,7 @@ const TableRow: FC<{ publicKey: PublicKey | null; asset: Token }> = ({
   );
 };
 
-const BalancesTable: FC<Props> = ({ publicKey, tokenList, fallback }) => {
+const BalancesTable: FC<Props> = ({ publicKey, coinList, fallback }) => {
   const tableStyles = mkTableStyles();
   return (
     <table
@@ -69,7 +69,7 @@ const BalancesTable: FC<Props> = ({ publicKey, tokenList, fallback }) => {
           </tr>
         )}
         {publicKey &&
-          tokenList.map((asset) => (
+          coinList.map((asset) => (
             <TableRow key={asset} publicKey={publicKey} asset={asset} />
           ))}
       </tbody>

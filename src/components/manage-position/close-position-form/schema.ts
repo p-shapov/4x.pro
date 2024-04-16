@@ -1,16 +1,16 @@
 import * as yup from "yup";
 
-import type { Token } from "@4x.pro/app-config";
-import { tokenList } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
+import { coinList } from "@4x.pro/app-config";
 
 type SubmitData = {
   slippage: number;
-  receiveToken: Token;
+  receiveToken: Coin;
 };
 
 const submitDataSchema = yup.object<SubmitData>().shape({
   slippage: yup.number().required().moreThan(0),
-  receiveToken: yup.string().required().oneOf(tokenList),
+  receiveToken: yup.string().required().oneOf(coinList),
 });
 
 export { submitDataSchema };

@@ -3,7 +3,7 @@ import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import type { WalletContextState } from "@solana/wallet-adapter-react";
 import type { Connection, TransactionInstruction } from "@solana/web3.js";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import { manualSendTransaction } from "@4x.pro/services/transaction-flow/handlers";
 import {
   createAtaIfNeeded,
@@ -23,8 +23,8 @@ const swapTransactionBuilder = async (
   walletContextState: WalletContextState,
   connection: Connection,
   pool: PoolAccount,
-  topToken: Token,
-  bottomToken: Token,
+  topToken: Coin,
+  bottomToken: Coin,
   amtInNumber: number,
   minAmtOutNumber?: number,
 ) => {
@@ -44,6 +44,9 @@ const swapTransactionBuilder = async (
     publicKey,
   );
   const preInstructions: TransactionInstruction[] = [];
+  if (!receivingCustody.getToken()) {
+    throw new Error("Token not found");
+  }
   if (receivingCustody.getToken() == "SOL") {
     const ataIx = await createAtaIfNeeded(
       publicKey,
@@ -108,6 +111,9 @@ const swapTransactionBuilder = async (
   if (preInstructions) {
     methodBuilder = methodBuilder.preInstructions(preInstructions);
   }
+  if (!dispensingCustody.getToken()) {
+    throw new Error("Token not found");
+  }
   if (
     dispensingCustody.getToken() == "SOL" ||
     receivingCustody.getToken() == "SOL"
@@ -122,8 +128,8 @@ const swap = async (
   walletContextState: WalletContextState,
   connection: Connection,
   pool: PoolAccount,
-  topToken: Token,
-  bottomToken: Token,
+  topToken: Coin,
+  bottomToken: Coin,
   amtInNumber: number,
   minAmtOutNumber?: number,
 ) => {

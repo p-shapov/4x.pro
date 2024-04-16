@@ -4,7 +4,7 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useWatch } from "react-hook-form";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import { useEntryPriceStats } from "@4x.pro/services/perpetuals/hooks/use-entry-price-stats";
 import type { PoolAccount } from "@4x.pro/services/perpetuals/lib/pool-account";
 import type { PositionSide } from "@4x.pro/services/perpetuals/lib/types";
@@ -20,7 +20,7 @@ type Props = {
   pool: PoolAccount;
   form: UseFormReturn<SubmitData>;
   side: PositionSide;
-  collateralTokens: readonly Token[];
+  collateralTokens: readonly Coin[];
 };
 
 const depositTokens = ["USDC", "SOL"] as const;
@@ -62,7 +62,9 @@ const Position: FC<Props> = ({ pool, form, side, collateralTokens }) => {
     size: useDeferredValue(quoteSize * leverage) || 0,
   });
   const rate =
-    basePriceStats?.entryPrice && quotePriceStats?.entryPrice
+    baseToken === quoteToken
+      ? 1
+      : basePriceStats?.entryPrice && quotePriceStats?.entryPrice
       ? quotePriceStats.entryPrice / basePriceStats.entryPrice
       : 1;
   useEffect(() => {
@@ -85,8 +87,8 @@ const Position: FC<Props> = ({ pool, form, side, collateralTokens }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quoteToken, baseToken, leverage, rate]);
   const mkHandleChangeBase =
-    (onChange: (data: { size: number; token: Token }) => void) =>
-    (data: { amount: number; token: Token }) => {
+    (onChange: (data: { size: number; token: Coin }) => void) =>
+    (data: { amount: number; token: Coin }) => {
       const baseSize = form.getValues("position.base.size");
       if (baseSize !== data.amount) {
         const quoteToken = form.getValues("position.quote.token");
@@ -102,8 +104,8 @@ const Position: FC<Props> = ({ pool, form, side, collateralTokens }) => {
       });
     };
   const mkHandleChangeQuote =
-    (onChange: (data: { size: number; token: Token }) => void) =>
-    (data: { amount: number; token: Token }) => {
+    (onChange: (data: { size: number; token: Coin }) => void) =>
+    (data: { amount: number; token: Coin }) => {
       const quoteSize = form.getValues("position.quote.size");
       if (quoteSize !== data.amount) {
         const baseToken = form.getValues("position.base.token");
@@ -134,7 +136,11 @@ const Position: FC<Props> = ({ pool, form, side, collateralTokens }) => {
             placeholder="0.00"
             tokenList={depositTokens}
             value={
-              rate === 1 && lastTouchedPosition === "quote" ? 0 : data.size || 0
+              quoteToken !== baseToken &&
+              rate === 1 &&
+              lastTouchedPosition === "quote"
+                ? 0
+                : data.size || 0
             }
             token={data.token}
             error={
@@ -152,7 +158,11 @@ const Position: FC<Props> = ({ pool, form, side, collateralTokens }) => {
             placeholder="0.00"
             tokenList={collateralTokens}
             value={
-              rate === 1 && lastTouchedPosition === "base" ? 0 : data.size || 0
+              quoteToken !== baseToken &&
+              rate === 1 &&
+              lastTouchedPosition === "base"
+                ? 0
+                : data.size || 0
             }
             error={
               !!(errors.position?.quote?.size && errors.position?.base?.size)

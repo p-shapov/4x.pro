@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 
 import type { IChartingLibraryWidget } from "@public/vendor/charting_library/charting_library";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import { getTickerSymbol } from "@4x.pro/app-config";
 import { useOpenPositionForm } from "@4x.pro/components/manage-position";
 import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
@@ -48,7 +48,7 @@ const TradeModule = () => {
     });
     return unsubscribe;
   }, [selectAsset, selectedAsset, openPositionForm]);
-  const handleAssetChange = (asset: Token) => {
+  const handleAssetChange = (asset: Coin) => {
     tvWidgetRef.current?.chart().setSymbol(getTickerSymbol(asset));
     const quoteSize = openPositionForm.getValues("position.quote.size");
     openPositionForm.setValue("position.quote", {

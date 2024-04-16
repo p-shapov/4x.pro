@@ -1,16 +1,16 @@
 import * as yup from "yup";
 
-import { tokenList } from "@4x.pro/app-config";
-import type { Token } from "@4x.pro/app-config";
+import { coinList } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 
 type SubmitData = {
   position: {
     base: {
-      token: Token;
+      token: Coin;
       size: number;
     };
     quote: {
-      token: Token;
+      token: Coin;
       size: number;
     };
   };
@@ -23,11 +23,11 @@ type SubmitData = {
 const submitDataSchema = yup.object<SubmitData>().shape({
   position: yup.object().shape({
     base: yup.object().shape({
-      token: yup.string().required().oneOf(tokenList),
+      token: yup.string().required().oneOf(coinList),
       size: yup.number().required().moreThan(0),
     }),
     quote: yup.object().shape({
-      token: yup.string().required().oneOf(tokenList),
+      token: yup.string().required().oneOf(coinList),
       size: yup.number().required().moreThan(0),
     }),
   }),

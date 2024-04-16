@@ -9,10 +9,10 @@ import type {
 } from "@public/vendor/charting_library/charting_library";
 
 import { getPythTickerSymbol } from "@4x.pro/app-config";
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 
 const useTvEmbedWidget = (
-  token: Token,
+  token: Coin,
   config: Omit<Partial<ChartingLibraryWidgetOptions>, "container"> & {
     container_id?: string;
   },

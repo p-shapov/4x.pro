@@ -5,7 +5,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import type { PublicKey } from "@solana/web3.js";
 import cn from "classnames";
 import { useEffect, useId, useState } from "react";
-import type { ChangeEventHandler, FC, ReactNode } from "react";
+import type { ChangeEventHandler, ReactNode } from "react";
 
 import { getTokenSymbol } from "@4x.pro/app-config";
 import type { Token } from "@4x.pro/app-config";
@@ -19,11 +19,11 @@ import { Select } from "./select";
 import { TokenBadge } from "./token-badge";
 import { Tooltip } from "./tooltip";
 
-type Props = {
-  tokenList?: ReadonlyArray<Token>;
+type Props<T extends Token> = {
+  tokenList?: ReadonlyArray<T>;
   label?: string;
   value?: number;
-  token?: Token;
+  token?: T;
   poolTokenAddress?: PublicKey;
   placeholder?: string;
   presets?: number[];
@@ -41,10 +41,10 @@ type Props = {
     width?: number;
   };
   onFocus?: () => void;
-  onChange?: (data: { amount: number; token: Token }) => void;
+  onChange?: (data: { amount: number; token: T }) => void;
 };
 
-const TokenField: FC<Props> = ({
+const TokenField = <T extends Token>({
   token,
   tokenList,
   onChange,
@@ -63,7 +63,7 @@ const TokenField: FC<Props> = ({
   readonlyAmount,
   readonlyToken,
   ...rest
-}) => {
+}: Props<T>) => {
   const inputRef = useNumberFormat({
     locales: "en",
     maximumFractionDigits: 20,
@@ -116,8 +116,8 @@ const TokenField: FC<Props> = ({
   };
   const handleSelect = (token: string) => {
     // TODO :: make Select component generic
-    setCurrentToken(token as Token);
-    onChange?.({ amount, token: token as Token });
+    setCurrentToken(token as T);
+    onChange?.({ amount, token: token as T });
   };
   const handleSetPresets = (preset: number) => {
     setInputValue(

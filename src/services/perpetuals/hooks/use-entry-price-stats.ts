@@ -2,7 +2,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { createQuery } from "react-query-kit";
 
 import { useAppConfig } from "@4x.pro/app-config";
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 
 import type { CustodyAccount } from "../lib/custody-account";
 import type { PoolAccount } from "../lib/pool-account";
@@ -39,7 +39,7 @@ const useEntryPriceStatsQuery = createQuery({
     );
   },
   placeholderData: keepPreviousData,
-  refetchInterval: 30 * 1000,
+  refetchInterval: 60 * 1 * 1000,
   queryKeyHashFn: (queryKey) => {
     const key = queryKey[0] as [string];
     const variables = queryKey[1] as {
@@ -61,7 +61,7 @@ const useEntryPriceStats = ({
   side,
   pool,
 }: {
-  collateralToken: Token;
+  collateralToken: Coin;
   collateral: number;
   size: number;
   side: PositionSide;

@@ -5,7 +5,7 @@ import type { FC } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
 import { useAddLiquidityStats } from "@4x.pro/services/perpetuals/hooks/use-add-liquidity-stats";
 import { useChangeLiquidity } from "@4x.pro/services/perpetuals/hooks/use-change-liquidity";
@@ -69,8 +69,8 @@ const MintLPForm: FC<Props> = ({ pool, form }) => {
   });
   const mintLPFormStyles = mkMintLPFormStyles();
   const mkHandleChangePay =
-    (onChange: (data: { amount: number; token: Token }) => void) =>
-    (data: { amount: number; token: Token }) => {
+    (onChange: (data: { amount: number; token: Coin }) => void) =>
+    (data: { amount: number; token: Coin }) => {
       onChange({
         amount: data.amount,
         token: data.token,

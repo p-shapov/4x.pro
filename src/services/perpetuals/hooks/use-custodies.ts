@@ -1,4 +1,4 @@
-import type { InitialDataFunction } from "@tanstack/react-query";
+import type { PlaceholderDataFunction } from "@tanstack/react-query";
 import { keepPreviousData } from "@tanstack/react-query";
 import { createQuery } from "react-query-kit";
 
@@ -13,7 +13,7 @@ const useCustodiesQuery = createQuery({
     return (await getCustodyData(rpcEndpoint)) || {};
   },
   refetchInterval: 60 * 10 * 1000,
-  placeholderData: keepPreviousData as InitialDataFunction<
+  placeholderData: keepPreviousData as PlaceholderDataFunction<
     Record<string, CustodyAccount>
   >,
 });
@@ -23,4 +23,12 @@ const useCustodies = () => {
   return useCustodiesQuery({ variables: { rpcEndpoint } });
 };
 
-export { useCustodiesQuery, useCustodies };
+const useCustody = ({ address }: { address: string }) => {
+  const { rpcEndpoint } = useAppConfig();
+  return useCustodiesQuery({
+    variables: { rpcEndpoint },
+    select: (data): CustodyAccount | undefined => data[address],
+  });
+};
+
+export { useCustodiesQuery, useCustody, useCustodies };

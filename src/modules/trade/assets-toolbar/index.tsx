@@ -1,6 +1,6 @@
 import type { FC } from "react";
 
-import type { Token } from "@4x.pro/app-config";
+import type { Coin } from "@4x.pro/app-config";
 import { Icon } from "@4x.pro/ui-kit/icon";
 
 import { AssetItem } from "./asset-item";
@@ -8,7 +8,7 @@ import { mkAssetsToolbarStyles } from "./styles";
 import { useTradeModule } from "../store";
 
 type Props = {
-  onChange?: (asset: Token) => void;
+  onChange?: (asset: Coin) => void;
 };
 
 const AssetsToolbar: FC<Props> = ({ onChange }) => {

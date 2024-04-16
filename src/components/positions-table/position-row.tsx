@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { FC } from "react";
 
 import { queryClient } from "@4x.pro/app-config";
-import { useCustodies } from "@4x.pro/services/perpetuals/hooks/use-custodies";
+import { useCustody } from "@4x.pro/services/perpetuals/hooks/use-custodies";
 import { useLiquidationPriceStats } from "@4x.pro/services/perpetuals/hooks/use-liquidation-price-stats";
 import { usePnLStats } from "@4x.pro/services/perpetuals/hooks/use-pnl-stats";
 import { usePositionsQuery } from "@4x.pro/services/perpetuals/hooks/use-positions";
@@ -29,8 +29,9 @@ type Props = {
 };
 
 const PositionRow: FC<Props> = ({ position }) => {
-  const { data: custodies } = useCustodies();
-  const custody = custodies?.[position.custody.toString()];
+  const { data: custody } = useCustody({
+    address: position.custody.toBase58(),
+  });
   const collateral =
     custody && position.collateralAmount.toNumber() / 10 ** custody.decimals;
   const entryPrice = position.getPrice();
