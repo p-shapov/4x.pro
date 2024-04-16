@@ -34,7 +34,7 @@ const TableRow: FC<{ publicKey: PublicKey | null; asset: Token }> = ({
       </td>
       <td className={tableStyles.cell}>
         <TokenPrice token={asset} fractionalDigits={2} watch>
-          {tokenBalance.data || null}
+          {tokenBalance.data}
         </TokenPrice>
       </td>
       <td className={tableStyles.cell}>
