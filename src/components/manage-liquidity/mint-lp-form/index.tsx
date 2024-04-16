@@ -114,7 +114,7 @@ const MintLPForm: FC<Props> = ({ pool, form }) => {
             labelVariant="balance"
             onChange={mkHandleChangePay(onChange)}
             presets={[25, 50, 75, 100]}
-            tokenList={["USDC", "SOL", "BTC"]}
+            tokenList={["USDC", "SOL"]}
             formatPresets={(value) => formatPercentage(value, 0)}
             mapPreset={(value) => (payBalance || 0) * (value / 100)}
             error={!!(errors.pay?.amount || errors.pay?.token)}

@@ -4,11 +4,7 @@ import { Listbox } from "@headlessui/react";
 import type { FC } from "react";
 
 import type { Token } from "@4x.pro/app-config";
-import {
-  collateralTokens,
-  getTokenLogo,
-  getTokenSymbol,
-} from "@4x.pro/app-config";
+import { getTokenLogo, getTokenSymbol } from "@4x.pro/app-config";
 import { formatRate } from "@4x.pro/shared/utils/number";
 import { Icon } from "@4x.pro/ui-kit/icon";
 
@@ -19,6 +15,8 @@ import { useTradeModule } from "../store";
 type Props = {
   onChange?: (asset: Token) => void;
 };
+
+const collateralTokens = ["SOL"] as const;
 
 const AssetSelector: FC<Props> = ({ onChange }) => {
   const { refs, floatingStyles } = useFloating({

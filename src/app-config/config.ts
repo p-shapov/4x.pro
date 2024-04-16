@@ -4,10 +4,8 @@ import { mainnetConfig } from "./config.mainnet";
 const rpcProviders = ["helius"] as const;
 type RpcProvider = (typeof rpcProviders)[number];
 
-const tokenList = ["BTC", "USDC", "SOL", "LP"] as const;
+const tokenList = ["USDC", "SOL", "LP"] as const;
 type Token = (typeof tokenList)[number];
-const depositTokens: readonly Token[] = ["BTC", "USDC", "SOL"];
-const collateralTokens: readonly Token[] = ["SOL", "BTC"];
 
 type Config = {
   rpcEndpoints: Record<RpcProvider, string>;
@@ -24,19 +22,16 @@ type Config = {
 const tickerSymbols: Record<Token, string> = {
   SOL: "Crypto.SOL/USD",
   USDC: "Crypto.USDC/USD",
-  BTC: "Crypto.BTC/USD",
   LP: "",
 };
 
 const pythTickerSymbols: Record<Token, string> = {
   SOL: "PYTH:SOLUSD",
   USDC: "PYTH:USDCUSD",
-  BTC: "PYTH:BTCUSD",
   LP: "",
 };
 
 const tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>> = {
-  BTC: "/coins/BTC.svg",
   SOL: "/coins/SOL.svg",
   USDC: "/coins/USDC.svg",
 };
@@ -44,21 +39,18 @@ const tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>> = {
 const tokenSymbols: Record<Token, string> = {
   SOL: "SOL",
   USDC: "USDC",
-  BTC: "BTC",
   LP: "LP",
 };
 
 const tokenNetworks: Record<Token, string> = {
   SOL: "Solana",
   USDC: "Solana",
-  BTC: "Bitcoin",
   LP: "Solana",
 };
 
 const tokenIds: Record<Token, string> = {
   SOL: "solana",
   USDC: "usd-coin",
-  BTC: "bitcoin",
   LP: "liquidity-provider",
 };
 
@@ -78,10 +70,4 @@ const DexPlatformConfig: Config = {
 };
 
 export type { Token, RpcProvider };
-export {
-  DexPlatformConfig,
-  tokenList,
-  rpcProviders,
-  depositTokens,
-  collateralTokens,
-};
+export { DexPlatformConfig, tokenList, rpcProviders };

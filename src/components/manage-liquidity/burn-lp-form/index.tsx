@@ -136,7 +136,7 @@ const BurnLPForm: FC<Props> = ({ pool, form }) => {
             token={value}
             label="Receive"
             readonlyAmount
-            tokenList={["USDC", "SOL", "BTC"]}
+            tokenList={["USDC", "SOL"]}
             onChange={mkHandleChangeReceive(onChange)}
             labelVariant="balance"
             placeholder="0.00"

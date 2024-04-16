@@ -30,7 +30,7 @@ const useTradeModule = create<Store & Actions>()(
     immer((set) => ({
       hydrated: false,
       selectedAsset: "SOL",
-      favorites: ["SOL", "BTC"] as const,
+      favorites: ["SOL"] as const,
       selectAsset: (token: Token) => set({ selectedAsset: token }),
       addFavorite: (token: Token) =>
         set((state) => {
