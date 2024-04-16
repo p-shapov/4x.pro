@@ -22,7 +22,7 @@ type Actions = {
 const storeSchema = yup.object<Store>({
   hydrated: yup.boolean(),
   selectedAsset: yup.string().oneOf(coinList).required(),
-  favorites: yup.array().of(yup.string().oneOf(coinList)).required(),
+  favorites: yup.array().of(yup.string().oneOf(coinList).required()).required(),
 });
 
 const useTradeModule = create<Store & Actions>()(
