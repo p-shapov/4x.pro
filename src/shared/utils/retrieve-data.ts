@@ -19,21 +19,23 @@ const fetchTokenBalance = async (
   connection: Connection,
   address?: PublicKey,
 ) => {
-  if (token == "LP") {
+  if (token === "LP") {
     if (!address) return null;
     return await fetchLPBalance(address, account, connection);
   }
   if (token === "SOL") {
     return (await connection.getBalance(account)) / LAMPORTS_PER_SOL;
   }
+  const publicKey = getTokenPublicKey(token);
+  if (!publicKey) return null;
   const tokenATA = await getAssociatedTokenAddress(
-    new PublicKey(getTokenPublicKey(token)),
+    new PublicKey(publicKey),
     new PublicKey(account),
   );
   if (await checkIfAccountExists(tokenATA, connection)) {
     return (await connection.getTokenAccountBalance(tokenATA)).value.uiAmount;
   }
-  return null;
+  return 0;
 };
 
 const fetchLPBalance = async (

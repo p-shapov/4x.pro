@@ -4,30 +4,33 @@ import { mainnetConfig } from "./config.mainnet";
 const rpcProviders = ["helius"] as const;
 type RpcProvider = (typeof rpcProviders)[number];
 
-const coinList = ["USDC", "SOL", "LTC"] as const;
-type Coin = (typeof coinList)[number];
-const tokenList = [...coinList, "LP"] as const;
+const tokenList = ["USDC", "SOL", "LTC", "LP"] as const;
+const payTokens = tokenList.filter((token) => token !== "LP");
+const collateralTokens = tokenList.filter(
+  (token) => token !== "LP" && token !== "USDC",
+);
+const receiveTokens = tokenList.filter((token) => token !== "LP");
 type Token = (typeof tokenList)[number];
 
 type Config = {
   rpcEndpoints: Record<RpcProvider, string>;
-  tickerSymbols: Record<Coin, string>;
-  pythTickerSymbols: Record<Coin, string>;
-  pythFeedIds_to_USD: Record<Coin, string>;
+  tickerSymbols: Partial<Record<Token, string>>;
+  pythTickerSymbols: Partial<Record<Token, string>>;
+  pythFeedIds_to_USD: Partial<Record<Token, string>>;
   tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>>;
   tokenSymbols: Record<Token, string>;
   tokenNetworks: Record<Token, string>;
   tokenIds: Record<Token, string>;
-  publicKeys: Record<Coin, string>;
+  publicKeys: Partial<Record<Token, string>>;
 };
 
-const tickerSymbols: Record<Coin, string> = {
+const tickerSymbols: Partial<Record<Token, string>> = {
   SOL: "Crypto.SOL/USD",
   USDC: "Crypto.USDC/USD",
   LTC: "Crypto.LTC/USD",
 };
 
-const pythTickerSymbols: Record<Coin, string> = {
+const pythTickerSymbols: Partial<Record<Token, string>> = {
   SOL: "PYTH:SOLUSD",
   USDC: "PYTH:USDCUSD",
   LTC: "PYTH:LTCUSD",
@@ -42,22 +45,22 @@ const tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>> = {
 const tokenSymbols: Record<Token, string> = {
   SOL: "SOL",
   USDC: "USDC",
-  LP: "LP",
   LTC: "LTC",
+  LP: "LP",
 };
 
 const tokenNetworks: Record<Token, string> = {
   SOL: "Solana",
   USDC: "Solana",
-  LP: "Solana",
   LTC: "Solana",
+  LP: "Solana",
 };
 
 const tokenIds: Record<Token, string> = {
   SOL: "solana",
   USDC: "usd-coin",
-  LP: "liquidity-provider",
   LTC: "litecoin",
+  LP: "liquidity-provider",
 };
 
 const DexPlatformConfig: Config = {
@@ -75,5 +78,12 @@ const DexPlatformConfig: Config = {
     : mainnetConfig),
 };
 
-export type { Token, Coin, RpcProvider };
-export { DexPlatformConfig, coinList, tokenList, rpcProviders };
+export type { Token, RpcProvider };
+export {
+  DexPlatformConfig,
+  tokenList,
+  rpcProviders,
+  collateralTokens,
+  payTokens,
+  receiveTokens,
+};

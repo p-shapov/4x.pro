@@ -7,13 +7,13 @@ import type {
   ResolutionString,
 } from "@public/vendor/charting_library/charting_library";
 
-import type { Coin } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 import { getTickerSymbol } from "@4x.pro/app-config";
 
 import { useDataFeed } from "./datafeed";
 
 const useTvChartingLibraryWidget = (
-  token: Coin,
+  token: Token,
   config: Partial<ChartingLibraryWidgetOptions>,
 ) => {
   const datafeed = useDataFeed();
@@ -37,7 +37,7 @@ const useTvChartingLibraryWidget = (
       } catch {
         return null;
       }
-      if (!window.TradingView) return null;
+      if (!window.TradingView || !getTickerSymbol(token)) return null;
       const instance = new window.TradingView.widget({
         container: "tv-charting-library-widget",
         autosize: true,

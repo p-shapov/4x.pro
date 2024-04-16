@@ -3,7 +3,7 @@ import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import type { WalletContextState } from "@solana/wallet-adapter-react";
 import type { Connection, TransactionInstruction } from "@solana/web3.js";
 
-import type { Coin } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 import { manualSendTransaction } from "@4x.pro/services/transaction-flow/handlers";
 import {
   createAtaIfNeeded,
@@ -23,8 +23,8 @@ const swapTransactionBuilder = async (
   walletContextState: WalletContextState,
   connection: Connection,
   pool: PoolAccount,
-  topToken: Coin,
-  bottomToken: Coin,
+  topToken: Token,
+  bottomToken: Token,
   amtInNumber: number,
   minAmtOutNumber?: number,
 ) => {
@@ -128,8 +128,8 @@ const swap = async (
   walletContextState: WalletContextState,
   connection: Connection,
   pool: PoolAccount,
-  topToken: Coin,
-  bottomToken: Coin,
+  topToken: Token,
+  bottomToken: Token,
   amtInNumber: number,
   minAmtOutNumber?: number,
 ) => {

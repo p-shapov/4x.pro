@@ -21,9 +21,8 @@ type Props = {
 
 const Sidebar: FC<Props> = ({ pool, openPositionForm }) => {
   const sidebarStyles = mkSidebarStyles();
-  const { selectedAsset, favorites } = useTradeModule((state) => ({
+  const { selectedAsset } = useTradeModule((state) => ({
     selectedAsset: state.selectedAsset,
-    favorites: state.favorites,
   }));
   const leverage = useWatch({
     control: openPositionForm.control,
@@ -34,9 +33,6 @@ const Sidebar: FC<Props> = ({ pool, openPositionForm }) => {
     name: "position.quote.size",
   });
   const [side, setSide] = useState<"long" | "short">("long");
-  const collateralTokens = favorites.includes(selectedAsset)
-    ? favorites
-    : [selectedAsset, ...favorites];
   return (
     <div className={sidebarStyles.root}>
       <div className={sidebarStyles.tabs}>
@@ -66,7 +62,6 @@ const Sidebar: FC<Props> = ({ pool, openPositionForm }) => {
                   pool={pool}
                   side="long"
                   form={openPositionForm}
-                  collateralTokens={collateralTokens}
                 />
               ),
               short: (
@@ -74,7 +69,6 @@ const Sidebar: FC<Props> = ({ pool, openPositionForm }) => {
                   pool={pool}
                   side="short"
                   form={openPositionForm}
-                  collateralTokens={collateralTokens}
                 />
               ),
             }}

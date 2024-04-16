@@ -7,7 +7,7 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
-import type { Coin } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
 import { useChangeCollateral } from "@4x.pro/services/perpetuals/hooks/use-change-collateral";
 import { useCustody } from "@4x.pro/services/perpetuals/hooks/use-custodies";
@@ -34,7 +34,7 @@ import type { SubmitData } from "./schema";
 import { submitDataSchema } from "./schema";
 import { mkRemoveCollateralFormStyles } from "./styles";
 
-const useRemoveCollateralForm = (receiveToken: Coin) => {
+const useRemoveCollateralForm = (receiveToken: Token) => {
   return useForm<SubmitData>({
     defaultValues: {
       receiveToken,

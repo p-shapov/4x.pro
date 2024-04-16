@@ -8,7 +8,7 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import { useEffect, useMemo, useSyncExternalStore } from "react";
 import { createQuery } from "react-query-kit";
 
-import type { Coin } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 import {
   getPythFeedIds_to_USD,
   getRpcEndpoint,
@@ -52,13 +52,13 @@ type PriceFeed = {
   priceData?: PriceData;
 };
 
-const PriceFeeds: Record<Coin, PriceFeed> = {
+const PriceFeeds: Partial<Record<Token, PriceFeed>> = {
   SOL: {},
   USDC: {},
   LTC: {},
 };
 
-const TokenMap: Record<string, Coin> = {
+const TokenMap: Partial<Record<string, Token>> = {
   SOL: "SOL",
   USDC: "USDC",
   LTC: "LTC",
@@ -68,7 +68,7 @@ const emit = () => {
   listeners.forEach((listener) => listener());
 };
 
-const useWatchPythPriceFeed = (token?: Coin): PriceFeed => {
+const useWatchPythPriceFeed = (token?: Token): PriceFeed => {
   const pythConnection = usePythConnection();
   return useSyncExternalStore<PriceFeed>(
     (listener) => {
@@ -85,7 +85,7 @@ const useWatchPythPriceFeed = (token?: Coin): PriceFeed => {
         listeners.delete(listener);
       };
     },
-    () => (token ? PriceFeeds[token] : {}),
+    () => (token ? PriceFeeds[token] || {} : {}),
     () => ({}),
   );
 };
@@ -96,7 +96,7 @@ const usePythPriceFeedQuery = createQuery({
     token,
     rpcEndpoint,
   }: {
-    token?: Coin;
+    token?: Token;
     rpcEndpoint: string;
   }) => {
     if (!token) return null;
@@ -106,8 +106,10 @@ const usePythPriceFeedQuery = createQuery({
         : rpcEndpoint,
     );
     const client = new PythHttpClient(connection, pythProgramKey, "confirmed");
+    const pythFeedId = getTokenPythFeedId_to_USD(token);
+    if (!pythFeedId) return null;
     const [priceData] = await client.getAssetPricesFromAccounts([
-      new PublicKey(getTokenPythFeedId_to_USD(token)),
+      new PublicKey(pythFeedId),
     ]);
     return priceData;
   },
@@ -115,7 +117,7 @@ const usePythPriceFeedQuery = createQuery({
   gcTime: 0,
 });
 
-const usePythPriceFeed = ({ token }: { token?: Coin }) => {
+const usePythPriceFeed = ({ token }: { token?: Token }) => {
   const { rpcEndpoint } = useAppConfig();
   return usePythPriceFeedQuery({
     variables: {

@@ -1,7 +1,7 @@
 import type { BN } from "@project-serum/anchor";
 import type { PublicKey } from "@solana/web3.js";
 
-import type { Coin } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 
 import type { CustodyAccount } from "./custody-account";
 import type { Position, PositionSide } from "./types";
@@ -28,7 +28,7 @@ export class PositionAccount {
   public stopLoss: BN | null;
   public takeProfit: BN | null;
 
-  public token: Coin;
+  public token: Token;
   public address: PublicKey;
   public oracleAccount: PublicKey;
 
@@ -58,7 +58,7 @@ export class PositionAccount {
     this.lockedAmount = position.lockedAmount;
     this.collateralAmount = position.collateralAmount;
 
-    this.token = custodies[this.custody.toString()]?.getToken() as Coin;
+    this.token = custodies[this.custody.toString()]?.getToken() as Token;
     this.address = address;
     this.oracleAccount =
       custodies[this.custody.toString()]?.oracle.oracleAccount;

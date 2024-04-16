@@ -3,7 +3,7 @@ import { forwardRef, useImperativeHandle } from "react";
 
 import type { IChartingLibraryWidget } from "@public/vendor/charting_library/charting_library";
 
-import type { Coin } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 // import { getTickerSymbol } from "@4x.pro/app-config";
 import { useToken24hrBenchmark } from "@4x.pro/shared/hooks/use-token-24hr-benchbark";
 // import { useTvChartingLibraryWidget } from "@4x.pro/shared/hooks/use-tv-charting-library-widget";
@@ -23,7 +23,7 @@ const TRADING_VIEW_ID = "tw-widget-advanced-chart";
 
 type Props = {
   height: number;
-  onChange?: (asset: Coin) => void;
+  onChange?: (asset: Token) => void;
 };
 
 const TradingViewChart = forwardRef<
@@ -51,7 +51,7 @@ const TradingViewChart = forwardRef<
   >(ref, () => null, []);
   // () => tvWidget,
   // [tvWidget]);
-  const handleAssetChange = (asset: Coin) => {
+  const handleAssetChange = (asset: Token) => {
     // tvWidget?.chart().setSymbol(getTickerSymbol(asset));
     onChange?.(asset);
   };

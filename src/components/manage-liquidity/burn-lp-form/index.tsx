@@ -5,8 +5,8 @@ import type { FC } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 
-import { coinList } from "@4x.pro/app-config";
-import type { Coin } from "@4x.pro/app-config";
+import { receiveTokens } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
 import { useChangeLiquidity } from "@4x.pro/services/perpetuals/hooks/use-change-liquidity";
 import { useRemoveLiquidityStats } from "@4x.pro/services/perpetuals/hooks/use-remove-liquidity-stats";
@@ -76,8 +76,8 @@ const BurnLPForm: FC<Props> = ({ pool, form }) => {
       onChange(data.amount);
     };
   const mkHandleChangeReceive =
-    (onChange: (value: Coin) => void) =>
-    (data: { amount: number; token: Coin }) => {
+    (onChange: (value: Token) => void) =>
+    (data: { amount: number; token: Token }) => {
       onChange(data.token);
     };
   const walletContextState = useWallet();
@@ -138,7 +138,7 @@ const BurnLPForm: FC<Props> = ({ pool, form }) => {
             token={value}
             label="Receive"
             readonlyAmount
-            tokenList={coinList}
+            tokenList={receiveTokens}
             onChange={mkHandleChangeReceive(onChange)}
             labelVariant="balance"
             placeholder="0.00"

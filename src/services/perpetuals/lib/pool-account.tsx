@@ -3,7 +3,7 @@ import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pub
 import type { Mint } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 
-import type { Coin } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 
 import type { CustodyAccount } from "./custody-account";
 import type { AccountMeta, Pool, TokenRatios } from "./types";
@@ -59,7 +59,7 @@ export class PoolAccount {
     // find the indexin
   }
 
-  getCustodyAccount(token: Coin): CustodyAccount | null {
+  getCustodyAccount(token: Token): CustodyAccount | null {
     return (
       Object.values(this.custodies).find(
         (custody) => custody.getToken() === token,
@@ -81,12 +81,12 @@ export class PoolAccount {
     )[0];
   }
 
-  getTokenList(exclude?: Coin[]): Coin[] {
+  getTokenList(exclude?: Token[]): Token[] {
     return Object.values(this.custodies)
       .map((custody) => {
         return custody?.getToken();
       })
-      .filter((token): token is Coin => {
+      .filter((token): token is Token => {
         return !!token && (!exclude || !exclude.includes(token));
       });
   }

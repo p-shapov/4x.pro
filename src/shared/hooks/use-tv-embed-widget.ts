@@ -9,10 +9,10 @@ import type {
 } from "@public/vendor/charting_library/charting_library";
 
 import { getPythTickerSymbol } from "@4x.pro/app-config";
-import type { Coin } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 
 const useTvEmbedWidget = (
-  token: Coin,
+  token: Token,
   config: Omit<Partial<ChartingLibraryWidgetOptions>, "container"> & {
     container_id?: string;
   },
@@ -30,7 +30,7 @@ const useTvEmbedWidget = (
       } catch {
         return null;
       }
-      if (!window.TradingView) return null;
+      if (!window.TradingView || !getPythTickerSymbol(token)) return null;
       // @ts-ignore
       const instance = new window.TradingView.widget({
         container_id: "tv-charting-library-widget",

@@ -5,8 +5,8 @@ import type { FC } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 
-import { coinList } from "@4x.pro/app-config";
-import type { Coin } from "@4x.pro/app-config";
+import { payTokens } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
 import { useAddLiquidityStats } from "@4x.pro/services/perpetuals/hooks/use-add-liquidity-stats";
 import { useChangeLiquidity } from "@4x.pro/services/perpetuals/hooks/use-change-liquidity";
@@ -72,8 +72,8 @@ const MintLPForm: FC<Props> = ({ pool, form }) => {
   });
   const mintLPFormStyles = mkMintLPFormStyles();
   const mkHandleChangePay =
-    (onChange: (data: { amount: number; token: Coin }) => void) =>
-    (data: { amount: number; token: Coin }) => {
+    (onChange: (data: { amount: number; token: Token }) => void) =>
+    (data: { amount: number; token: Token }) => {
       onChange({
         amount: data.amount,
         token: data.token,
@@ -117,7 +117,7 @@ const MintLPForm: FC<Props> = ({ pool, form }) => {
             labelVariant="balance"
             onChange={mkHandleChangePay(onChange)}
             presets={[25, 50, 75, 100]}
-            tokenList={coinList}
+            tokenList={payTokens}
             formatPresets={(value) => formatPercentage(value, 0)}
             mapPreset={(value) => (payBalance || 0) * (value / 100)}
             error={!!(errors.pay?.amount || errors.pay?.token)}

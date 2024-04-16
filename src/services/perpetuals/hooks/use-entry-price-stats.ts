@@ -2,7 +2,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { createQuery } from "react-query-kit";
 
 import { useAppConfig } from "@4x.pro/app-config";
-import type { Coin } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 
 import type { CustodyAccount } from "../lib/custody-account";
 import type { PoolAccount } from "../lib/pool-account";
@@ -61,7 +61,7 @@ const useEntryPriceStats = ({
   side,
   pool,
 }: {
-  collateralToken: Coin;
+  collateralToken: Token;
   collateral: number;
   size: number;
   side: PositionSide;

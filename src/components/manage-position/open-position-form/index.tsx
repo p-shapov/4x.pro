@@ -7,7 +7,6 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useForm, useWatch } from "react-hook-form";
 
-import type { Coin } from "@4x.pro/app-config";
 import { useEntryPriceStats } from "@4x.pro/services/perpetuals/hooks/use-entry-price-stats";
 import { useOpenPosition } from "@4x.pro/services/perpetuals/hooks/use-open-position";
 import { usePositions } from "@4x.pro/services/perpetuals/hooks/use-positions";
@@ -32,7 +31,6 @@ type Props = {
   pool: PoolAccount;
   form: UseFormReturn<SubmitData>;
   side: PositionSide;
-  collateralTokens: readonly Coin[];
 };
 
 const useOpenPositionForm = () => {
@@ -56,12 +54,7 @@ const useOpenPositionForm = () => {
   return form;
 };
 
-const OpenPositionForm: FC<Props> = ({
-  pool,
-  side,
-  form,
-  collateralTokens,
-}) => {
+const OpenPositionForm: FC<Props> = ({ pool, side, form }) => {
   const logTransaction = useLogTransaction();
   const openPositionFormStyles = mkOpenPositionFormStyles();
   const walletContextState = useWallet();
@@ -172,12 +165,7 @@ const OpenPositionForm: FC<Props> = ({
       onSubmit={handleSubmit}
       noValidate
     >
-      <Position
-        pool={pool}
-        form={form}
-        side={side}
-        collateralTokens={collateralTokens}
-      />
+      <Position pool={pool} form={form} side={side} />
       <Leverage form={form} />
       <Slippage form={form} />
       <TriggerPrice form={form} />

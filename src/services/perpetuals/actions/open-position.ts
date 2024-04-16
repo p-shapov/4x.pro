@@ -6,7 +6,7 @@ import type { WalletContextState } from "@solana/wallet-adapter-react";
 import type { Connection, TransactionInstruction } from "@solana/web3.js";
 import { SystemProgram } from "@solana/web3.js";
 
-import type { Coin } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 import { manualSendTransaction } from "@4x.pro/services/transaction-flow/handlers";
 import {
   createAtaIfNeeded,
@@ -190,8 +190,8 @@ const openPosition = async (
   connection: Connection,
   walletContextState: WalletContextState,
   pool: PoolAccount,
-  payToken: Coin,
-  positionToken: Coin,
+  payToken: Token,
+  positionToken: Token,
   payAmount: number,
   positionAmount: number,
   price: number,

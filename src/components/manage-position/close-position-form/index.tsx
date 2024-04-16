@@ -6,7 +6,7 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form";
 
-import type { Coin } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 // import type { Token } from "@4x.pro/app-config";
 import { useClosePosition } from "@4x.pro/services/perpetuals/hooks/use-close-position";
 import { useCustody } from "@4x.pro/services/perpetuals/hooks/use-custodies";
@@ -40,7 +40,7 @@ type Props = {
 
 // const receiveTokens: readonly Token[] = ["SOL", "USDC", "BTC"];
 
-const useClosePositionForm = (receiveToken: Coin) => {
+const useClosePositionForm = (receiveToken: Token) => {
   return useForm<SubmitData>({
     defaultValues: {
       receiveToken,

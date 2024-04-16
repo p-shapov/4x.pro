@@ -1,10 +1,10 @@
-import type { Coin, RpcProvider, Token } from "./config";
+import type { RpcProvider, Token } from "./config";
 import { DexPlatformConfig } from "./config";
 
-const getPythTickerSymbol = (coin: Coin) => {
+const getPythTickerSymbol = (coin: Token) => {
   return DexPlatformConfig.pythTickerSymbols[coin];
 };
-const getTickerSymbol = (coin: Coin) => {
+const getTickerSymbol = (coin: Token) => {
   return DexPlatformConfig.tickerSymbols[coin];
 };
 const getTokenLogo = (token: Token) => {
@@ -13,7 +13,7 @@ const getTokenLogo = (token: Token) => {
 const getTokenSymbol = (token: Token) => {
   return DexPlatformConfig.tokenSymbols[token];
 };
-const getTokenPythFeedId_to_USD = (coin: Coin) => {
+const getTokenPythFeedId_to_USD = (coin: Token) => {
   return DexPlatformConfig.pythFeedIds_to_USD[coin];
 };
 const getRpcEndpoint = (rpcProvider: RpcProvider) => {
@@ -22,14 +22,14 @@ const getRpcEndpoint = (rpcProvider: RpcProvider) => {
 const getPythFeedIds_to_USD = () => {
   return Object.values(DexPlatformConfig.pythFeedIds_to_USD);
 };
-const getTokenPublicKey = (token: Coin) => {
+const getTokenPublicKey = (token: Token) => {
   return DexPlatformConfig.publicKeys[token];
 };
 const getTokenNetwork = (token: Token) => {
-  return DexPlatformConfig.tokenNetworks[token];
+  return token === "LP" ? "Solana" : DexPlatformConfig.tokenNetworks[token];
 };
 const tokenAddressToToken = (tokenAddress: string) => {
-  return (Object.keys(DexPlatformConfig.publicKeys) as readonly Coin[]).find(
+  return (Object.keys(DexPlatformConfig.publicKeys) as readonly Token[]).find(
     (token) => DexPlatformConfig.publicKeys[token] === tokenAddress,
   );
 };

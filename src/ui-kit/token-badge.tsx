@@ -27,7 +27,9 @@ const TokenBadge: FC<
   const tokenStyles = mkTokenStyles({ dir, bold, gap });
   return (
     <span className={tokenStyles.root}>
-      <img src={getTokenLogo(token)} alt={token} width={16} height={16} />
+      {token !== "LP" && (
+        <img src={getTokenLogo(token)} alt={token} width={16} height={16} />
+      )}
       <span className={tokenStyles.info}>
         <span className={tokenStyles.symbol}>{getTokenSymbol(token)}</span>
         {showNetwork && (

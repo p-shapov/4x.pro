@@ -1,7 +1,7 @@
 import cn from "classnames";
 import type { FC } from "react";
 
-import type { Coin } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 import { useToken24hrBenchmark } from "@4x.pro/shared/hooks/use-token-24hr-benchbark";
 import { TokenBadge } from "@4x.pro/ui-kit/token-badge";
 
@@ -9,8 +9,8 @@ import { mkAssetItemStyles } from "./styles";
 import { useTradeModule } from "../store";
 
 type Props = {
-  coin: Coin;
-  onChange?: (asset: Coin) => void;
+  coin: Token;
+  onChange?: (asset: Token) => void;
 };
 
 const AssetItem: FC<Props> = ({ onChange, coin }) => {

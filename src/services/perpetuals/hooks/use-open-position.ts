@@ -4,7 +4,7 @@ import type { Connection } from "@solana/web3.js";
 import { createMutation } from "react-query-kit";
 
 import { queryClient, useAppConfig } from "@4x.pro/app-config";
-import type { Coin } from "@4x.pro/app-config";
+import type { Token } from "@4x.pro/app-config";
 import { useTokenBalanceQuery } from "@4x.pro/shared/hooks/use-token-balance";
 
 import { usePositionsQuery } from "./use-positions";
@@ -34,8 +34,8 @@ const useOpenPositionMutation = createMutation({
     connection: Connection;
     walletContextState: WalletContextState;
     pool: PoolAccount;
-    payToken: Coin;
-    positionToken: Coin;
+    payToken: Token;
+    positionToken: Token;
     payAmount: number;
     positionAmount: number;
     price: number;
@@ -82,8 +82,8 @@ const useOpenPosition = () => {
     ...mutation,
     mutate: (params: {
       pool: PoolAccount;
-      payToken: Coin;
-      positionToken: Coin;
+      payToken: Token;
+      positionToken: Token;
       payAmount: number;
       positionAmount: number;
       price: number;
@@ -101,8 +101,8 @@ const useOpenPosition = () => {
       }),
     mutateAsync: async (params: {
       pool: PoolAccount;
-      payToken: Coin;
-      positionToken: Coin;
+      payToken: Token;
+      positionToken: Token;
       payAmount: number;
       positionAmount: number;
       price: number;
