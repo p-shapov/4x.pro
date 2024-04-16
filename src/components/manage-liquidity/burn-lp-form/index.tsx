@@ -5,6 +5,7 @@ import type { FC } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 
+import { coinList } from "@4x.pro/app-config";
 import type { Coin } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
 import { useChangeLiquidity } from "@4x.pro/services/perpetuals/hooks/use-change-liquidity";
@@ -47,7 +48,9 @@ const useBurnLPForm = () => {
 const BurnLPForm: FC<Props> = ({ pool, form }) => {
   const changeLiquidity = useChangeLiquidity();
   const handleSubmit = form.handleSubmit(async (data) => {
-    if (!removeLiquidityStats.data) {
+    if (isInsufficientLPBalance.data) {
+      return messageToast("Insufficient balance", "error");
+    } else if (!removeLiquidityStats.data) {
       return messageToast("No stats found", "error");
     } else if (!custody) {
       return messageToast("No custody found", "error");
@@ -135,7 +138,7 @@ const BurnLPForm: FC<Props> = ({ pool, form }) => {
             token={value}
             label="Receive"
             readonlyAmount
-            tokenList={["USDC", "SOL"]}
+            tokenList={coinList}
             onChange={mkHandleChangeReceive(onChange)}
             labelVariant="balance"
             placeholder="0.00"
@@ -172,7 +175,6 @@ const BurnLPForm: FC<Props> = ({ pool, form }) => {
           variant="accent"
           size="lg"
           loading={changeLiquidity.isPending}
-          disabled={isInsufficientLPBalance.data}
         >
           Burn
         </Button>

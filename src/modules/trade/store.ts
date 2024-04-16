@@ -64,7 +64,7 @@ const useTradeModule = create<Store & Actions>()(
         favorites: state.favorites,
       }),
       merge: (persistedState, state) => {
-        if (storeSchema.isType(persistedState)) {
+        if (storeSchema.isValidSync(persistedState)) {
           return {
             ...state,
             ...persistedState,

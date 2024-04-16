@@ -127,6 +127,19 @@ const formatCurrency_LP: Formatter = (
     }).format(value) + " LP"
   );
 };
+const formatCurrency_LTC: Formatter = (
+  value,
+  maximumFractionDigits = 2,
+  minimumFractionDigits = maximumFractionDigits,
+) => {
+  if (typeof value !== "number" || isNaN(value)) return noValue;
+  return (
+    new Intl.NumberFormat("en", {
+      minimumFractionDigits,
+      maximumFractionDigits,
+    }).format(value) + " LTC"
+  );
+};
 const formatCurrency = (token: Token | "$") => {
   return currencyFormatters[token];
 };
@@ -135,6 +148,7 @@ const currencyFormatters: Record<Token | "$", Formatter> = {
   SOL: formatCurrency_SOL,
   USDC: formatCurrency_USDC,
   LP: formatCurrency_LP,
+  LTC: formatCurrency_LTC,
 };
 
 export {

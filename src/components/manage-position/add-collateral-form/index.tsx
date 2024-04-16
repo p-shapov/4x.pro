@@ -86,7 +86,9 @@ const AddCollateralForm: FC<Props> = ({ position, form }) => {
     depositAmount: useDeferredValue(depositAmount),
   });
   const handleSubmit = form.handleSubmit(async (data) => {
-    if (leverageAfterDeposit && leverageAfterDeposit < 1) {
+    if (isInsufficientBalance) {
+      messageToast("Insufficient balance", "error");
+    } else if (leverageAfterDeposit && leverageAfterDeposit < 1) {
       messageToast("Position leverage is too low", "error");
     } else if (leverageAfterDeposit && leverageAfterDeposit > 20) {
       messageToast("Position leverage exceeds limit", "error");
@@ -226,7 +228,7 @@ const AddCollateralForm: FC<Props> = ({ position, form }) => {
         <Button
           type="submit"
           variant="accent"
-          disabled={isInsufficientBalance || !pool}
+          disabled={!pool}
           size="lg"
           loading={changeCollateral.isPending}
         >

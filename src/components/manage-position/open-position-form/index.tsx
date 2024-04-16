@@ -78,10 +78,19 @@ const OpenPositionForm: FC<Props> = ({
   );
   const handleSubmit = form.handleSubmit(async (data) => {
     const price = priceStats?.entryPrice;
-    if (hasPosition) {
+    if (isInsufficientBalance.data) {
+      messageToast("Insufficient balance", "error");
+    } else if (hasPosition) {
       messageToast("You already have an open position", "error");
     } else if (!price) {
       messageToast("Price data is not available", "error");
+    } else if (
+      (pool
+        .getCustodyAccount(data.position.quote.token)
+        ?.getCustodyLiquidity(price) || 0) <
+      data.position.quote.size * price
+    ) {
+      messageToast("Insufficient liquidity", "error");
     } else {
       try {
         messageToast("Transaction submitted", "success");
@@ -178,7 +187,6 @@ const OpenPositionForm: FC<Props> = ({
         <Button
           type="submit"
           variant={getButtonVariant()}
-          disabled={isInsufficientBalance.data}
           loading={openPosition.isPending}
         >
           {getTitle()}

@@ -4,7 +4,7 @@ import { Listbox } from "@headlessui/react";
 import type { FC } from "react";
 
 import type { Coin } from "@4x.pro/app-config";
-import { getTokenLogo, getTokenSymbol } from "@4x.pro/app-config";
+import { coinList, getTokenLogo, getTokenSymbol } from "@4x.pro/app-config";
 import { formatRate } from "@4x.pro/shared/utils/number";
 import { Icon } from "@4x.pro/ui-kit/icon";
 
@@ -16,7 +16,7 @@ type Props = {
   onChange?: (asset: Coin) => void;
 };
 
-const collateralTokens = ["SOL"] as const;
+const collateralTokens = coinList.filter((coin) => coin !== "USDC");
 
 const AssetSelector: FC<Props> = ({ onChange }) => {
   const { refs, floatingStyles } = useFloating({

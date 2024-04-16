@@ -4,6 +4,7 @@ import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Controller, useWatch } from "react-hook-form";
 
+import { coinList } from "@4x.pro/app-config";
 import type { Coin } from "@4x.pro/app-config";
 import { useEntryPriceStats } from "@4x.pro/services/perpetuals/hooks/use-entry-price-stats";
 import type { PoolAccount } from "@4x.pro/services/perpetuals/lib/pool-account";
@@ -22,8 +23,6 @@ type Props = {
   side: PositionSide;
   collateralTokens: readonly Coin[];
 };
-
-const depositTokens = ["USDC", "SOL"] as const;
 
 const Position: FC<Props> = ({ pool, form, side, collateralTokens }) => {
   const errors = form.formState.errors;
@@ -134,7 +133,7 @@ const Position: FC<Props> = ({ pool, form, side, collateralTokens }) => {
         render={({ field: { onChange, value: data } }) => (
           <TokenField
             placeholder="0.00"
-            tokenList={depositTokens}
+            tokenList={coinList}
             value={
               quoteToken !== baseToken &&
               rate === 1 &&

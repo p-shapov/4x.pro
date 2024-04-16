@@ -5,6 +5,7 @@ import type { FC } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 
+import { coinList } from "@4x.pro/app-config";
 import type { Coin } from "@4x.pro/app-config";
 import { Wallet } from "@4x.pro/components/wallet";
 import { useAddLiquidityStats } from "@4x.pro/services/perpetuals/hooks/use-add-liquidity-stats";
@@ -50,7 +51,9 @@ const useMintLPForm = () => {
 const MintLPForm: FC<Props> = ({ pool, form }) => {
   const changeLiquidity = useChangeLiquidity();
   const handleSubmit = form.handleSubmit(async (data) => {
-    if (!custody) {
+    if (isInsufficientPayBalance.data) {
+      return messageToast("Insufficient balance", "error");
+    } else if (!custody) {
       return messageToast("No custody found", "error");
     } else {
       try {
@@ -114,7 +117,7 @@ const MintLPForm: FC<Props> = ({ pool, form }) => {
             labelVariant="balance"
             onChange={mkHandleChangePay(onChange)}
             presets={[25, 50, 75, 100]}
-            tokenList={["USDC", "SOL"]}
+            tokenList={coinList}
             formatPresets={(value) => formatPercentage(value, 0)}
             mapPreset={(value) => (payBalance || 0) * (value / 100)}
             error={!!(errors.pay?.amount || errors.pay?.token)}
@@ -161,7 +164,6 @@ const MintLPForm: FC<Props> = ({ pool, form }) => {
           variant="accent"
           size="lg"
           loading={changeLiquidity.isPending}
-          disabled={isInsufficientPayBalance.data}
         >
           Mint
         </Button>

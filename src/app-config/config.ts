@@ -4,7 +4,7 @@ import { mainnetConfig } from "./config.mainnet";
 const rpcProviders = ["helius"] as const;
 type RpcProvider = (typeof rpcProviders)[number];
 
-const coinList = ["USDC", "SOL"] as const;
+const coinList = ["USDC", "SOL", "LTC"] as const;
 type Coin = (typeof coinList)[number];
 const tokenList = [...coinList, "LP"] as const;
 type Token = (typeof tokenList)[number];
@@ -24,34 +24,40 @@ type Config = {
 const tickerSymbols: Record<Coin, string> = {
   SOL: "Crypto.SOL/USD",
   USDC: "Crypto.USDC/USD",
+  LTC: "Crypto.LTC/USD",
 };
 
 const pythTickerSymbols: Record<Coin, string> = {
   SOL: "PYTH:SOLUSD",
   USDC: "PYTH:USDCUSD",
+  LTC: "PYTH:LTCUSD",
 };
 
 const tokenLogos: Partial<Record<Token, `/coins/${string}.svg`>> = {
   SOL: "/coins/SOL.svg",
   USDC: "/coins/USDC.svg",
+  LTC: "/coins/LTC.svg",
 };
 
 const tokenSymbols: Record<Token, string> = {
   SOL: "SOL",
   USDC: "USDC",
   LP: "LP",
+  LTC: "LTC",
 };
 
 const tokenNetworks: Record<Token, string> = {
   SOL: "Solana",
   USDC: "Solana",
   LP: "Solana",
+  LTC: "Solana",
 };
 
 const tokenIds: Record<Token, string> = {
   SOL: "solana",
   USDC: "usd-coin",
   LP: "liquidity-provider",
+  LTC: "litecoin",
 };
 
 const DexPlatformConfig: Config = {

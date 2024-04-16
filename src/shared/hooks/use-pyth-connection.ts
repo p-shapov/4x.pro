@@ -55,11 +55,13 @@ type PriceFeed = {
 const PriceFeeds: Record<Coin, PriceFeed> = {
   SOL: {},
   USDC: {},
+  LTC: {},
 };
 
 const TokenMap: Record<string, Coin> = {
   SOL: "SOL",
   USDC: "USDC",
+  LTC: "LTC",
 };
 const listeners = new Set<() => void>();
 const emit = () => {
