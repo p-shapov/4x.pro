@@ -8,6 +8,8 @@ import {
   getTokenSymbol,
 } from "@4x.pro/app-config";
 import type { Token } from "@4x.pro/app-config";
+import { useToken24hrBenchmark } from "@4x.pro/shared/hooks/use-token-24hr-benchbark";
+import { formatPercentage } from "@4x.pro/shared/utils/number";
 import { Icon } from "@4x.pro/ui-kit/icon";
 import { TokenPrice } from "@4x.pro/ui-kit/token-price";
 
@@ -25,6 +27,10 @@ const AssetItem: FC<Props> = ({ token }) => {
     toggleFavorite: state.toggleFavorite,
     isFavorite: state.favorites.includes(token),
   }));
+  const { data: benchmark24hr } = useToken24hrBenchmark({ token });
+  const change24hr = benchmark24hr
+    ? (benchmark24hr.change / benchmark24hr.close) * 100
+    : undefined;
   const handleToggleFavorite: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     toggleFavorite(token);
@@ -58,14 +64,17 @@ const AssetItem: FC<Props> = ({ token }) => {
           <span className={assetItemStyles.price}>
             <TokenPrice token={token} fractionalDigits={2} watch />
           </span>
-          <span
-            className={cn(assetItemStyles.change, {
-              [assetItemStyles.changePositive]: true,
-              [assetItemStyles.changeNegative]: false,
-            })}
-          >
-            +0.12%
-          </span>
+          {change24hr && (
+            <span
+              className={cn(assetItemStyles.change, {
+                [assetItemStyles.changePositive]: (change24hr || 0) > 0,
+                [assetItemStyles.changeNegative]: (change24hr || 0) < 0,
+              })}
+            >
+              {change24hr > 0 ? "+" : change24hr < 0 ? "-" : ""}
+              {formatPercentage(Math.abs(change24hr), 2)}
+            </span>
+          )}
         </div>
       </div>
     </Listbox.Option>

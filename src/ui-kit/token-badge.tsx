@@ -36,14 +36,15 @@ const TokenBadge: FC<
           <span className={tokenStyles.network}>{getTokenNetwork(token)}</span>
         )}
       </span>
-      {priceChange && (
+      {priceChange && dir && (
         <span className={tokenStyles.tradeDir}>
           <Icon
             className={tokenStyles.icon}
             src={dir === "up" ? "/icons/arrow-up.svg" : "/icons/arrow-down.svg"}
           />
           <span className={cn(tokenStyles.percentage)}>
-            {formatPercentage(priceChange, 2)}
+            {dir === "up" ? "+" : dir === "down" ? "-" : ""}
+            {formatPercentage(Math.abs(priceChange), 2)}
           </span>
         </span>
       )}
