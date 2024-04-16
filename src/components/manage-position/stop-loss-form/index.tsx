@@ -135,6 +135,7 @@ const StopLossForm: FC<Props> = ({ position, form }) => {
           variant="accent"
           size="lg"
           loading={updateOrder.isPending}
+          disabled={!pool}
         >
           {newTriggerPrice > 0 ? "Set stop loss" : "Enter amount"}
         </Button>

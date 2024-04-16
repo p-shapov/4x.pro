@@ -111,6 +111,7 @@ const CancelOrderForm: FC<Props> = ({ type, position, form }) => {
           variant="accent"
           size="lg"
           loading={updateOrder.isPending}
+          disabled={!pool}
         >
           Cancel Order
         </Button>
