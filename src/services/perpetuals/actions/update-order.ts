@@ -52,7 +52,7 @@ const updateOrder = async (
       methodBuilder = perpetual_program.methods
         .updatePositionLimits({
           takeProfit: finalTriggerPrice,
-          stopLoss: position.takeProfit,
+          stopLoss: position.stopLoss,
         })
         .accounts({
           owner: publicKey,
