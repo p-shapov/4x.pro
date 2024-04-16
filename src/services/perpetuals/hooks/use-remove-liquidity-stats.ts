@@ -27,7 +27,7 @@ const useRemoveLiquidityStatsQuery = createQuery({
     return viewHelper.getRemoveLiquidityAmountAndFees(amount, pool, custody);
   },
   placeholderData: keepPreviousData,
-  refetchInterval: 30 * 1000,
+  refetchInterval: 60 * 0.5 * 1000,
   queryKeyHashFn: (queryKey) => {
     const key = queryKey[0] as [string];
     const variables = queryKey[1] as {

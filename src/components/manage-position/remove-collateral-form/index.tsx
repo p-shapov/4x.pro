@@ -258,7 +258,7 @@ const RemoveCollateralForm: FC<Props> = ({ position, form }) => {
         <Button
           type="submit"
           variant="accent"
-          disabled={!!isInsufficientBalance}
+          disabled={!!isInsufficientBalance || !pool}
           size="lg"
           loading={changeCollateral.isPending}
         >

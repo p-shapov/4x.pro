@@ -216,6 +216,7 @@ const ClosePositionForm: FC<Props> = ({ position, form }) => {
           type="submit"
           variant="accent"
           size="lg"
+          disabled={!pool}
           loading={closePosition.isPending}
         >
           Close Position

@@ -135,6 +135,7 @@ const TakeProfitForm: FC<Props> = ({ position, form }) => {
           variant="accent"
           size="lg"
           loading={updateOrder.isPending}
+          disabled={!pool}
         >
           {newTriggerPrice > 0 ? "Set take profit" : "Enter amount"}
         </Button>
