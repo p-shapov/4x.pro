@@ -8,6 +8,7 @@ import { getTickerSymbol } from "@4x.pro/app-config";
 import { useOpenPositionForm } from "@4x.pro/components/manage-position";
 import { usePools } from "@4x.pro/services/perpetuals/hooks/use-pools";
 import { useResizableLayout } from "@4x.pro/shared/hooks/use-resizable-layout";
+import { PageLoader } from "@4x.pro/ui-kit/page-loader";
 
 import { AssetsToolbar } from "./assets-toolbar";
 import { Sidebar } from "./sidebar";
@@ -68,6 +69,7 @@ const TradeModule = () => {
       });
     }
   }, [hydrated, selectedAsset, openPositionForm]);
+  if (!hydrated || !pool) return <PageLoader />;
   return (
     <div className={tradeModuleStyles.root}>
       {hydrated && pool && (
