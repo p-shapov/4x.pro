@@ -57,7 +57,7 @@ const useAddLiquidityStats = ({
         data &&
         custody &&
         pool && {
-          amount: Number(data.amount) / 10 ** custody.decimals,
+          amount: Number(data.amount) / 10 ** pool.lpData.decimals,
           fee: Number(data.fee) / 10 ** 9,
         }
       );

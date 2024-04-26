@@ -11,6 +11,7 @@ import { Wallet } from "@4x.pro/components/wallet";
 import { useChangeLiquidity } from "@4x.pro/services/perpetuals/hooks/use-change-liquidity";
 import { useRemoveLiquidityStats } from "@4x.pro/services/perpetuals/hooks/use-remove-liquidity-stats";
 import type { PoolAccount } from "@4x.pro/services/perpetuals/lib/pool-account";
+import { useWatchPythPriceFeed } from "@4x.pro/shared/hooks/use-pyth-connection";
 import {
   useIsInsufficientBalance,
   useTokenBalance,
@@ -48,14 +49,20 @@ const useBurnLPForm = () => {
 const BurnLPForm: FC<Props> = ({ pool, form }) => {
   const changeLiquidity = useChangeLiquidity();
   const handleSubmit = form.handleSubmit(async (data) => {
+    if (!removeLiquidityStats.data || !price) return;
+
     if (isInsufficientLPBalance.data) {
       return messageToast("Insufficient balance", "error");
     } else if (!removeLiquidityStats.data) {
       return messageToast("No stats found", "error");
     } else if (!custody) {
       return messageToast("No custody found", "error");
-    }
-    {
+    } else if (
+      (pool.getCustodyAccount(receiveToken)?.getCustodyLiquidity(price) || 0) <
+      removeLiquidityStats.data.amount * price
+    ) {
+      return messageToast("Insufficient liquidity", "error");
+    } else {
       try {
         messageToast("Transaction submitted", "success");
         await changeLiquidity.mutateAsync({
@@ -89,6 +96,8 @@ const BurnLPForm: FC<Props> = ({ pool, form }) => {
     control: form.control,
     name: "receiveToken",
   });
+  const { priceData: { price } = { price: undefined } } =
+    useWatchPythPriceFeed(receiveToken) || {};
   const custody = pool.getCustodyAccount(receiveToken);
   const { data: lpBalance } = useTokenBalance({
     token: receiveToken,
