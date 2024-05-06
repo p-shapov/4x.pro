@@ -132,10 +132,19 @@ const openPositionBuilder = async (
       connection,
     );
     if (ataIx) preInstructions.push(ataIx);
+    const View = new ViewHelper(connection, provider);
+    const getEntryPrice = await View.getEntryPriceAndFee(
+      payAmount,
+      positionAmount,
+      side,
+      pool!,
+      positionCustody!,
+    );
+    const entryFee = Number(getEntryPrice.fee) / 10 ** positionCustody.decimals;
     const wrapInstructions = await wrapSolIfNeeded(
       publicKey,
       connection,
-      payAmount,
+      payAmount + entryFee,
     );
     if (wrapInstructions) {
       preInstructions.push(...wrapInstructions);
