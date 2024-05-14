@@ -22,7 +22,7 @@ const ACCOUNT_URL = (address: string) =>
   `https://explorer.solana.com/address/${address}?cluster=devnet`;
 
 // const WRAP_SOL_TRANSFER_MULTIPLIER = 3;
-const WRAP_SOL_TRANSFER_MULTIPLIER = 1;
+// const WRAP_SOL_TRANSFER_MULTIPLIER = 1;
 
 const createAtaIfNeeded = async (
   publicKey: PublicKey,
@@ -57,16 +57,13 @@ const wrapSolIfNeeded = async (
   );
   const balance =
     (await connection.getBalance(associatedTokenAccount)) / LAMPORTS_PER_SOL;
+  const transferLamports = Math.ceil((payAmount - balance) * LAMPORTS_PER_SOL);
   if (balance < payAmount) {
     preInstructions.push(
       SystemProgram.transfer({
         fromPubkey: publicKey,
         toPubkey: associatedTokenAccount,
-        lamports: Math.floor(
-          (payAmount - balance) *
-            LAMPORTS_PER_SOL *
-            WRAP_SOL_TRANSFER_MULTIPLIER,
-        ),
+        lamports: transferLamports,
       }),
     );
     preInstructions.push(
