@@ -21,8 +21,7 @@ const TRX_URL = (txid: string) =>
 const ACCOUNT_URL = (address: string) =>
   `https://explorer.solana.com/address/${address}?cluster=devnet`;
 
-// const WRAP_SOL_TRANSFER_MULTIPLIER = 3;
-// const WRAP_SOL_TRANSFER_MULTIPLIER = 1;
+const WRAP_SOL_TRANSFER_MULTIPLIER = 1.1;
 
 const createAtaIfNeeded = async (
   publicKey: PublicKey,
@@ -65,7 +64,7 @@ const wrapSolIfNeeded = async (
       SystemProgram.transfer({
         fromPubkey: publicKey,
         toPubkey: associatedTokenAccount,
-        lamports: transferLamports,
+        lamports: transferLamports * WRAP_SOL_TRANSFER_MULTIPLIER,
       }),
     );
     preInstructions.push(
