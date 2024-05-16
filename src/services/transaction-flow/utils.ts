@@ -21,7 +21,7 @@ const TRX_URL = (txid: string) =>
 const ACCOUNT_URL = (address: string) =>
   `https://explorer.solana.com/address/${address}?cluster=devnet`;
 
-const WRAP_SOL_TRANSFER_MULTIPLIER = 1.5;
+const WRAP_SOL_TRANSFER_MULTIPLIER = 3;
 
 const createAtaIfNeeded = async (
   publicKey: PublicKey,
@@ -99,4 +99,5 @@ export {
   unwrapSolIfNeeded,
   TRX_URL,
   ACCOUNT_URL,
+  WRAP_SOL_TRANSFER_MULTIPLIER,
 };
