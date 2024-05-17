@@ -64,7 +64,7 @@ const wrapSolIfNeeded = async (
       SystemProgram.transfer({
         fromPubkey: publicKey,
         toPubkey: associatedTokenAccount,
-        lamports: transferLamports * WRAP_SOL_TRANSFER_MULTIPLIER,
+        lamports: transferLamports,
       }),
     );
     preInstructions.push(
