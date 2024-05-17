@@ -9,6 +9,7 @@ import type { Token } from "@4x.pro/app-config";
 import { useEntryPriceStats } from "@4x.pro/services/perpetuals/hooks/use-entry-price-stats";
 import type { PoolAccount } from "@4x.pro/services/perpetuals/lib/pool-account";
 import type { PositionSide } from "@4x.pro/services/perpetuals/lib/types";
+import { roundToFirstNonZeroDecimal } from "@4x.pro/shared/utils/number";
 import { TokenField } from "@4x.pro/ui-kit/token-field";
 import { TokenPrice } from "@4x.pro/ui-kit/token-price";
 
@@ -64,19 +65,22 @@ const Position: FC<Props> = ({ pool, form, side }) => {
       : basePriceStats?.entryPrice && quotePriceStats?.entryPrice
       ? quotePriceStats.entryPrice / basePriceStats.entryPrice
       : 1;
+  const roundSize = (size: number) => {
+    return baseToken === quoteToken ? size : roundToFirstNonZeroDecimal(size);
+  };
   useEffect(() => {
     switch (lastTouchedPosition) {
       case "base":
         const baseSize = form.getValues("position.base.size");
         form.setValue("position.quote", {
-          size: (baseSize / rate) * leverage,
+          size: roundSize((baseSize / rate) * leverage),
           token: quoteToken,
         });
         break;
       case "quote":
         const quoteSize = form.getValues("position.quote.size");
         form.setValue("position.base", {
-          size: (quoteSize * rate) / leverage,
+          size: roundSize((quoteSize * rate) / leverage),
           token: baseToken,
         });
         break;
@@ -91,7 +95,7 @@ const Position: FC<Props> = ({ pool, form, side }) => {
         const quoteToken = form.getValues("position.quote.token");
         setLastTouchedPosition("base");
         form.setValue("position.quote", {
-          size: (data.amount / rate) * leverage,
+          size: roundSize((data.amount / rate) * leverage),
           token: quoteToken,
         });
       }
@@ -108,7 +112,7 @@ const Position: FC<Props> = ({ pool, form, side }) => {
         const baseToken = form.getValues("position.base.token");
         setLastTouchedPosition("quote");
         form.setValue("position.base", {
-          size: (data.amount * rate) / leverage,
+          size: roundSize((data.amount * rate) / leverage),
           token: baseToken,
         });
       }
