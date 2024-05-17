@@ -30,7 +30,7 @@ import {
 } from "../utils/constants";
 import { ViewHelper } from "../utils/view-helpers";
 
-const FEE_MULTIPLIER = 3;
+// const FEE_MULTIPLIER = 3;
 
 const openPositionBuilder = async (
   rpcEndpoint: string,
@@ -146,7 +146,7 @@ const openPositionBuilder = async (
     const wrapInstructions = await wrapSolIfNeeded(
       publicKey,
       connection,
-      payAmount + entryFee * FEE_MULTIPLIER,
+      payAmount + entryFee,
     );
     if (wrapInstructions) {
       preInstructions.push(...wrapInstructions);
