@@ -3,6 +3,7 @@ import { createQuery } from "react-query-kit";
 
 import { useAppConfig } from "@4x.pro/app-config";
 
+import type { CustodyAccount } from "../lib/custody-account";
 import type { PositionAccount } from "../lib/position-account";
 import { getPerpetualProgramAndProvider } from "../utils/constants";
 import { ViewHelper } from "../utils/view-helpers";
@@ -12,10 +13,13 @@ const useExitPriceStatsQuery = createQuery({
   fetcher: async ({
     rpcEndpoint,
     position,
+    custody,
   }: {
     rpcEndpoint: string;
     position: PositionAccount;
+    custody?: CustodyAccount;
   }) => {
+    if (!custody) return null;
     const { provider } = getPerpetualProgramAndProvider(rpcEndpoint);
     const viewHelper = new ViewHelper(provider.connection, provider);
     return viewHelper.getExitPriceAndFee(position);
@@ -32,15 +36,21 @@ const useExitPriceStatsQuery = createQuery({
   },
 });
 
-const useExitPriceStats = ({ position }: { position: PositionAccount }) => {
+const useExitPriceStats = ({
+  position,
+  custody,
+}: {
+  position: PositionAccount;
+  custody?: CustodyAccount;
+}) => {
   const { rpcEndpoint } = useAppConfig();
   return useExitPriceStatsQuery({
-    variables: { rpcEndpoint, position },
+    variables: { rpcEndpoint, position, custody },
     select: (data) => {
       return (
         data && {
           exitPrice: Number(data.price) / 10 ** 6,
-          fee: Number(data.fee) / 10 ** 9,
+          fee: Number(data.fee) / 10 ** custody!.decimals,
         }
       );
     },

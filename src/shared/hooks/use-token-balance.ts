@@ -25,6 +25,7 @@ const useTokenBalanceQuery = createQuery({
     const connection = new Connection(rpcEndpoint);
     return fetchTokenBalance(token, account, connection, address);
   },
+  refetchInterval: 10000,
   queryKeyHashFn: (queryKey) => {
     const key = queryKey[0] as string;
     const variables = queryKey[1] as {

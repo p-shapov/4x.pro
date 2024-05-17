@@ -127,10 +127,6 @@ const OpenPositionForm: FC<Props> = ({ pool, side, form }) => {
     control: form.control,
     name: "position.quote",
   });
-  const isInsufficientBalance = useIsInsufficientBalance({
-    token: positionBase.token,
-    amount: positionBase.size,
-  });
   const leverage = useWatch({
     control: form.control,
     name: "leverage",
@@ -142,6 +138,10 @@ const OpenPositionForm: FC<Props> = ({ pool, side, form }) => {
     collateralToken: positionQuote.token,
     size: useDeferredValue(size),
     collateral: useDeferredValue(positionQuote.size),
+  });
+  const isInsufficientBalance = useIsInsufficientBalance({
+    token: positionBase.token,
+    amount: positionBase.size + (priceStats?.fee || 0),
   });
   const getTitle = () => {
     switch (side) {
@@ -176,6 +176,9 @@ const OpenPositionForm: FC<Props> = ({ pool, side, form }) => {
           type="submit"
           variant={getButtonVariant()}
           loading={openPosition.isPending}
+          disabled={
+            typeof isInsufficientBalance.data === "undefined" || !priceStats
+          }
         >
           {getTitle()}
         </Button>
