@@ -57,14 +57,14 @@ const wrapSolIfNeeded = async (
   const balanceLamports = await connection.getBalance(associatedTokenAccount);
   const balance = balanceLamports / LAMPORTS_PER_SOL;
   if (balance < payAmount) {
-    const transferLamports = Math.floor(
+    const transferLamports = Math.round(
       (payAmount - balance) * LAMPORTS_PER_SOL,
     );
     preInstructions.push(
       SystemProgram.transfer({
         fromPubkey: publicKey,
         toPubkey: associatedTokenAccount,
-        lamports: transferLamports,
+        lamports: transferLamports * 1.1,
       }),
     );
     preInstructions.push(
