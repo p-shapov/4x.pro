@@ -57,7 +57,7 @@ const wrapSolIfNeeded = async (
   const balanceLamports = await connection.getBalance(associatedTokenAccount);
   const balance = balanceLamports / LAMPORTS_PER_SOL;
   if (balance < payAmount) {
-    const transferLamports = Math.ceil(
+    const transferLamports = Math.floor(
       (payAmount - balance) * LAMPORTS_PER_SOL,
     );
     preInstructions.push(
