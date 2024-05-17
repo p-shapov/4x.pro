@@ -83,7 +83,7 @@ const useEntryPriceStats = ({
         data && {
           liquidationPrice: data.liquidationPrice.toNumber() / 10 ** 6,
           entryPrice: data.entryPrice.toNumber() / 10 ** 6,
-          fee: data.fee.toNumber() / 10 ** custody!.decimals,
+          fee: data.fee.toNumber() / 10 ** 9,
         }
       );
     },
