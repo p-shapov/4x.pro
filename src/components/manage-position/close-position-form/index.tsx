@@ -68,7 +68,7 @@ const ClosePositionForm: FC<Props> = ({ position, form }) => {
   const { data: pool } = usePool({ address: position.pool });
   const { data: pnl } = usePnLStats({ position });
   const { data: liquidationPrice } = useLiquidationPriceStats({ position });
-  const { data: priceStats } = useExitPriceStats({ position, custody });
+  const { data: priceStats } = useExitPriceStats({ position });
   // const mkHandleSelectChange =
   //   (onChange: (receiveToken: Token) => void) => (token: string) => {
   //     onChange(token as Token);
