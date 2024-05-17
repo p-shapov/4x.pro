@@ -60,6 +60,7 @@ const wrapSolIfNeeded = async (
     const transferLamports = Math.ceil(
       (payAmount - balance) * LAMPORTS_PER_SOL,
     );
+    console.log(transferLamports);
     preInstructions.push(
       SystemProgram.transfer({
         fromPubkey: publicKey,
