@@ -141,7 +141,7 @@ const OpenPositionForm: FC<Props> = ({ pool, side, form }) => {
   });
   const isInsufficientBalance = useIsInsufficientBalance({
     token: positionBase.token,
-    amount: positionBase.size + (priceStats?.fee || 0),
+    amount: positionBase.size,
   });
   const getTitle = () => {
     switch (side) {
